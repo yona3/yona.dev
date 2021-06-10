@@ -1,4 +1,4 @@
-This is my Next.js + TypeScript + Tailwind CSS starter template.
+This is my home page.
 
 ## Tech stack
 
@@ -7,3 +7,4 @@ This is my Next.js + TypeScript + Tailwind CSS starter template.
 - ESLint
 - Prettier
 - Tailwind CSS
+- microCMS
