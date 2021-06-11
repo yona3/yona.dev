@@ -8,9 +8,9 @@ interface Props {
 
 export const Layout: VFC<Props> = ({ children }) => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen text-gray-700">
       <Header />
-      <div>{children}</div>
+      <div className="px-5">{children}</div>
     </div>
   );
 };

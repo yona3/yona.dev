@@ -13,7 +13,7 @@ export const Header: VFC = () => {
     >
       <div className="flex justify-between items-center mx-auto max-w-screen-xl ">
         <Link href="/">
-          <h1 className="text-base sm:text-xl font-semibold text-gray-800 cursor-pointer ">
+          <h1 className="text-base sm:text-xl font-semibold cursor-pointer ">
             {"🦔"} yona{"'"}s home
           </h1>
         </Link>
