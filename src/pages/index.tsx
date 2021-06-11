@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 
-import { Layout } from "../components/Layout";
+import { Layout } from "../components/shared/Layout";
+import { Top } from "../components/Top";
 
 const Index: NextPage = () => {
   return (
     <Layout>
-      <div className="text-center">
-        <h2 className="mt-12 text-xl">index</h2>
+      <div className="mx-auto max-w-sm">
+        <Top />
       </div>
     </Layout>
   );
