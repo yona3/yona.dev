@@ -4,7 +4,7 @@ import { Header } from "./Header";
 
 interface Props {
   children: ReactNode;
-  refs: { [key: string]: HTMLDivElement };
+  refs?: { [key: string]: HTMLDivElement };
 }
 
 export const Layout: VFC<Props> = ({ children, refs }) => {

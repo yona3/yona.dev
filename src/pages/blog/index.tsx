@@ -6,7 +6,7 @@ const Blog: NextPage = () => {
   return (
     <Layout>
       <div className="text-center">
-        <h2 className="mt-12 text-xl">blog</h2>
+        <h2 className="mt-12 text-sm">準備中です！</h2>
       </div>
     </Layout>
   );
