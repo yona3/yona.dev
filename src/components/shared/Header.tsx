@@ -1,9 +1,21 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { VFC } from "react";
 
 const ITEMS = ["About", "Products", "Blog"];
 
-export const Header: VFC = () => {
+interface Props {
+  refs: { [key: string]: HTMLElement };
+}
+
+export const Header: VFC<Props> = ({ refs }) => {
+  const router = useRouter();
+
+  const handleScroll = (name: string) => {
+    if (router.pathname !== "/") return router.push("/");
+    refs[name.toLowerCase()].scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <header
       className="
@@ -11,14 +23,18 @@ export const Header: VFC = () => {
         text-center bg-yellow-50 shadow
       "
     >
-      <div className="flex justify-between items-center mx-auto max-w-screen-xl ">
+      <div
+        className="
+          flex justify-center sm:justify-between 
+          items-center mx-auto max-w-screen-xl 
+        "
+      >
         <Link href="/">
-          <h1 className="text-base sm:text-xl font-semibold cursor-pointer ">
+          <h1 className="text-xl font-semibold cursor-pointer ">
             {"🦔"} yona{"'"}s home
           </h1>
         </Link>
         <nav>
-          {/* pc */}
           <div className="hidden sm:block">
             <ul className="flex justify-between w-64">
               {ITEMS.map((name) => {
@@ -37,6 +53,7 @@ export const Header: VFC = () => {
                   </Link>
                 ) : (
                   <li
+                    onClick={() => handleScroll(name)}
                     key={name}
                     className="
                       cursor-pointer

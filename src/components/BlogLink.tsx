@@ -9,10 +9,11 @@ export const BlogLink: VFC = () => {
       <Link href="/blog">
         <p
           className="
+            border-b-2 border-gray-800 sm:border-opacity-0
+            border-opacity-70
             cursor-pointer h-8 inline-block
             box-border relative flex-col-reverse
-            border-b-2 border-gray-800 border-opacity-0
-            hover:border-opacity-100 transition duration-200
+            sm:hover:border-opacity-100 transition duration-200
           "
         >
           Tech Blog

@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useEffect, useRef, useState } from "react";
 
 import { About } from "../components/About";
 import { BlogLink } from "../components/BlogLink";
@@ -7,12 +8,21 @@ import { Layout } from "../components/shared/Layout";
 import { Top } from "../components/Top";
 
 const Index: NextPage = () => {
+  const [refs, setRefs] = useState<{ [key: string]: HTMLDivElement }>(null);
+  const aboutSection = useRef<HTMLDivElement>(null);
+  const productsSection = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (aboutSection.current && productsSection.current)
+      setRefs({ about: aboutSection.current, products: productsSection.current });
+  }, [aboutSection, productsSection]);
+
   return (
-    <Layout>
+    <Layout refs={refs}>
       <div className="mx-auto max-w-sm">
         <Top />
-        <About />
-        <Products />
+        <About ref={aboutSection} />
+        <Products ref={productsSection} />
         <BlogLink />
       </div>
     </Layout>

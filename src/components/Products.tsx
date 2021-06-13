@@ -1,4 +1,4 @@
-import type { VFC } from "react";
+import { forwardRef } from "react";
 
 import { ProductItem } from "./ProductItem";
 import { SectionLayout } from "./shared/SectionLayout";
@@ -27,25 +27,28 @@ const ITEMS: { image: string; name: string; description: string; tech: string; u
   },
 ];
 
-export const Products: VFC = () => {
+// eslint-disable-next-line react/display-name
+export const Products = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <SectionLayout>
-      <div>
-        <h2 className="text-2xl font-semibold">Products</h2>
+    <div ref={ref}>
+      <SectionLayout>
         <div>
-          {ITEMS.map(({ name, image, description, tech, url }) => (
-            <div key={name} className="mt-16">
-              <ProductItem
-                name={name}
-                image={image}
-                description={description}
-                tech={tech}
-                url={url}
-              />
-            </div>
-          ))}
+          <h2 className="text-2xl font-semibold">Products</h2>
+          <div>
+            {ITEMS.map(({ name, image, description, tech, url }) => (
+              <div key={name} className="mt-16">
+                <ProductItem
+                  name={name}
+                  image={image}
+                  description={description}
+                  tech={tech}
+                  url={url}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </SectionLayout>
+      </SectionLayout>
+    </div>
   );
-};
+});
