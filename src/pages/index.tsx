@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { useEffect, useRef, useState } from "react";
+import Head from "next/head";
 
 import { About } from "../components/About";
 import { BlogLink } from "../components/BlogLink";
@@ -19,6 +20,9 @@ const Index: NextPage = () => {
 
   return (
     <Layout refs={refs}>
+      <Head>
+        <title>Home</title>
+      </Head>
       <div className="mx-auto max-w-sm">
         <Top />
         <About ref={aboutSection} />
