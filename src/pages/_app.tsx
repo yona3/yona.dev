@@ -25,7 +25,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <meta property="og:site_name" content="yona's home" />
         <meta name="twitter:site" content="https://yona.dev" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="yona's home" />
+        <meta name="twitter:title" content="yons's home" />
         <meta name="twitter:image" content="https://yona.dev/icon.jpeg" />
         <meta name="twitter:description" content="yonaのホームページです。" />
       </Head>
