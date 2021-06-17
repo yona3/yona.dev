@@ -12,12 +12,12 @@ export const Top: VFC = () => {
         <p className="mt-4">Web開発が好きな大学２年生です</p>
         <div className="flex justify-between items-center mx-auto mt-6 w-20">
           <a
-            className="block w-8 h-8 hover:opacity-70 transition"
+            className="block w-8 h-8 ml-1 hover:opacity-70 transition"
             href="https://github.com/yona3"
             target="_blank"
             rel="noreferrer"
           >
-            <Image src="/GitHub-Mark.png" width={31} height={31} />
+            <Image src="/GitHub-Mark.png" width={30} height={30} />
           </a>
           <a
             className="block w-8 h-8 hover:opacity-70 transition"
