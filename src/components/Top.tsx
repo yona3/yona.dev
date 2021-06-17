@@ -17,7 +17,7 @@ export const Top: VFC = () => {
             target="_blank"
             rel="noreferrer"
           >
-            <Image src="/Github-Mark.png" width={31} height={31} />
+            <Image src="/GitHub-Mark.png" width={31} height={31} />
           </a>
           <a
             className="block w-8 h-8 hover:opacity-70 transition"
