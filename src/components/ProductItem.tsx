@@ -13,7 +13,7 @@ export const ProductItem: VFC<Props> = ({ image, name, description, tech, url })
   return (
     <a className="block cursor-pointer" href={url} target="_blank" rel="noreferrer">
       <div className="h-72 sm:h-80 rounded-2xl shadow-md">
-        <div className="overflow-hidden relative h-2/3 bg-yellow-50 rounded-t-2xl border-b">
+        <div className="overflow-hidden relative z-0 h-2/3 bg-yellow-50 rounded-t-2xl border-b">
           <Image
             className="transition duration-500 transform hover:scale-110"
             src={image}
