@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 
 import { SectionLayout } from "./shared/SectionLayout";
 
+// eslint-disable-next-line react/display-name
 export const About = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div ref={ref}>
