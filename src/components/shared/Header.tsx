@@ -13,7 +13,10 @@ export const Header: VFC<Props> = ({ refs }) => {
 
   const handleScroll = (name: string) => {
     if (router.pathname !== "/") return router.push("/");
-    refs[name.toLowerCase()].scrollIntoView({ behavior: "smooth", block: "start" });
+    refs[name.toLowerCase()].scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -52,6 +55,7 @@ export const Header: VFC<Props> = ({ refs }) => {
                     </li>
                   </Link>
                 ) : (
+                  // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
                   <li
                     onClick={() => handleScroll(name)}
                     key={name}

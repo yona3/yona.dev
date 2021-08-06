@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
+import { useEffect, useRef, useState } from "react";
 
 import { About } from "../components/About";
 import { BlogLink } from "../components/BlogLink";
@@ -15,7 +15,10 @@ const Index: NextPage = () => {
 
   useEffect(() => {
     if (aboutSection.current && productsSection.current)
-      setRefs({ about: aboutSection.current, products: productsSection.current });
+      setRefs({
+        about: aboutSection.current,
+        products: productsSection.current,
+      });
   }, [aboutSection, productsSection]);
 
   return (

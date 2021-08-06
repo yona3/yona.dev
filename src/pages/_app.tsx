@@ -1,7 +1,7 @@
 import "tailwindcss/tailwind.css";
-import Head from "next/head";
 
 import type { AppProps } from "next/dist/next-server/lib/router/router";
+import Head from "next/head";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

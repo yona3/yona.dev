@@ -3,7 +3,13 @@ import { forwardRef } from "react";
 import { ProductItem } from "./ProductItem";
 import { SectionLayout } from "./shared/SectionLayout";
 
-const ITEMS: { image: string; name: string; description: string; tech: string; url: string }[] = [
+const ITEMS: {
+  image: string;
+  name: string;
+  description: string;
+  tech: string;
+  url: string;
+}[] = [
   {
     image: "/pigu_icon.svg",
     name: "pigu",
