@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 
 import { Article } from "../../components/shared/Article";
@@ -29,7 +29,7 @@ const Blog: NextPage<Props> = ({ data }) => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const data = await microcms.get({
     endpoint: "blog",
   });
