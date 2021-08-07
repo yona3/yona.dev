@@ -16,13 +16,16 @@ const Blog: NextPage<Props> = ({ data }) => {
       <Head>
         <title>Blog</title>
       </Head>
-      <div className="pt-10 sm:pt-20 text-center">
-        <div className="mx-auto space-y-10 max-w-2xl text-center">
-          {data.map((article) => (
-            <div key={article.id}>
-              <Article article={article} />
-            </div>
-          ))}
+      <div className="pt-10 sm:pt-16 text-center">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold">Blog</h2>
+          <div className="mt-8 sm:mt-14 space-y-10">
+            {data.map((article) => (
+              <div key={article.id}>
+                <Article article={article} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Layout>
@@ -30,13 +33,13 @@ const Blog: NextPage<Props> = ({ data }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const data = await microcms.get({
+  const data = await microcms.get<{ contents: Content }>({
     endpoint: "blog",
   });
 
   return {
     props: {
-      data: (data as { contents: Content[] }).contents,
+      data: data.contents,
     },
   };
 };
