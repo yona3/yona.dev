@@ -1,6 +1,7 @@
 import cheerio from "cheerio";
 import hljs from "highlight.js";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Head from "next/head";
 
 import { Layout } from "../../components/shared/Layout";
 import { formatDate } from "../../lib/day";
@@ -15,6 +16,24 @@ type Props = {
 const ArticleDetail: NextPage<Props> = ({ article }) => {
   return (
     <Layout>
+      <Head>
+        <title>{article.title}</title>
+        <meta name="description" content="yonaのブログ記事です。" />
+        <meta property="og:title" content={article.title} />
+        <meta property="og:description" content="yonaのブログ記事です。" />
+        <meta
+          property="og:url"
+          content={`https://yona.dev/blog/${article.id}`}
+        />
+        <meta
+          name="twitter:site"
+          content={`https://yona.dev/blog/${article.id}`}
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:image" content="https://yona.dev/icon.jpeg" />
+        <meta name="twitter:description" content="yonaのブログ記事です。" />
+      </Head>
       <div className="py-10 sm:py-24">
         <div className="mx-auto max-w-2xl">
           {/* top */}

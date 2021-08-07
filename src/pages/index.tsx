@@ -24,7 +24,7 @@ const Index: NextPage = () => {
   return (
     <Layout refs={refs}>
       <Head>
-        <title>Home</title>
+        <title>{"yona's home"}</title>
       </Head>
       <div className="mx-auto max-w-sm">
         <Top />
