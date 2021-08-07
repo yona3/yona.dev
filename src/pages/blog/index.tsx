@@ -15,6 +15,13 @@ const Blog: NextPage<Props> = ({ data }) => {
     <Layout>
       <Head>
         <title>Blog</title>
+        <meta name="description" content="yonaのブログです。" />
+        <meta property="og:title" content="Blog" />
+        <meta property="og:description" content="yonaのブログです。" />
+        <meta property="og:url" content="https://yona.dev/blog" />
+        <meta name="twitter:site" content="https://yona.dev/blog" />
+        <meta name="twitter:title" content="Blog" />
+        <meta name="twitter:description" content="yonaのブログです。" />
       </Head>
       <div className="pt-10 sm:pt-16 text-center">
         <div className="mx-auto max-w-2xl text-center">
