@@ -1,0 +1,50 @@
+.article h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 36px 0 10px;
+}
+
+.article h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 36px 0 10px;
+}
+
+.article h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 30px 0 10px;
+}
+
+.article h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 24px 0 10px;
+}
+
+.article p {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.article p code {
+  margin: 0 2px;
+  padding: 2px 6px;
+  background: rgb(242, 242, 242);
+  border-radius: 4px;
+}
+
+.article pre {
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.article pre code {
+  border-radius: 4px;
+}
+
+.article a {
+  margin: 6px 0;
+  color: #2196f3;
+  word-wrap: break-word;
+}
