@@ -17,7 +17,7 @@ export const Top: VFC = () => {
         <h2 className="mt-2 text-2xl font-semibold">yona</h2>
         <p className="mt-4">Web開発が好きな大学２年生です</p>
         <div className="flex justify-center mx-auto mt-6">
-          <ul className="flex space-x-4">
+          <ul className="flex items-center space-x-5">
             <li className="flex items-center cursor-pointer">
               <Link href="/blog">
                 <Image
@@ -35,10 +35,10 @@ export const Top: VFC = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src="/github.svg" width={31} height={31} />
+                <Image src="/github.svg" width={32} height={32} />
               </a>
             </li>
-            <li className="cursor-pointer">
+            <li className="mt-1 cursor-pointer">
               <a
                 className="block w-8 h-8 hover:opacity-70 transition"
                 href="https://twitter.com/js_yona"
