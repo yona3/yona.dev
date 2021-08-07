@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 import { About } from "../components/About";
-import { BlogLink } from "../components/BlogLink";
 import { Products } from "../components/Products";
 import { Layout } from "../components/shared/Layout";
 import { Top } from "../components/Top";
@@ -17,7 +16,6 @@ const Index: NextPage = () => {
         <Top />
         <About />
         <Products />
-        <BlogLink />
       </div>
     </Layout>
   );
