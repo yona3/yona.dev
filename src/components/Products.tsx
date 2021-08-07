@@ -1,5 +1,3 @@
-import { forwardRef } from "react";
-
 import { ProductItem } from "./ProductItem";
 import { SectionLayout } from "./shared/SectionLayout";
 
@@ -34,9 +32,9 @@ const ITEMS: {
 ];
 
 // eslint-disable-next-line react/display-name
-export const Products = forwardRef<HTMLDivElement>((_, ref) => {
+export const Products = () => {
   return (
-    <div ref={ref}>
+    <div>
       <SectionLayout>
         <div>
           <h2 className="text-2xl font-semibold">Products</h2>
@@ -57,4 +55,4 @@ export const Products = forwardRef<HTMLDivElement>((_, ref) => {
       </SectionLayout>
     </div>
   );
-});
+};

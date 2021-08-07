@@ -1,11 +1,9 @@
-import { forwardRef } from "react";
-
 import { SectionLayout } from "./shared/SectionLayout";
 
 // eslint-disable-next-line react/display-name
-export const About = forwardRef<HTMLDivElement>((_, ref) => {
+export const About = () => {
   return (
-    <div ref={ref}>
+    <div>
       <SectionLayout>
         <div>
           <h2 className="text-2xl font-semibold">About</h2>
@@ -23,4 +21,4 @@ export const About = forwardRef<HTMLDivElement>((_, ref) => {
       </SectionLayout>
     </div>
   );
-});
+};
