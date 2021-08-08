@@ -5,6 +5,7 @@ import Head from "next/head";
 
 import { Layout } from "../../components/shared/Layout";
 import { formatDate } from "../../lib/day";
+import { generateOGPUrl } from "../../lib/generageOGP";
 import { microcms } from "../../lib/microcms";
 import styles from "../../style/[articleId].module.css";
 import type { Content } from "../../types";
@@ -14,12 +15,15 @@ type Props = {
 };
 
 const ArticleDetail: NextPage<Props> = ({ article }) => {
+  const OGPUrl = generateOGPUrl(article.title);
+
   return (
     <Layout>
       <Head>
         <title>{article.title}</title>
         <meta name="description" content="yonaのブログ記事です。" />
         <meta property="og:title" content={article.title} />
+        <meta property="og:image" content={OGPUrl} />
         <meta property="og:description" content="yonaのブログ記事です。" />
         <meta
           property="og:url"
@@ -29,9 +33,9 @@ const ArticleDetail: NextPage<Props> = ({ article }) => {
           name="twitter:site"
           content={`https://yona.dev/blog/${article.id}`}
         />
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={article.title} />
-        <meta name="twitter:image" content="https://yona.dev/icon.jpeg" />
+        <meta name="twitter:image" content={OGPUrl} />
         <meta name="twitter:description" content="yonaのブログ記事です。" />
       </Head>
       <div className="py-10 sm:py-24">
