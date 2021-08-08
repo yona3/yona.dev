@@ -52,7 +52,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
             </div>
             {/* tags */}
-            <ul className="flex mt-5 space-x-3">
+            <ul className="flex mt-5 space-x-2">
               {article.tags.map((tag) => (
                 <li
                   key={tag.id}
@@ -92,7 +92,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 {prev && (
                   <Link href={`/blog/${prev.id}`}>
                     <div className="flex justify-center sm:justify-start">
-                      <span className="mr-2">←</span>
+                      <span className="mr-2 font-bold">←</span>
                       <p className="text-center sm:text-left">{prev.title}</p>
                     </div>
                   </Link>
@@ -107,7 +107,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                   <Link href={`/blog/${next.id}`}>
                     <div className="flex justify-center sm:justify-end text-right">
                       <p className="text-center sm:text-left">{next.title}</p>
-                      <span className="ml-2">→</span>
+                      <span className="ml-2 font-bold">→</span>
                     </div>
                   </Link>
                 )}
