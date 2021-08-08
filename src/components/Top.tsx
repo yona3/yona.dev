@@ -41,7 +41,7 @@ export const Top: VFC = () => {
             <li className="mt-1 cursor-pointer">
               <a
                 className="block w-8 h-8 hover:opacity-70 transition"
-                href="https://twitter.com/js_yona"
+                href="https://twitter.com/yonah6g"
                 target="_blank"
                 rel="noreferrer"
               >
