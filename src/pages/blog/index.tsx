@@ -1,5 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 
 import { Article } from "../../components/shared/Article";
 import { Layout } from "../../components/shared/Layout";
@@ -32,6 +33,11 @@ const Blog: NextPage<Props> = ({ data }) => {
                 <Article article={article} />
               </div>
             ))}
+          </div>
+          <div className="mt-16">
+            <Link href="/">
+              <p className="text-base underline cursor-pointer">Home</p>
+            </Link>
           </div>
         </div>
       </div>
