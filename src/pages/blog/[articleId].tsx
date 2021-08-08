@@ -43,7 +43,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
       </Head>
 
       <div className="py-10 sm:py-24">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
             <h1 className="text-3xl font-bold">{article.title}</h1>
