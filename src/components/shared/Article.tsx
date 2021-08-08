@@ -14,7 +14,7 @@ export const Article: VFC<Props> = ({ article }) => {
       <Link href={`/blog/${article.id}`}>
         <h1
           className="
-            text-xl transition
+            text-lg sm:text-xl transition
             hover:opacity-70 cursor-pointer
           "
         >

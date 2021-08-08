@@ -24,17 +24,17 @@ const Blog: NextPage<Props> = ({ data }) => {
         <meta name="twitter:title" content="Blog" />
         <meta name="twitter:description" content="yonaのブログです。" />
       </Head>
-      <div className="pt-10 sm:pt-16 text-center">
+      <div className="pt-12 sm:pt-16 text-center">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-xl sm:text-2xl font-semibold">Blog</h2>
-          <div className="mt-8 sm:mt-14 space-y-10">
+          <div className="mt-12 sm:mt-16 space-y-8 sm:space-y-10">
             {data.map((article) => (
               <div key={article.id}>
                 <Article article={article} />
               </div>
             ))}
           </div>
-          <div className="mt-16">
+          <div className="mt-12 sm:mt-16">
             <Link href="/">
               <p className="text-base underline cursor-pointer">Home</p>
             </Link>
