@@ -57,8 +57,8 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 <li
                   key={tag.id}
                   className="
-                      py-1 px-2 text-sm border border-gray-300
-                      rounded cursor-pointer
+                      py-1 px-3 text-sm border border-gray-400
+                      rounded-full cursor-pointer
                     "
                 >
                   {tag.name}
