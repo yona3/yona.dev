@@ -75,30 +75,38 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
             }}
           />
           {/* footer */}
-          <div className="mt-16 sm:mt-20">
+          <div className="mt-20">
             {/* prev, next */}
             <div
               className="
                 flex flex-col sm:flex-row 
-                space-y-8 sm:space-y-0
+                space-y-5 sm:space-y-0
                 sm:justify-between text-center
               "
             >
-              <div className="w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer">
+              <div
+                className={`${
+                  !prev && "sm:block hidden"
+                } w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer`}
+              >
                 {prev && (
                   <Link href={`/blog/${prev.id}`}>
                     <div className="flex justify-center sm:justify-start">
                       <span className="mr-2">←</span>
-                      <p className="text-left">{prev.title}</p>
+                      <p className="text-center sm:text-left">{prev.title}</p>
                     </div>
                   </Link>
                 )}
               </div>
-              <div className="w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer">
+              <div
+                className={`${
+                  !next && "sm:block hidden"
+                } w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer`}
+              >
                 {next && (
                   <Link href={`/blog/${next.id}`}>
                     <div className="flex justify-center sm:justify-end text-right">
-                      <p className="text-left">{next.title}</p>
+                      <p className="text-center sm:text-left">{next.title}</p>
                       <span className="ml-2">→</span>
                     </div>
                   </Link>
@@ -106,7 +114,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               </div>
             </div>
             {/* article list */}
-            <div className="mt-14 sm:mt-8 text-center">
+            <div className="mt-6 sm:mt-8 text-center">
               <Link href="/blog">
                 <p className="inline-block underline hover:opacity-80 transition cursor-pointer">
                   Top
