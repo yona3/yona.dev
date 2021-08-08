@@ -1,7 +1,7 @@
 import base64url from "base64url";
 
 const imageUrl =
-  "https://images.microcms-assets.io/assets/3c1fa25360b2455ab94fa433bfcfb496/56a85f7772c341aeae55a8558c489b0f/%40js_yona.png";
+  "https://images.microcms-assets.io/assets/3c1fa25360b2455ab94fa433bfcfb496/34083129afa54933b48ec5d774a4750c/%40js_yona%20(1).png";
 
 export const generateOGPUrl = (title: string) => {
   const base64title = base64url(title);
