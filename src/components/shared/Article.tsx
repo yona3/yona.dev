@@ -22,7 +22,7 @@ export const Article: VFC<Props> = ({ article }) => {
         </h1>
       </Link>
       <p className="mt-2 text-sm text-gray-500">
-        {formatDate(article.createdAt)}
+        {formatDate(article.publishedAt)}
       </p>
     </article>
   );
