@@ -1,23 +1,17 @@
-.article h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 36px 0 10px;
-}
-
 .article h2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   margin: 36px 0 10px;
 }
 
 .article h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   margin: 30px 0 10px;
 }
 
 .article h4 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   margin: 24px 0 10px;
 }

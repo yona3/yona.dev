@@ -50,7 +50,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
-            <h1 className="text-3xl font-bold">{title}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">{title}</h1>
             <div className="flex mt-5 text-sm text-gray-500">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
