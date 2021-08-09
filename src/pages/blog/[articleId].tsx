@@ -3,6 +3,14 @@ import hljs from "highlight.js";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import {
+  HatenaIcon,
+  HatenaShareButton,
+  LineIcon,
+  LineShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+} from "react-share";
 
 import { Layout } from "../../components/shared/Layout";
 import { formatDate } from "../../lib/day";
@@ -18,26 +26,22 @@ type Props = {
 };
 
 const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
-  const OGPUrl = generateOGPUrl(article.title);
+  const title = article.title;
+  const url = `https://yona.dev/blog/${article.id}`;
+  const OGPUrl = generateOGPUrl(title);
 
   return (
     <Layout>
       <Head>
-        <title>{article.title}</title>
+        <title>{title}</title>
         <meta name="description" content="yonaのブログ記事です。" />
-        <meta property="og:title" content={article.title} />
+        <meta property="og:title" content={title} />
         <meta property="og:image" content={OGPUrl} />
         <meta property="og:description" content="yonaのブログ記事です。" />
-        <meta
-          property="og:url"
-          content={`https://yona.dev/blog/${article.id}`}
-        />
-        <meta
-          name="twitter:site"
-          content={`https://yona.dev/blog/${article.id}`}
-        />
+        <meta property="og:url" content={url} />
+        <meta name="twitter:site" content={url} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:title" content={title} />
         <meta name="twitter:image" content={OGPUrl} />
         <meta name="twitter:description" content="yonaのブログ記事です。" />
       </Head>
@@ -46,7 +50,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
-            <h1 className="text-3xl font-bold">{article.title}</h1>
+            <h1 className="text-3xl font-bold">{title}</h1>
             <div className="flex mt-5 text-sm text-gray-500">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
@@ -74,8 +78,24 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               __html: `${article.body}`,
             }}
           />
+          {/* share */}
+          <div className="mt-12 space-x-2">
+            <LineShareButton className="focus:outline-none" url={url}>
+              <LineIcon size={36} round />
+            </LineShareButton>
+            <TwitterShareButton className="focus:outline-none" url={url}>
+              <TwitterIcon size={36} round />
+            </TwitterShareButton>
+            <HatenaShareButton
+              className="focus:outline-none"
+              url={url}
+              title={title}
+            >
+              <HatenaIcon size={36} round />
+            </HatenaShareButton>
+          </div>
           {/* footer */}
-          <div className="mt-20">
+          <div className="mt-10">
             {/* prev, next */}
             <div
               className="
@@ -116,7 +136,12 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
             {/* article list */}
             <div className="mt-6 sm:mt-8 text-center">
               <Link href="/blog">
-                <p className="inline-block underline hover:opacity-80 transition cursor-pointer">
+                <p
+                  className="
+                    inline-block underline hover:opacity-80 
+                    transition cursor-pointer
+                  "
+                >
                   Top
                 </p>
               </Link>
