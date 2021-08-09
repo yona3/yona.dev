@@ -32,6 +32,7 @@
   padding: 2px 6px;
   background: rgb(242, 242, 242);
   border-radius: 4px;
+  word-wrap: break-word;
 }
 
 .article pre {
