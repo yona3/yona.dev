@@ -185,7 +185,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     },
   });
 
-  console.log(prev);
   // syntax highlighting
   const $ = cheerio.load(data.body);
   $("pre code").each((_, elm) => {
