@@ -61,9 +61,9 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 <li
                   key={tag.id}
                   className="
-                      py-1 px-3 text-sm border border-gray-400
-                      rounded-full cursor-pointer
-                    "
+                py-1 px-3 text-sm border border-gray-400
+                rounded-full cursor-pointer
+                "
                 >
                   {tag.name}
                 </li>
@@ -99,9 +99,9 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
             {/* prev, next */}
             <div
               className="
-                flex flex-col sm:flex-row 
-                space-y-5 sm:space-y-0
-                sm:justify-between text-center
+              flex flex-col sm:flex-row 
+              space-y-5 sm:space-y-0
+              sm:justify-between text-center
               "
             >
               <div
@@ -140,7 +140,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                   className="
                     inline-block underline hover:opacity-80 
                     transition cursor-pointer
-                  "
+                    "
                 >
                   Top
                 </p>
@@ -170,7 +170,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   });
   const prev = await microcms.get<{ contents: Content[] }>({
     endpoint: "blog",
-    queries: { limit: 1, filters: `publishedAt[less_than]${data.publishedAt}` },
+    queries: {
+      limit: 1,
+      filters: `publishedAt[less_than]${data.publishedAt}`,
+      orders: "-publishedAt",
+    },
   });
   const next = await microcms.get<{ contents: Content[] }>({
     endpoint: "blog",
@@ -181,6 +185,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     },
   });
 
+  console.log(prev);
   // syntax highlighting
   const $ = cheerio.load(data.body);
   $("pre code").each((_, elm) => {
