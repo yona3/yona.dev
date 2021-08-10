@@ -29,6 +29,13 @@ const ITEMS: {
     tech: "HTML, CSS, JavaScript",
     url: "https://cat-gacha.netlify.app",
   },
+  {
+    image: "/blog.png",
+    name: "Blog",
+    description: "個人ブログ",
+    tech: "Next.js, TypeScript, microCMS",
+    url: "/blog",
+  },
 ];
 
 // eslint-disable-next-line react/display-name
