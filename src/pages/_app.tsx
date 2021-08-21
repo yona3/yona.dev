@@ -1,7 +1,7 @@
 import "tailwindcss/tailwind.css";
 import "highlight.js/styles/androidstudio.css";
 
-import type { AppProps } from "next/dist/next-server/lib/router/router";
+import type { AppProps } from "next/dist/shared/lib/router/router";
 import Head from "next/head";
 
 import { usePageView } from "../hooks/usePageView";
