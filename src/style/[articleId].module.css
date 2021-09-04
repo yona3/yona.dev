@@ -61,3 +61,8 @@
   border: 1px solid #ededed;
   border-radius: 4px;
 }
+
+.article ul {
+  list-style: disc;
+  padding-left: 32px;
+}
