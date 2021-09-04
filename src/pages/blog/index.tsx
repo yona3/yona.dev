@@ -22,8 +22,12 @@ const Blog: NextPage<Props> = ({ data }) => {
         <meta name="twitter:site" content="https://yona.dev/blog" />
         <meta name="twitter:title" content="Blog" />
         <meta name="twitter:description" content="yonaのブログです。" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
-      <div className="pt-12 sm:pt-16 text-center">
+      <div className="pt-12 sm:pt-16 font-noto text-center">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-xl sm:text-2xl font-semibold">Blog</h2>
           <div className="mt-12 sm:mt-16 space-y-8 sm:space-y-10">

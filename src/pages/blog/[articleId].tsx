@@ -44,9 +44,13 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:image" content={OGPUrl} />
         <meta name="twitter:description" content="yonaのブログ記事です。" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
 
-      <div className="py-10 sm:py-24">
+      <div className="py-10 sm:py-24 font-noto">
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
