@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface Window {
   gtag(type: "config", googleAnalyticsId: string, { page_path: string });
   gtag(

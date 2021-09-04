@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { VFC } from "react";
 
-interface Props {
+type Props = {
   image: string;
   name: string;
   description: string;
   tech: string;
   url: string;
-}
+};
 
 export const ProductItem: VFC<Props> = ({
   image,

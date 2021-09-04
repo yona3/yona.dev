@@ -3,9 +3,9 @@ import type { ReactNode, VFC } from "react";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
-interface Props {
+type Props = {
   children: ReactNode;
-}
+};
 
 export const Layout: VFC<Props> = ({ children }) => {
   return (
