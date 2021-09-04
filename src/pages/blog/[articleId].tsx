@@ -133,19 +133,6 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 )}
               </div>
             </div>
-            {/* article list */}
-            <div className="mt-6 sm:mt-8 text-center">
-              <Link href="/blog">
-                <p
-                  className="
-                    inline-block underline hover:opacity-80 
-                    transition cursor-pointer
-                    "
-                >
-                  Top
-                </p>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
