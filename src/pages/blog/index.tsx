@@ -14,7 +14,7 @@ const Blog: NextPage<Props> = ({ data }) => {
   return (
     <Layout>
       <Head>
-        <title>Blog</title>
+        <title>{"yona's blog"}</title>
         <meta name="description" content="yonaのブログです。" />
         <meta property="og:title" content="Blog" />
         <meta property="og:description" content="yonaのブログです。" />
