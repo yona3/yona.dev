@@ -5,5 +5,5 @@ type Props = {
 };
 
 export const SectionLayout: VFC<Props> = ({ children }) => {
-  return <section className="py-16 text-center">{children}</section>;
+  return <section className="py-12 text-center">{children}</section>;
 };

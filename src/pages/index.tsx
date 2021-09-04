@@ -12,7 +12,7 @@ const Index: NextPage = () => {
       <Head>
         <title>{"yona's home"}</title>
       </Head>
-      <div className="mx-auto max-w-sm">
+      <div>
         <Top />
         <About />
         <Products />

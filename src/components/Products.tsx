@@ -9,6 +9,13 @@ const ITEMS: {
   url: string;
 }[] = [
   {
+    image: "/blog.png",
+    name: "Blog",
+    description: "個人ブログ",
+    tech: "Next.js, TypeScript, microCMS",
+    url: "/blog",
+  },
+  {
     image: "/pigu_icon.svg",
     name: "pigu",
     description: "琉大生向け情報共有サイト",
@@ -29,13 +36,6 @@ const ITEMS: {
     tech: "HTML, CSS, JavaScript",
     url: "https://cat-gacha.netlify.app",
   },
-  {
-    image: "/blog.png",
-    name: "Blog",
-    description: "個人ブログ",
-    tech: "Next.js, TypeScript, microCMS",
-    url: "/blog",
-  },
 ];
 
 // eslint-disable-next-line react/display-name
@@ -43,11 +43,13 @@ export const Products = () => {
   return (
     <div>
       <SectionLayout>
-        <div>
-          <h2 className="text-2xl font-semibold">Products</h2>
-          <div>
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-left">
+            Products
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-6 lg:gap-y-12 pt-14">
             {ITEMS.map(({ name, image, description, tech, url }) => (
-              <div key={name} className="mt-16">
+              <div key={name} className="w-full sm:max-w-md">
                 <ProductItem
                   name={name}
                   image={image}
