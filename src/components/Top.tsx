@@ -1,7 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { VFC } from "react";
 
+import { GithubIcon } from "./icons/GithubIcon";
+import { TwitterIcon } from "./icons/TwitterIcon";
 import { SectionLayout } from "./shared/SectionLayout";
 
 export const Top: VFC = () => {
@@ -16,36 +17,34 @@ export const Top: VFC = () => {
         />
         <h2 className="mt-2 text-2xl font-semibold">yona</h2>
         <p className="mt-4">Web開発が好きな大学２年生です</p>
+
         <div className="flex justify-center mx-auto mt-6">
-          <ul className="flex items-center space-x-5">
-            <li className="flex items-center cursor-pointer">
-              <Link href="/blog">
-                <Image
-                  className="hover:opacity-70 transition"
-                  src="/blog.svg"
-                  width={26}
-                  height={26}
-                />
-              </Link>
-            </li>
+          <ul className="flex items-center space-x-4">
             <li className="cursor-pointer">
               <a
-                className="block ml-1 w-8 h-8 hover:opacity-70 transition"
+                className="block w-8 h-8 hover:opacity-60 transition"
                 href="https://github.com/yona3"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src="/github.svg" width={32} height={32} />
+                <GithubIcon
+                  width="30"
+                  height="30"
+                  className="flex justify-center items-center"
+                />
               </a>
             </li>
             <li className="mt-1 cursor-pointer">
               <a
-                className="block w-8 h-8 hover:opacity-70 transition"
+                className="block w-8 h-8 hover:opacity-60 transition"
                 href="https://twitter.com/yonah6g"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src="/twitter.svg" width={30} height={30} />
+                <TwitterIcon
+                  width="28"
+                  className="flex justify-center items-center"
+                />
               </a>
             </li>
           </ul>
