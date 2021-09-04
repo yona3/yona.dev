@@ -3,7 +3,7 @@ import { SectionLayout } from "./shared/SectionLayout";
 // eslint-disable-next-line react/display-name
 export const About = () => {
   return (
-    <div>
+    <div className="pb-4 md:pb-8">
       <SectionLayout>
         <div className="mx-auto max-w-3xl text-left">
           <h2 className="text-2xl sm:text-3xl font-semibold">About</h2>

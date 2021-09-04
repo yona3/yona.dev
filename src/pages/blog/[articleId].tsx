@@ -50,7 +50,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         ></link>
       </Head>
 
-      <div className="py-10 sm:py-24 font-noto">
+      <div className="pt-10 sm:pt-24 pb-8 sm:pb-12 font-noto">
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
