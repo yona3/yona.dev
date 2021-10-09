@@ -12,6 +12,7 @@ import {
   TwitterShareButton,
 } from "react-share";
 
+import { Author } from "../../components/shared/Author";
 import { Layout } from "../../components/shared/Layout";
 import { formatDate } from "../../lib/day";
 import { generateOGPUrl } from "../../lib/generageOGP";
@@ -82,6 +83,10 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               __html: `${article.body}`,
             }}
           />
+          {/* author */}
+          <div className="mx-auto mt-8 max-w-2xl">
+            <Author />
+          </div>
           {/* share */}
           <div className="mt-12 space-x-2">
             <LineShareButton className="focus:outline-none" url={url}>
