@@ -16,7 +16,7 @@ export const Top: VFC = () => {
           height={125}
         />
         <h2 className="mt-2 text-2xl font-semibold">yona</h2>
-        <p className="mt-4">Web開発してる大学生です</p>
+        <p className="mt-4">こんにちは！</p>
 
         <div className="flex justify-center mx-auto mt-6">
           <ul className="flex items-center space-x-4">

@@ -30,6 +30,13 @@ const ITEMS: {
     url: "https://pigu-opinion-box.vercel.app",
   },
   {
+    image: "/syllabus_link.png",
+    name: "syllabus link",
+    description: "シラバスのリンクを生成するChrome拡張機能",
+    tech: "JavaScript",
+    url: "https://chrome.google.com/webstore/detail/syllabus-link/cbkclpogeoklpidegnmlfkppfmgehcgd",
+  },
+  {
     image: "/neko-gacha_icon.svg",
     name: "ねこガチャ",
     description: "ランダムで猫の画像を表示するサイト",
