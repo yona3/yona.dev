@@ -22,15 +22,15 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="https://twemoji.maxcdn.com/v/13.1.0/72x72/1f994.png"
         />
         <meta name="description" content="yonaのホームページです。" />
-        <meta property="og:title" content="yona's home" />
+        <meta property="og:title" content="yona.dev" />
         <meta property="og:image" content="https://yona.dev/icon.jpeg" />
         <meta property="og:description" content="yonaのホームページです。" />
         <meta property="og:url" content="https://yona.dev" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="yona's home" />
+        <meta property="og:site_name" content="yona.dev" />
         <meta name="twitter:site" content="https://yona.dev" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="yona's home" />
+        <meta name="twitter:title" content="yona.dev" />
         <meta name="twitter:image" content="https://yona.dev/icon.jpeg" />
         <meta name="twitter:description" content="yonaのホームページです。" />
       </Head>

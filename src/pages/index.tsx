@@ -10,7 +10,7 @@ const Index: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>{"yona's home"}</title>
+        <title>{"yona.dev"}</title>
       </Head>
       <div>
         <Top />
