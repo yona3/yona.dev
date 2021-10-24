@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import { Article } from "../../components/shared/Article";
 import { Layout } from "../../components/shared/Layout";
+import { MyLinks } from "../../components/shared/MyLinks";
 import { microcms } from "../../lib/microcms";
 import type { Content } from "../../types";
 
@@ -30,12 +31,17 @@ const Blog: NextPage<Props> = ({ data }) => {
       <div className="pt-12 sm:pt-16 font-noto text-center">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-xl sm:text-2xl font-semibold">Blog</h2>
+
           <div className="mt-12 sm:mt-16 space-y-8 sm:space-y-10">
             {data.map((article) => (
               <div key={article.id}>
                 <Article article={article} />
               </div>
             ))}
+          </div>
+
+          <div className="mt-12">
+            <MyLinks />
           </div>
         </div>
       </div>
