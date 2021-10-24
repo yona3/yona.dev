@@ -24,6 +24,16 @@ export const MyLinks = () => {
       </li>
       <span>・</span>
       <li className="hover:text-gray-400 underline transition">
+        <a
+          href="https://zenn.dev/yonajs"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Zenn
+        </a>
+      </li>
+      <span>・</span>
+      <li className="hover:text-gray-400 underline transition">
         <Link href="/">
           <a>yona.dev</a>
         </Link>

@@ -5,7 +5,7 @@ import { MyLinks } from "./MyLinks";
 
 export const Author: VFC = () => {
   return (
-    <div className="sm:flex p-6 pb-8 rounded-md border shadow-sm">
+    <div className="sm:flex p-4 sm:p-6 pb-8 rounded-md border shadow-sm">
       {/* left */}
       <div className="m-0 sm:mr-6 text-center">
         <Image
