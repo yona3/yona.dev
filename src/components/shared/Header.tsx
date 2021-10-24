@@ -20,7 +20,7 @@ export const Header: VFC = () => {
       >
         <Link href={pathname === "/" ? "/" : "/blog"}>
           <h1 className="font-mono text-xl font-semibold cursor-pointer">
-            yona.{pathname === "/blog" ? "blog" : "dev"}
+            yona.{pathname === "/" ? "dev" : "blog"}
           </h1>
         </Link>
       </div>
