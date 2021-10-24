@@ -19,8 +19,9 @@ export const ProductItem: VFC<Props> = ({
   const contents = (
     <div
       className="
-        border border-gray-200 shadow-md transform sm:hover:scale-105
-        sm:hover:shadow-xl h-72 sm:h-80 rounded-2xl 
+        sm:hover:scale-[1.05]
+        border border-gray-200 shadow-md transform
+        sm:hover:shadow-lg h-72 sm:h-80 rounded-2xl 
         transition duration-500 cursor-pointer
       "
     >
