@@ -21,7 +21,7 @@ export const Author: VFC = () => {
           <p className="text-lg sm:text-xl font-semibold text-center sm:text-left">
             yona
           </p>
-          <p className="mt-3 sm:mt-2 text-sm">
+          <p className="mt-3 sm:mt-2 text-sm leading-relaxed">
             琉球大学の理学部に所属している大学2年生です。
             趣味と仕事でWebアプリ開発やシステム開発をしています。
           </p>
