@@ -16,6 +16,13 @@ const ITEMS: {
     url: "/blog",
   },
   {
+    image: "/typescanner.png",
+    name: "typescanner",
+    description: "型ガードのためのTypeScriptライブラリ",
+    tech: "TypeScript",
+    url: "https://github.com/yona3/typescanner",
+  },
+  {
     image: "/pigu_icon.svg",
     name: "pigu",
     description: "琉大生向け情報共有サイト",
