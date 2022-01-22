@@ -10,13 +10,13 @@ export const About = () => {
           <div className="mt-8 text-base leading-relaxed">
             <p className="text-base sm:text-lg leading-relaxed">
               私は琉球大学の理学部に所属している大学2年生です。
-              趣味と仕事でWebアプリ開発やシステム開発をしています。
-              現在は個人開発のサービスを開発・運営や、React, Next.js,
-              TypeScript, Go言語, Firebaseなどを使用した開発をしています。
+              仕事と趣味で主にWeb開発をしています。
+              現在は個人開発のサービスを開発・運営や、 React, TypeScript, Ruby,
+              Go, Firebaseなどを用いた開発をしています。
             </p>
             <br />
             <p className="text-base sm:text-lg leading-relaxed">
-              生まれも育ちも沖縄県で、趣味はプログラミング、ギター、バスケットボールです。こんぶ、しいたけ、レバーが苦手です。
+              生まれも育ちも沖縄県で、趣味は個人開発、ギター、バスケットボールです。こんぶ、しいたけ、レバーが苦手です。
             </p>
           </div>
         </div>
