@@ -28,11 +28,11 @@ const Blog: NextPage<Props> = ({ data }) => {
           rel="stylesheet"
         ></link>
       </Head>
-      <div className="pt-12 sm:pt-16 font-noto text-center">
+      <div className="pt-12 font-noto text-center sm:pt-16">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-xl sm:text-2xl font-semibold">Blog</h2>
+          <h2 className="text-xl font-semibold sm:text-2xl">Blog</h2>
 
-          <div className="mt-12 sm:mt-16 space-y-8 sm:space-y-10">
+          <div className="mt-12 space-y-8 sm:mt-16 sm:space-y-10">
             {data.map((article) => (
               <div key={article.id}>
                 <Article article={article} />

@@ -51,11 +51,11 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         ></link>
       </Head>
 
-      <div className="pt-10 sm:pt-24 pb-8 sm:pb-12 font-noto">
+      <div className="pt-10 pb-8 font-noto sm:pt-24 sm:pb-12">
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
-            <h1 className="text-2xl sm:text-3xl font-bold">{title}</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
             <div className="flex mt-5 text-sm text-gray-500">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
@@ -66,8 +66,8 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 <li
                   key={tag.id}
                   className="
-                py-1 px-3 text-sm border border-gray-400
-                rounded-full cursor-pointer
+                py-1 px-3 text-sm rounded-full border
+                border-gray-400 cursor-pointer
                 "
                 >
                   {tag.name}
@@ -108,9 +108,9 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
             {/* prev, next */}
             <div
               className="
-              flex flex-col sm:flex-row 
-              space-y-5 sm:space-y-0
-              sm:justify-between text-center
+              flex flex-col space-y-5 
+              text-center sm:flex-row
+              sm:justify-between sm:space-y-0
               "
             >
               <div
@@ -134,7 +134,7 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               >
                 {next && (
                   <Link href={`/blog/${next.id}`}>
-                    <div className="flex justify-center sm:justify-end text-right">
+                    <div className="flex justify-center text-right sm:justify-end">
                       <p className="text-center sm:text-left">{next.title}</p>
                       <span className="ml-2 font-bold">→</span>
                     </div>

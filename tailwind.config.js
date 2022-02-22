@@ -8,7 +8,7 @@ module.exports = {
       fontFamily: {
         noto: ["Noto Sans JP", "sans-serif"],
       },
-    }
+    },
   },
   plugins: [],
 };

@@ -8,7 +8,7 @@ export const About = () => {
     <div className="pb-4 md:pb-8">
       <SectionLayout>
         <div className="mx-auto max-w-3xl text-left">
-          <h2 className="text-2xl sm:text-3xl font-semibold">About</h2>
+          <h2 className="text-2xl font-semibold sm:text-3xl">About</h2>
           <div className="mt-8 text-base sm:text-lg">
             <p className="leading-relaxed">
               私は琉球大学の理学部に所属している大学生です。 現在{universityAge}
@@ -31,10 +31,6 @@ export const About = () => {
                 </li>
               ))}
             </ul>
-            {/* <p>
-              趣味はバスケットボールとギターです。
-              甘いものを食べながらコーヒーを飲むのが好きです。
-            </p> */}
           </div>
         </div>
       </SectionLayout>

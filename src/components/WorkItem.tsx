@@ -19,16 +19,16 @@ export const WorkItem: VFC<Props> = ({
   const contents = (
     <div
       className="
-        h-72 sm:h-80 rounded-md md:hover:opacity-60
-        border border-gray-200 shadow transform
-        transition duration-500 cursor-pointer
+        h-72 rounded-md border border-gray-200
+        shadow transition duration-500 cursor-pointer
+        sm:h-80 md:hover:opacity-60
       "
     >
       <div className="overflow-hidden relative z-0 h-2/3 bg-yellow-50 rounded-t-md border-b">
         <Image src={image} layout="fill" objectFit="cover" />
       </div>
-      <div className="py-2 px-3 sm:px-5 text-left">
-        <h3 className="text-base sm:text-lg font-semibold">{name}</h3>
+      <div className="py-2 px-3 text-left sm:px-5">
+        <h3 className="text-base font-semibold sm:text-lg">{name}</h3>
         <div className="flex flex-col justify-between mt-2">
           <p className="text-xs sm:text-sm">{description}</p>
           <p className="mt-2 text-xs text-gray-500">Tech: {tech}</p>
