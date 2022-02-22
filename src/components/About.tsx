@@ -1,3 +1,5 @@
+import { LIKE_LIST } from "../constants/like";
+import { age, universityAge } from "../utils/age";
 import { SectionLayout } from "./shared/SectionLayout";
 
 // eslint-disable-next-line react/display-name
@@ -7,17 +9,32 @@ export const About = () => {
       <SectionLayout>
         <div className="mx-auto max-w-3xl text-left">
           <h2 className="text-2xl sm:text-3xl font-semibold">About</h2>
-          <div className="mt-8 text-base leading-relaxed">
-            <p className="text-base sm:text-lg leading-relaxed">
-              私は琉球大学の理学部に所属している大学2年生です。
-              仕事と趣味で主にWeb開発をしています。
-              現在は個人開発のサービスを開発・運営や、 React, TypeScript, Ruby,
-              Go, Firebaseなどを用いた開発をしています。
+          <div className="mt-8 text-base sm:text-lg">
+            <p className="leading-relaxed">
+              私は琉球大学の理学部に所属している大学生です。 現在{universityAge}
+              年生の{age}
+              歳です。趣味はバスケットボールとギターと個人開発です。
             </p>
-            <br />
-            <p className="text-base sm:text-lg leading-relaxed">
-              生まれも育ちも沖縄県で、趣味は個人開発、ギター、バスケットボールです。こんぶ、しいたけ、レバーが苦手です。
-            </p>
+            <ul className="mt-4 space-y-4">
+              {LIKE_LIST.map(({ category, description, list }) => (
+                <li key={category} className="leading-7">
+                  <span className="mr-1">好きな{category}：</span>
+                  {list &&
+                    list.map((item, index) => (
+                      <span key={index}>
+                        {item}
+                        <span>、</span>
+                        {index === list.length - 1 && "etc."}
+                      </span>
+                    ))}
+                  {description && <span>{description}</span>}
+                </li>
+              ))}
+            </ul>
+            {/* <p>
+              趣味はバスケットボールとギターです。
+              甘いものを食べながらコーヒーを飲むのが好きです。
+            </p> */}
           </div>
         </div>
       </SectionLayout>
