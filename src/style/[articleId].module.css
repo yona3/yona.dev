@@ -47,13 +47,14 @@
 
 .article a {
   margin: 6px 0;
-  color: rgb(165, 165, 165);
+  color: rgb(150, 150, 150);
   text-decoration: underline;
   word-wrap: break-word;
 }
 
 .article a:hover {
-  text-decoration: underline;
+  transition: 0.2s;
+  opacity: 0.8;
 }
 
 .article blockquote {
