@@ -9,7 +9,7 @@ type Props = {
   url: string;
 };
 
-export const ProductItem: VFC<Props> = ({
+export const WorkItem: VFC<Props> = ({
   image,
   name,
   description,

@@ -2,9 +2,9 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 import { About } from "../components/About";
-import { Products } from "../components/Products";
 import { Layout } from "../components/shared/Layout";
 import { Top } from "../components/Top";
+import { Works } from "../components/Works";
 
 const Index: NextPage = () => {
   return (
@@ -15,7 +15,7 @@ const Index: NextPage = () => {
       <div>
         <Top />
         <About />
-        <Products />
+        <Works />
       </div>
     </Layout>
   );
