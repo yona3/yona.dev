@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { VFC } from "react";
 
+import { universityAge } from "../../utils/age";
 import { MyLinks } from "./MyLinks";
 
 export const Author: VFC = () => {
@@ -22,8 +23,7 @@ export const Author: VFC = () => {
             yona
           </p>
           <p className="mt-3 text-sm leading-relaxed sm:mt-2">
-            {/* TODO: update */}
-            琉球大学の理学部に所属している大学2年生です。
+            琉球大学の理学部に所属している大学{universityAge}年生です。
             趣味と仕事でWebアプリ開発やシステム開発をしています。
           </p>
         </div>
