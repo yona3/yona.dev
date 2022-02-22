@@ -21,7 +21,7 @@ export const Top: VFC = () => {
 
         <div className="flex justify-center mx-auto mt-6">
           <ul className="flex items-center space-x-4">
-            <li className="flex items-center mr-[3px] cursor-pointer">
+            <li className="flex items-center mr-[2px] cursor-pointer">
               <a
                 className="block hover:opacity-60 transition"
                 href="https://github.com/yona3"
@@ -29,9 +29,9 @@ export const Top: VFC = () => {
                 rel="noreferrer"
               >
                 <GithubIcon
-                  width="30"
-                  height="30"
-                  className="flex justify-center items-center"
+                  width="32"
+                  height="32"
+                  className="flex justify-center items-center fill-gray-100"
                 />
               </a>
             </li>
@@ -44,7 +44,7 @@ export const Top: VFC = () => {
               >
                 <TwitterIcon
                   width="30"
-                  className="flex justify-center items-center"
+                  className="flex justify-center items-center fill-gray-100"
                 />
               </a>
             </li>
@@ -57,7 +57,7 @@ export const Top: VFC = () => {
               >
                 <ZennIcon
                   width="25"
-                  className="flex justify-center items-center"
+                  className="flex justify-center items-center fill-gray-100"
                 />
               </a>
             </li>

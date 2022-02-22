@@ -5,7 +5,7 @@ import { MyLinks } from "./MyLinks";
 
 export const Author: VFC = () => {
   return (
-    <div className="p-4 pb-8 rounded-md border shadow-sm sm:flex sm:p-6">
+    <div className="p-4 pb-8 rounded-md border border-gray-400 shadow-sm sm:flex sm:p-6">
       {/* left */}
       <div className="m-0 text-center sm:mr-6">
         <Image
@@ -22,6 +22,7 @@ export const Author: VFC = () => {
             yona
           </p>
           <p className="mt-3 text-sm leading-relaxed sm:mt-2">
+            {/* TODO: update */}
             琉球大学の理学部に所属している大学2年生です。
             趣味と仕事でWebアプリ開発やシステム開発をしています。
           </p>

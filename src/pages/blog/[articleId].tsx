@@ -51,12 +51,12 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         ></link>
       </Head>
 
-      <div className="pt-10 pb-8 font-noto sm:pt-24 sm:pb-12">
+      <div className="pt-10 pb-8 font-noto text-gray-300 sm:pt-24 sm:pb-12">
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
             <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
-            <div className="flex mt-5 text-sm text-gray-500">
+            <div className="flex mt-5 text-sm text-gray-400">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
             </div>
@@ -66,9 +66,9 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
                 <li
                   key={tag.id}
                   className="
-                py-1 px-3 text-sm rounded-full border
-                border-gray-400 cursor-pointer
-                "
+                    py-1 px-3 text-sm rounded-full border
+                    border-gray-400 cursor-pointer
+                  "
                 >
                   {tag.name}
                 </li>

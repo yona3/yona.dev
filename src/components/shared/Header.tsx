@@ -8,8 +8,8 @@ export const Header: VFC = () => {
   return (
     <header
       className="
-        p-5 text-center bg-yellow-50
-        shadow sm:px-10
+        p-5 text-center bg-gray-900
+        border-b border-gray-800 shadow sm:px-10
       "
     >
       <div

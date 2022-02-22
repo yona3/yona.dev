@@ -9,7 +9,7 @@ export const About = () => {
       <SectionLayout>
         <div className="mx-auto max-w-3xl text-left">
           <h2 className="text-2xl font-semibold sm:text-3xl">About</h2>
-          <div className="mt-8 text-base sm:text-lg">
+          <div className="mt-8 text-sm sm:text-base">
             <p className="leading-relaxed">
               私は琉球大学の理学部に所属している大学生です。 現在{universityAge}
               年生の{age}

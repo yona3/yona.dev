@@ -15,14 +15,14 @@ export const Article: VFC<Props> = ({ article }) => {
         <h1
           className="
             text-lg font-medium 
-            text-gray-700 hover:opacity-70 transition
+            hover:opacity-70 transition
             cursor-pointer sm:text-xl
           "
         >
           {article.title}
         </h1>
       </Link>
-      <p className="mt-2 text-sm text-gray-500">
+      <p className="mt-2 text-sm text-gray-400">
         {formatDate(article.publishedAt)}
       </p>
     </article>

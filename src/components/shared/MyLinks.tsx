@@ -1,9 +1,11 @@
 import Link from "next/link";
 
+// TODO: refactor
+
 export const MyLinks = () => {
   return (
-    <ul className="flex space-x-1 text-sm text-gray-600">
-      <li className="hover:text-gray-400 underline transition">
+    <ul className="flex space-x-1 text-sm text-gray-400">
+      <li className="hover:text-gray-300 underline transition">
         <a
           href="http://github.com/yona3"
           target="_blank"
@@ -13,7 +15,7 @@ export const MyLinks = () => {
         </a>
       </li>
       <span>・</span>
-      <li className="hover:text-gray-400 underline transition">
+      <li className="hover:text-gray-300 underline transition">
         <a
           href="http://twitter.com/yonah6g"
           target="_blank"
@@ -23,7 +25,7 @@ export const MyLinks = () => {
         </a>
       </li>
       <span>・</span>
-      <li className="hover:text-gray-400 underline transition">
+      <li className="hover:text-gray-300 underline transition">
         <a
           href="https://zenn.dev/yonajs"
           target="_blank"
@@ -33,7 +35,7 @@ export const MyLinks = () => {
         </a>
       </li>
       <span>・</span>
-      <li className="hover:text-gray-400 underline transition">
+      <li className="hover:text-gray-300 underline transition">
         <Link href="/">
           <a>yona.dev</a>
         </Link>

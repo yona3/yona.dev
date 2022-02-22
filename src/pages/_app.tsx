@@ -1,7 +1,9 @@
 import "tailwindcss/tailwind.css";
-import "highlight.js/styles/androidstudio.css";
+import "highlight.js/styles/base16/atelier-sulphurpool.css";
 
-import type { AppProps } from "next/dist/shared/lib/router/router";
+// import "highlight.js/styles/vs2015.css";
+import type { AppProps } from "next/app";
+// import "highlight.js/styles/base16/solarized-dark.css";
 import Head from "next/head";
 
 import { usePageView } from "../hooks/usePageView";
