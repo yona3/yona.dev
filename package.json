@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint '**/*.@(js|ts|tsx)'",
+    "format": "prettier --write . && yarn lint -- --fix"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
