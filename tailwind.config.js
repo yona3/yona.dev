@@ -1,16 +1,14 @@
 module.exports = {
-  mode: "jit",
-  purge: ["./src/**/*.{ts,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
         noto: ["Noto Sans JP", "sans-serif"],
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 };

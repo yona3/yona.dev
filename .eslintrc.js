@@ -26,7 +26,10 @@ module.exports = {
     "prefer-arrow-callback": "error",
     "prefer-const": "error",
     "func-style": ["error", "expression"],
-    "no-restricted-imports": ["error", { paths: [{ name: "react", importNames: ["default"] }] }],
+    "no-restricted-imports": [
+      "error",
+      { paths: [{ name: "react", importNames: ["default"] }] },
+    ],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/display-name": "error",
@@ -49,7 +52,10 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      { prefer: "type-imports" },
+    ],
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "@typescript-eslint/naming-convention": [
       "error",
