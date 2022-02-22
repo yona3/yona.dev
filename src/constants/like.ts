@@ -4,7 +4,7 @@ type Like = {
   description?: string;
 };
 
-export const LIKE_LIST: Like[] = [
+export const LIKES: Like[] = [
   {
     category: "作品",
     list: [

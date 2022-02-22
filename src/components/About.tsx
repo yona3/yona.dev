@@ -1,4 +1,4 @@
-import { LIKE_LIST } from "../constants/like";
+import { LIKES } from "../constants/like";
 import { age, universityAge } from "../utils/age";
 import { SectionLayout } from "./shared/SectionLayout";
 
@@ -16,7 +16,7 @@ export const About = () => {
               歳です。趣味はバスケットボールとギターと個人開発です。
             </p>
             <ul className="mt-4 space-y-4">
-              {LIKE_LIST.map(({ category, description, list }) => (
+              {LIKES.map(({ category, description, list }) => (
                 <li key={category} className="leading-7">
                   <span className="mr-1">好きな{category}：</span>
                   {list &&
