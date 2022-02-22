@@ -19,13 +19,12 @@ export const WorkItem: VFC<Props> = ({
   const contents = (
     <div
       className="
-        sm:hover:scale-[1.05]
-        border border-gray-200 shadow-md transform
-        sm:hover:shadow-lg h-72 sm:h-80 rounded-2xl 
+        h-72 sm:h-80 rounded-md md:hover:opacity-60
+        border border-gray-200 shadow transform
         transition duration-500 cursor-pointer
       "
     >
-      <div className="overflow-hidden relative z-0 h-2/3 bg-yellow-50 rounded-t-2xl border-b">
+      <div className="overflow-hidden relative z-0 h-2/3 bg-yellow-50 rounded-t-md border-b">
         <Image src={image} layout="fill" objectFit="cover" />
       </div>
       <div className="py-2 px-3 sm:px-5 text-left">
