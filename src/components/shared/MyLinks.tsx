@@ -1,45 +1,32 @@
 import Link from "next/link";
+import { Fragment } from "react";
 
-// TODO: refactor
+import type { LinkItem } from "../../constants/links";
+import { MY_LINKS } from "../../constants/links";
+
+const LinkList = ({ type, href, name }: LinkItem) => (
+  <li className="hover:text-gray-300 underline transition">
+    {type === "a" ? (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {name}
+      </a>
+    ) : (
+      <Link href={href}>
+        <a>{name}</a>
+      </Link>
+    )}
+  </li>
+);
 
 export const MyLinks = () => {
   return (
     <ul className="flex space-x-1 text-sm text-gray-400">
-      <li className="hover:text-gray-300 underline transition">
-        <a
-          href="http://github.com/yona3"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-      </li>
-      <span>・</span>
-      <li className="hover:text-gray-300 underline transition">
-        <a
-          href="http://twitter.com/yonah6g"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Twitter
-        </a>
-      </li>
-      <span>・</span>
-      <li className="hover:text-gray-300 underline transition">
-        <a
-          href="https://zenn.dev/yonajs"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Zenn
-        </a>
-      </li>
-      <span>・</span>
-      <li className="hover:text-gray-300 underline transition">
-        <Link href="/">
-          <a>yona.dev</a>
-        </Link>
-      </li>
+      {MY_LINKS.map((link, index) => (
+        <Fragment key={link.name}>
+          <LinkList {...link} />
+          {index !== MY_LINKS.length - 1 && <span>・</span>}
+        </Fragment>
+      ))}
     </ul>
   );
 };
