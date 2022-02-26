@@ -8,20 +8,6 @@ type Work = {
 
 export const WORKS: Work[] = [
   {
-    image: "/blog.png",
-    name: "Blog",
-    description: "個人ブログ",
-    tech: "Next.js, TypeScript, microCMS",
-    url: "/blog",
-  },
-  {
-    image: "/typescanner.png",
-    name: "typescanner",
-    description: "型ガードのためのTypeScriptライブラリ",
-    tech: "TypeScript",
-    url: "https://github.com/yona3/typescanner",
-  },
-  {
     image: "/pigu_icon.svg",
     name: "pigu",
     description: "琉大生向け情報共有サイト",
@@ -36,11 +22,32 @@ export const WORKS: Work[] = [
     url: "https://pigu-opinion-box.vercel.app",
   },
   {
+    image: "/pigu-twitter.png",
+    name: "pigu twitter",
+    description: "piguのツイート管理システム",
+    tech: "React, TypeScript, Twitter API",
+    url: "https://github.com/yona3/pigu-twitter",
+  },
+  {
+    image: "/typescanner.png",
+    name: "typescanner",
+    description: "型ガードのためのTypeScriptライブラリ",
+    tech: "TypeScript",
+    url: "https://github.com/yona3/typescanner",
+  },
+  {
     image: "/syllabus_link.png",
     name: "syllabus link",
     description: "シラバスのリンクを生成するChrome拡張機能",
     tech: "JavaScript",
     url: "https://chrome.google.com/webstore/detail/syllabus-link/cbkclpogeoklpidegnmlfkppfmgehcgd",
+  },
+  {
+    image: "/blog.png",
+    name: "Blog",
+    description: "個人ブログ",
+    tech: "Next.js, TypeScript, microCMS",
+    url: "/blog",
   },
   {
     image: "/neko-gacha_icon.svg",
