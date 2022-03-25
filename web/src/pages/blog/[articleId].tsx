@@ -15,10 +15,10 @@ import {
 import { Author } from "../../components/shared/Author";
 import { Layout } from "../../components/shared/Layout";
 import { formatDate } from "../../lib/day";
-import { generateOGPUrl } from "../../lib/generageOGP";
 import { microcms } from "../../lib/microcms";
 import styles from "../../style/[articleId].module.css";
 import type { Content } from "../../types";
+import { generateOGPUrl } from "../../utils/generateOGP";
 
 type Props = {
   article: Content;
