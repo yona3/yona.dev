@@ -1,8 +1,8 @@
-import type { VFC } from "react";
+import type { FC } from "react";
 
 type Props = JSX.IntrinsicElements["svg"];
 
-export const GithubIcon: VFC<Props> = (props) => {
+export const GithubIcon: FC<Props> = (props) => {
   return (
     <svg
       height={512}

@@ -28,7 +28,7 @@ const Blog: NextPage<Props> = ({ data }) => {
           rel="stylesheet"
         ></link>
       </Head>
-      <div className="pt-12 font-noto text-center sm:pt-16">
+      <div className="pt-12 text-center font-noto sm:pt-16">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-xl font-semibold sm:text-2xl">Blog</h2>
 

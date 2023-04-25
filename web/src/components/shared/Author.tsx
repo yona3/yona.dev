@@ -1,17 +1,18 @@
 import Image from "next/image";
-import type { VFC } from "react";
+import type { FC } from "react";
 
 import { universityAge } from "../../utils/age";
 import { MyLinks } from "./MyLinks";
 
-export const Author: VFC = () => {
+export const Author: FC = () => {
   return (
-    <div className="p-4 pb-8 rounded-md border border-gray-400 shadow-sm sm:flex sm:p-6">
+    <div className="rounded-md border border-gray-400 p-4 pb-8 shadow-sm sm:flex sm:p-6">
       {/* left */}
       <div className="m-0 text-center sm:mr-6">
         <Image
           className="rounded-full"
           src="/icon.jpeg"
+          alt="yona"
           width={112}
           height={112}
         />
@@ -19,7 +20,7 @@ export const Author: VFC = () => {
       {/* right */}
       <div className="mt-1 w-full sm:mt-0">
         <div className="text-left">
-          <p className="text-lg font-semibold text-center sm:text-xl sm:text-left">
+          <p className="text-center text-lg font-semibold sm:text-left sm:text-xl">
             yona
           </p>
           <p className="mt-3 text-sm leading-relaxed sm:mt-2">

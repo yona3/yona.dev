@@ -1,9 +1,9 @@
-import type { ReactNode, VFC } from "react";
+import type { FC, ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
-export const SectionLayout: VFC<Props> = ({ children }) => {
+export const SectionLayout: FC<Props> = ({ children }) => {
   return <section className="py-12 text-center md:py-16">{children}</section>;
 };
