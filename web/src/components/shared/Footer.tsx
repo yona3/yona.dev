@@ -1,13 +1,13 @@
-import type { VFC } from "react";
+import type { FC } from "react";
 
 const year = new Date().getFullYear();
 
-export const Footer: VFC = () => {
+export const Footer: FC = () => {
   return (
     <footer
       className="
-        absolute bottom-0 py-6 w-full text-center 
-        border-t border-gray-800
+        absolute bottom-0 w-full border-t border-gray-800 
+        py-6 text-center
       "
     >
       <p className="text-sm text-gray-400">&copy; {year}, yona</p>

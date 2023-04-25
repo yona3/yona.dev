@@ -51,23 +51,23 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
         ></link>
       </Head>
 
-      <div className="pt-10 pb-8 font-noto text-gray-300 sm:pt-24 sm:pb-12">
+      <div className="pb-8 pt-10 font-noto text-gray-300 sm:pb-12 sm:pt-24">
         <div className="mx-auto max-w-2xl">
           {/* top */}
           <div className="mb-10">
             <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
-            <div className="flex mt-5 text-sm text-gray-400">
+            <div className="mt-5 flex text-sm text-gray-400">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
               <p className="">更新日: {formatDate(article.updatedAt)}</p>
             </div>
             {/* tags */}
-            <ul className="flex mt-5 space-x-2">
+            <ul className="mt-5 flex space-x-2">
               {article.tags.map((tag) => (
                 <li
                   key={tag.id}
                   className="
-                    py-1 px-3 text-sm rounded-full border
-                    border-gray-400 cursor-pointer
+                    cursor-pointer rounded-full border border-gray-400 px-3
+                    py-1 text-sm
                   "
                 >
                   {tag.name}
@@ -115,8 +115,8 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
             >
               <div
                 className={`${
-                  !prev && "sm:block hidden"
-                } w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer`}
+                  !prev && "hidden sm:block"
+                } w-full cursor-pointer transition hover:opacity-80 sm:w-2/5`}
               >
                 {prev && (
                   <Link href={`/blog/${prev.id}`}>
@@ -129,8 +129,8 @@ const ArticleDetail: NextPage<Props> = ({ article, prev, next }) => {
               </div>
               <div
                 className={`${
-                  !next && "sm:block hidden"
-                } w-full sm:w-2/5 hover:opacity-80 transition cursor-pointer`}
+                  !next && "hidden sm:block"
+                } w-full cursor-pointer transition hover:opacity-80 sm:w-2/5`}
               >
                 {next && (
                   <Link href={`/blog/${next.id}`}>

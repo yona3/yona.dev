@@ -5,15 +5,13 @@ import type { LinkItem } from "../../constants/links";
 import { MY_LINKS } from "../../constants/links";
 
 const LinkList = ({ type, href, name }: LinkItem) => (
-  <li className="hover:text-gray-300 underline transition">
+  <li className="underline transition hover:text-gray-300">
     {type === "a" ? (
       <a href={href} target="_blank" rel="noopener noreferrer">
         {name}
       </a>
     ) : (
-      <Link href={href}>
-        <a>{name}</a>
-      </Link>
+      <Link href={href}>{name}</Link>
     )}
   </li>
 );

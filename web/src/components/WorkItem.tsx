@@ -1,5 +1,5 @@
-import Image from "next/image";
-import type { VFC } from "react";
+import Image from "next/legacy/image";
+import type { FC } from "react";
 
 type Props = {
   image: string;
@@ -9,7 +9,7 @@ type Props = {
   url: string;
 };
 
-export const WorkItem: VFC<Props> = ({
+export const WorkItem: FC<Props> = ({
   image,
   name,
   description,
@@ -19,17 +19,17 @@ export const WorkItem: VFC<Props> = ({
   const contents = (
     <div
       className="
-        h-72 rounded-md border border-gray-800
-        shadow transition duration-500 cursor-pointer
+        h-72 cursor-pointer rounded-md border
+        border-gray-800 shadow transition duration-500
         sm:h-80 md:hover:opacity-70
       "
     >
-      <div className="overflow-hidden relative z-0 h-2/3 bg-gray-800 rounded-t-md border-b">
+      <div className="relative z-0 h-2/3 overflow-hidden rounded-t-md border-b bg-gray-800">
         <Image src={image} layout="fill" objectFit="cover" />
       </div>
-      <div className="py-2 px-3 text-left sm:px-5">
+      <div className="px-3 py-2 text-left sm:px-5">
         <h3 className="text-base font-semibold sm:text-lg">{name}</h3>
-        <div className="flex flex-col justify-between mt-2">
+        <div className="mt-2 flex flex-col justify-between">
           <p className="text-xs sm:text-sm">{description}</p>
           <p className="mt-2 text-xs text-gray-400">Tech: {tech}</p>
         </div>

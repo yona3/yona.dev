@@ -8,4 +8,6 @@ const admissionYear = new Date("2020-04-01");
 export const universityAge =
   Math.floor(
     (today.getTime() - admissionYear.getTime()) / (1000 * 3600 * 24 * 365)
-  ) + 1;
+  ) +
+  1 -
+  1;

@@ -1,17 +1,18 @@
-import Image from "next/image";
-import type { VFC } from "react";
+import Image from "next/legacy/image";
+import type { FC } from "react";
 
 import { GithubIcon } from "./icons/GithubIcon";
 import { TwitterIcon } from "./icons/TwitterIcon";
 import { ZennIcon } from "./icons/ZennIcon";
 import { SectionLayout } from "./shared/SectionLayout";
 
-export const Top: VFC = () => {
+export const Top: FC = () => {
   return (
     <SectionLayout>
-      <div className="pt-4 mx-auto max-w-sm">
+      <div className="mx-auto max-w-sm pt-4">
         <Image
           className="rounded-full"
+          alt="yona"
           src="/icon.jpeg"
           width={125}
           height={125}
@@ -19,11 +20,11 @@ export const Top: VFC = () => {
         <h2 className="mt-2 text-2xl font-semibold">yona</h2>
         <p className="mt-4">Hello :)</p>
 
-        <div className="flex justify-center mx-auto mt-6">
+        <div className="mx-auto mt-6 flex justify-center">
           <ul className="flex items-center space-x-4">
-            <li className="flex items-center mr-[2px] cursor-pointer">
+            <li className="mr-[2px] flex cursor-pointer items-center">
               <a
-                className="block hover:opacity-60 transition"
+                className="block transition hover:opacity-60"
                 href="https://github.com/yona3"
                 target="_blank"
                 rel="noreferrer"
@@ -31,33 +32,33 @@ export const Top: VFC = () => {
                 <GithubIcon
                   width="32"
                   height="32"
-                  className="flex justify-center items-center fill-gray-100"
+                  className="flex items-center justify-center fill-gray-100"
                 />
               </a>
             </li>
-            <li className="flex items-center mt-[2px] cursor-pointer">
+            <li className="mt-[2px] flex cursor-pointer items-center">
               <a
-                className="block hover:opacity-60 transition"
+                className="block transition hover:opacity-60"
                 href="https://twitter.com/yonah6g"
                 target="_blank"
                 rel="noreferrer"
               >
                 <TwitterIcon
                   width="30"
-                  className="flex justify-center items-center fill-gray-100"
+                  className="flex items-center justify-center fill-gray-100"
                 />
               </a>
             </li>
-            <li className="flex items-center cursor-pointer">
+            <li className="flex cursor-pointer items-center">
               <a
-                className="block hover:opacity-60 transition"
+                className="block transition hover:opacity-60"
                 href="https://zenn.dev/yonajs"
                 target="_blank"
                 rel="noreferrer"
               >
                 <ZennIcon
                   width="25"
-                  className="flex justify-center items-center fill-gray-100"
+                  className="flex items-center justify-center fill-gray-100"
                 />
               </a>
             </li>

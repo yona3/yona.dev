@@ -8,7 +8,7 @@ export const Works = () => {
     <div>
       <SectionLayout>
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-2xl font-semibold text-left sm:text-3xl">
+          <h2 className="text-left text-2xl font-semibold sm:text-3xl">
             Works
           </h2>
           <div className="grid gap-x-12 gap-y-6 pt-14 sm:grid-cols-2 lg:gap-y-12">

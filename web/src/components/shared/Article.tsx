@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { VFC } from "react";
+import type { FC } from "react";
 
 import { formatDate } from "../../lib/day";
 import type { Content } from "../../types";
@@ -8,15 +8,15 @@ type Props = {
   article: Content;
 };
 
-export const Article: VFC<Props> = ({ article }) => {
+export const Article: FC<Props> = ({ article }) => {
   return (
     <article className="text-left">
       <Link href={`/blog/${article.id}`}>
         <h1
           className="
-            text-lg font-medium 
-            hover:opacity-70 transition
-            cursor-pointer sm:text-xl
+            cursor-pointer text-lg 
+            font-medium transition
+            hover:opacity-70 sm:text-xl
           "
         >
           {article.title}
