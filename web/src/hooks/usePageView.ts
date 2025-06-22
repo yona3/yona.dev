@@ -9,7 +9,10 @@ export const usePageView = () => {
   useEffect(() => {
     if (!gtag.GA_ID) return;
 
-    const handleRouteChange = (path, { shallow }) => {
+    const handleRouteChange = (
+      path: string,
+      { shallow }: { shallow: boolean },
+    ) => {
       if (!shallow) gtag.pageview(path);
     };
 

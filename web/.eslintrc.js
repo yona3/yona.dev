@@ -20,6 +20,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:tailwindcss/recommended",
+    "next",
     "prettier",
   ],
   rules: {
@@ -88,8 +89,26 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/pages/**/*.tsx"],
-      rules: { "import/no-default-export": "off" },
+      files: ["src/app/**/*.tsx", "src/app/**/*.ts"],
+      rules: {
+        "import/no-default-export": "off",
+        "func-style": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          { selector: ["typeAlias", "typeParameter"], format: ["PascalCase"] },
+          {
+            selector: ["property", "parameterProperty", "method"],
+            format: ["camelCase"],
+            filter: { regex: "^__html$", match: false },
+          },
+        ],
+      },
+    },
+    {
+      files: ["next.config.js", ".eslintrc.js", "tailwind.config.js"],
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+      },
     },
   ],
 };
