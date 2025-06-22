@@ -6,6 +6,11 @@ module.exports = {
     project: "./tsconfig.json",
   },
   env: { browser: true, node: true, es2020: true },
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   plugins: ["simple-import-sort", "tailwindcss"],
   extends: [
     "eslint:recommended",

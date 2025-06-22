@@ -1,6 +1,6 @@
-import type { FC } from "react";
+import type { ComponentProps, FC } from "react";
 
-type Props = JSX.IntrinsicElements["svg"];
+type Props = ComponentProps<"svg">;
 
 export const TwitterIcon: FC<Props> = (props) => {
   return (

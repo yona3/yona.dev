@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import hljs from "highlight.js";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
