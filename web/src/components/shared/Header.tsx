@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import type { FC } from "react";
 
 export const Header: FC = () => {
-  const { pathname } = useRouter();
+  const pathname = usePathname();
 
   return (
     <header
