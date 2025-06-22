@@ -105,9 +105,11 @@ module.exports = {
       },
     },
     {
-      files: ["next.config.js", ".eslintrc.js", "tailwind.config.js"],
+      files: ["next.config.js", "next.config.ts", ".eslintrc.js", "tailwind.config.js"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-require-imports": "off",
+        "@typescript-eslint/naming-convention": "off",
       },
     },
   ],

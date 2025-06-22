@@ -11,6 +11,10 @@ This is a personal homepage and blog for yona.dev built with Next.js 15 (App Rou
 
 ## Development Commands
 
+### Requirements
+- Node.js 18.18.0 or higher (required for Next.js 15)
+- Yarn package manager
+
 ### Setup and Development
 ```bash
 cd web
@@ -35,9 +39,9 @@ ANALYZE=true yarn build  # Build with bundle analysis report
 
 ### Directory Structure
 - `web/src/components/` - React components organized by purpose
-  - `shared/` - Reusable components (Layout, Article, Header, Footer, ShareButtons)
-  - `icons/` - Icon components
-  - Root level - Page-specific components (About, Works, Top)
+  - `shared/` - Reusable components (Layout, Article, Header, Footer, ShareButtons, Author, MyLinks, SectionLayout)
+  - `icons/` - Icon components (GitHub, Twitter, Zenn)
+  - Root level - Page-specific components (About, Works, WorkItem, Top)
 - `web/src/app/` - Next.js App Router file-based routing
   - `layout.tsx` - Root layout with metadata and global styles
   - `page.tsx` - Homepage
@@ -45,9 +49,9 @@ ANALYZE=true yarn build  # Build with bundle analysis report
     - `page.tsx` - Blog listing page
     - `[articleId]/page.tsx` - Dynamic route for individual articles
   - `api/` - API routes (health check)
-- `web/src/lib/` - External service integrations (microCMS client)
+- `web/src/lib/` - External service integrations (microCMS client, date utilities)
 - `web/src/types/` - TypeScript type definitions
-- `web/src/constants/` - Static data (works portfolio, links, etc.)
+- `web/src/constants/` - Static data (works portfolio, links, likes, etc.)
 - `web/src/utils/` - Utility functions (age calculation, OGP generation, Google Analytics)
 - `web/src/hooks/` - Custom React hooks (page view tracking)
 
@@ -57,7 +61,10 @@ ANALYZE=true yarn build  # Build with bundle analysis report
 - **Styling**: Tailwind CSS with custom configuration and next/font for optimized fonts
 - **Code Highlighting**: highlight.js for blog syntax highlighting
 - **Social Sharing**: react-share for article sharing
+- **Security**: DOMPurify with jsdom for XSS protection and content sanitization
+- **Data Processing**: cheerio for HTML parsing, dayjs for date manipulation
 - **Development**: TypeScript, ESLint, Prettier for code quality
+- **Performance**: @next/bundle-analyzer for webpack bundle analysis
 
 ## Content Management
 
@@ -91,6 +98,16 @@ ANALYZE=true yarn build  # Build with bundle analysis report
 - ISR (Incremental Static Regeneration) with revalidate
 - OG image generation for social sharing
 - Client Components for interactive features (ShareButtons)
+
+### Security Features
+- **XSS Protection**: DOMPurify sanitization for all user-generated content
+- **Content Sanitization**: Three-stage sanitization process:
+  1. Initial microCMS content sanitization
+  2. highlight.js output sanitization
+  3. Final HTML output sanitization
+- **Safe HTML Rendering**: Restricted HTML tags and attributes
+- **Script Prevention**: All script tags and dangerous elements are blocked
+- **Server-side Processing**: JSDOM enables secure server-side sanitization
 
 ## Performance & Security
 

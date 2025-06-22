@@ -1,5 +1,7 @@
 import * as cheerio from "cheerio";
+import DOMPurify from "dompurify";
 import hljs from "highlight.js";
+import { JSDOM } from "jsdom";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -20,17 +22,95 @@ type Props = {
   params: Promise<Params>;
 };
 
-// Content processing function
+// Secure content processing function with XSS protection
 async function processContent(data: Content): Promise<Content> {
-  // syntax highlighting
-  const $ = cheerio.load(data.body);
+  // Create a virtual DOM for server-side processing
+  const { window } = new JSDOM("<!DOCTYPE html><html><body></body></html>");
+  const purify = DOMPurify(window);
+
+  // Configure DOMPurify to allow only safe HTML elements and attributes
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const purifyConfig = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    ALLOWED_TAGS: [
+      "p",
+      "br",
+      "strong",
+      "em",
+      "u",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "a",
+      "img",
+      "pre",
+      "code",
+      "span",
+      "div",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "th",
+      "td",
+    ],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    ALLOWED_ATTR: [
+      "href",
+      "src",
+      "alt",
+      "title",
+      "class",
+      "id",
+      "target",
+      "rel",
+    ],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    ALLOW_DATA_ATTR: false,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    FORBID_SCRIPTS: true,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    FORBID_TAGS: ["script", "object", "embed", "form", "input", "iframe"],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    STRIP_COMMENTS: true,
+  };
+
+  // First sanitize the raw content
+  const sanitizedBody = purify.sanitize(data.body, purifyConfig);
+
+  // Apply syntax highlighting to sanitized content
+  const $ = cheerio.load(sanitizedBody);
   $("pre code").each((_, elm) => {
-    const result = hljs.highlightAuto($(elm).text());
-    $(elm).html(result.value);
+    const codeText = $(elm).text();
+    const result = hljs.highlightAuto(codeText);
+
+    // Sanitize the highlighted result before inserting
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const sanitizedHighlight = purify.sanitize(result.value, {
+      ...purifyConfig,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ALLOWED_TAGS: [...purifyConfig.ALLOWED_TAGS, "span"],
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ALLOWED_ATTR: [...purifyConfig.ALLOWED_ATTR, "class"],
+    });
+
+    $(elm).html(sanitizedHighlight);
     $(elm).addClass("hljs");
   });
 
-  return { ...data, body: $("body").html() || "" };
+  const processedBody = $("body").html() || "";
+
+  // Final sanitization pass
+  const finalSanitizedBody = purify.sanitize(processedBody, purifyConfig);
+
+  return { ...data, body: finalSanitizedBody };
 }
 
 // Generate static params for all blog articles
