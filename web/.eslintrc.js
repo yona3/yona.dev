@@ -10,8 +10,18 @@ module.exports = {
     react: {
       version: "detect",
     },
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+        project: "./tsconfig.json",
+      },
+      alias: {
+        map: [["@", "./src"]],
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
+      },
+    },
   },
-  plugins: ["simple-import-sort", "tailwindcss"],
+  plugins: ["simple-import-sort", "tailwindcss", "import"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -28,13 +38,32 @@ module.exports = {
     "no-restricted-syntax": [
       "error",
       { selector: "TSEnumDeclaration", message: "Don't declare enums" },
+      {
+        selector: "ClassDeclaration",
+        message: "Classes are not allowed. Use functions instead.",
+      },
+      {
+        selector:
+          "NewExpression[callee.name!=/^(Date|Error|Map|Set|Promise|URL|URLSearchParams|AbortController|JSDOM)$/]",
+        message:
+          "The 'new' keyword is not allowed for custom classes. Use factory functions instead.",
+      },
     ],
     "prefer-arrow-callback": "error",
     "prefer-const": "error",
     "func-style": ["error", "expression"],
     "no-restricted-imports": [
       "error",
-      { paths: [{ name: "react", importNames: ["default"] }] },
+      {
+        paths: [{ name: "react", importNames: ["default"] }],
+        patterns: [
+          {
+            group: ["../*", "../../*", "../../../*", "../../../../*"],
+            message:
+              "Relative imports from parent directories are not allowed. Use '@/*' alias instead.",
+          },
+        ],
+      },
     ],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
@@ -86,6 +115,7 @@ module.exports = {
       },
     ],
     "jsx-a11y/click-events-have-key-events": "off",
+    "import/no-relative-packages": "error",
   },
   overrides: [
     {
@@ -105,11 +135,26 @@ module.exports = {
       },
     },
     {
-      files: ["next.config.js", "next.config.ts", ".eslintrc.js", "tailwind.config.js"],
+      files: [
+        "next.config.js",
+        "next.config.ts",
+        ".eslintrc.js",
+        "tailwind.config.js",
+      ],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/naming-convention": "off",
+        "no-restricted-imports": "off",
+      },
+    },
+    {
+      files: ["src/app/**/*.tsx", "next.config.ts"],
+      rules: {
+        "no-restricted-syntax": [
+          "error",
+          { selector: "TSEnumDeclaration", message: "Don't declare enums" },
+        ],
       },
     },
   ],

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import Script from "next/script";
 
-import { GA_ID } from "../utils/gtag";
+import { GA_ID } from "@/shared/utils/gtag";
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -53,13 +53,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="ja" className={notoSansJP.className}>
+    <html lang="ja" className={notoSansJP.className} suppressHydrationWarning>
       <head>
         {/* Google Analytics */}
         {GA_ID && (
@@ -88,4 +84,6 @@ export default function RootLayout({
       <body>{children}</body>
     </html>
   );
-}
+};
+
+export default RootLayout;

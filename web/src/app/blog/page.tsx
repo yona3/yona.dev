@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 
-import { Article } from "../../components/shared/Article";
-import { Layout } from "../../components/shared/Layout";
-import { MyLinks } from "../../components/shared/MyLinks";
-import { microcms } from "../../lib/microcms";
-import type { Content } from "../../types";
+import { BlogList } from "@/features/blog";
+import { Layout } from "@/shared/components/Layout";
+import { MyLinks } from "@/shared/components/MyLinks";
 
 export const metadata: Metadata = {
   title: "yona.blog",
@@ -36,19 +34,30 @@ export const metadata: Metadata = {
 // ISR with revalidation every 60 seconds
 export const revalidate = 60;
 
-async function getBlogData(): Promise<Content[]> {
-  const data = await microcms.get<{ contents: Content[] }>({
-    endpoint: "blog",
-    queries: {
-      orders: "-publishedAt",
-    },
-  });
-
-  return data.contents;
-}
-
 export default async function BlogPage() {
-  const data = await getBlogData();
+  const { createBlogService } = await import("@/services/BlogService");
+  const { MicroCmsBlogRepository } = await import(
+    "@/repositories/MicroCmsBlogRepository"
+  );
+  const { microcmsClient } = await import("@/infrastructure/api/microcms");
+  const { DefaultErrorHandler } = await import("@/services/ErrorHandler");
+  const { createBlogFeatureService } = await import(
+    "@/features/blog/services/BlogFeatureService"
+  );
+
+  const blogRepository = MicroCmsBlogRepository(microcmsClient);
+  const errorHandler = DefaultErrorHandler();
+  const blogService = createBlogService(blogRepository, errorHandler);
+  const blogFeatureService = createBlogFeatureService(
+    blogService,
+    blogRepository,
+  );
+
+  const articlesResult = await blogFeatureService.getBlogList();
+  if (!articlesResult.success) {
+    throw new Error("Failed to fetch articles");
+  }
+  const articles = articlesResult.data.contents;
 
   return (
     <Layout>
@@ -56,13 +65,18 @@ export default async function BlogPage() {
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-xl font-semibold sm:text-2xl">Blog</h2>
 
-          <div className="mt-12 space-y-8 sm:mt-16 sm:space-y-10">
-            {data.map((article) => (
-              <div key={article.id}>
-                <Article article={article} />
-              </div>
-            ))}
-          </div>
+          <BlogList
+            articles={articles.map((article) => ({
+              id: article.id,
+              title: article.title,
+              publishedAt: article.publishedAt.toISOString(),
+              updatedAt: article.updatedAt.toISOString(),
+              tags: article.tags.map((tag) => ({
+                id: tag,
+                name: tag,
+              })),
+            }))}
+          />
 
           <div className="mt-12">
             <MyLinks />
