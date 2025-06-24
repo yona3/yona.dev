@@ -1,131 +1,177 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Claude Code向けのプロジェクト設定ファイル
 
 ユーザーへは日本語で答えてください。
 コード中では、英語を使ってください。
 
-## Project Overview
+## プロジェクト概要
 
-This is a personal homepage and blog for yona.dev built with Next.js 15 (App Router), TypeScript, and microCMS. The main source code is located in the `web/` directory.
+yona.devの個人ホームページ・ブログサイト
+- Next.js 15 (App Router)
+- TypeScript (strict mode)  
+- microCMS (ヘッドレスCMS)
+- メインコードは`web/`ディレクトリ
 
-## Development Commands
+## 開発コマンド
 
-### Requirements
-- Node.js 18.18.0 or higher (required for Next.js 15)
-- Yarn package manager
+### 前提条件
+- Node.js 18.18.0以上
+- Yarn
 
-### Setup and Development
+### セットアップ・開発
 ```bash
 cd web
-yarn install           # Install dependencies
-yarn dev              # Start development server at http://localhost:3000
-yarn build            # Build for production
-yarn start            # Start production server
+yarn install           # 依存関係インストール
+yarn dev              # 開発サーバー起動 (http://localhost:3000)
+yarn build            # プロダクションビルド
+yarn start            # プロダクションサーバー起動
 ```
 
-### Code Quality
+### コード品質
 ```bash
-yarn lint             # Run ESLint on all TypeScript/JavaScript files
-yarn format           # Format code with Prettier and fix linting issues
+yarn lint             # ESLint実行
+yarn format           # Prettier + ESLint修正
 ```
 
-### Performance Analysis
+### パフォーマンス分析
 ```bash
-ANALYZE=true yarn build  # Build with bundle analysis report
+ANALYZE=true yarn build  # バンドル分析レポート生成
 ```
 
-## Architecture
+## アーキテクチャ
 
-### Directory Structure
-- `web/src/components/` - React components organized by purpose
-  - `shared/` - Reusable components (Layout, Article, Header, Footer, ShareButtons, Author, MyLinks, SectionLayout)
-  - `icons/` - Icon components (GitHub, Twitter, Zenn)
-  - Root level - Page-specific components (About, Works, WorkItem, Top)
-- `web/src/app/` - Next.js App Router file-based routing
-  - `layout.tsx` - Root layout with metadata and global styles
-  - `page.tsx` - Homepage
-  - `blog/` - Blog-related pages
-    - `page.tsx` - Blog listing page
-    - `[articleId]/page.tsx` - Dynamic route for individual articles
-  - `api/` - API routes (health check)
-- `web/src/lib/` - External service integrations (microCMS client, date utilities)
-- `web/src/types/` - TypeScript type definitions
-- `web/src/constants/` - Static data (works portfolio, links, likes, etc.)
-- `web/src/utils/` - Utility functions (age calculation, OGP generation, Google Analytics)
-- `web/src/hooks/` - Custom React hooks (page view tracking)
+### フィーチャーベース階層アーキテクチャ
+保守性・テスト性・拡張性を向上させるため
 
-### Key Technologies
-- **Framework**: Next.js 15 with App Router (React 19)
-- **Content Management**: microCMS headless CMS for blog articles
-- **Styling**: Tailwind CSS with custom configuration and next/font for optimized fonts
-- **Code Highlighting**: highlight.js for blog syntax highlighting
-- **Social Sharing**: react-share for article sharing
-- **Security**: DOMPurify with jsdom for XSS protection and content sanitization
-- **Data Processing**: cheerio for HTML parsing, dayjs for date manipulation
-- **Development**: TypeScript, ESLint, Prettier for code quality
-- **Performance**: @next/bundle-analyzer for webpack bundle analysis
+#### アーキテクチャ階層
 
-## Content Management
+**主要階層:**
+- **App Layer** (`web/src/app/`) - Next.js App Router、ページとAPI Routes
+- **Feature Layer** (`web/src/features/`) - 機能別モジュール（アプリケーションの中核）
+- **Infrastructure Layer** (`web/src/infrastructure/`) - 外部API統合
+- **Shared Layer** (`web/src/shared/`) - 共通機能
 
-### microCMS Integration
-- API client configured in `src/lib/microcms.ts`
-- Content types defined in `src/types/index.ts`
-- Blog articles are fetched and statically generated
+**補助階層:**
+- **Service Layer** (`web/src/services/`) - 横断的ビジネスロジック
+- **Repository Layer** (`web/src/repositories/`) - データアクセス抽象化
+- **Interface Layer** (`web/src/interfaces/`) - 契約定義
+- **Type Layer** (`web/src/types/`) - グローバル型定義
+- **Library Layer** (`web/src/lib/`) - ユーティリティ関数
+- **Example Layer** (`web/src/examples/`) - 使用例・サンプルコード
 
-### Environment Variables
-- `NEXT_PUBLIC_API_KEY` - microCMS API key (required)
-- `GA_ID` - Google Analytics tracking ID (optional)
-- `ANALYZE` - Bundle analyzer enable flag (optional, set to "true")
-- Environment file: `.env.local` (gitignored)
+#### ディレクトリ構造
+```
+web/src/
+├── app/           # Next.js App Router
+│   ├── api/       # API Routes
+│   ├── blog/      # ブログページ
+│   └── test/      # テストページ
+├── features/      # 機能別モジュール
+│   ├── blog/      # ブログ機能
+│   ├── portfolio/ # ポートフォリオ機能
+│   └── profile/   # プロフィール機能
+├── shared/        # 共通コンポーネント・ユーティリティ
+├── infrastructure/ # 外部API統合
+├── interfaces/    # インターフェース定義
+├── lib/          # ライブラリ関数
+├── repositories/ # データアクセス層
+├── services/     # ビジネスロジック層
+├── types/        # グローバル型定義
+└── examples/     # 使用例・サンプルコード
+```
 
-## Development Notes
+#### アーキテクチャ原則
+- 関心の分離：各層が明確な責任を持つ
+- 依存性逆転：上位層は抽象に依存
+- 機能独立性：機能間の疎結合
 
-### Personal Data
-- Age is dynamically calculated in `src/utils/age.ts`
-- University status and personal info in `src/components/About.tsx`
-- Portfolio projects defined in `src/constants/works.ts`
+### 主要技術
+- **Next.js 15** (App Router, React 19)
+- **microCMS** (ヘッドレスCMS)
+- **Tailwind CSS** (スタイリング)
+- **TypeScript** (型安全性)
+- **DOMPurify** (XSS対策)
 
-### Styling Approach
-- Uses Tailwind CSS with dark theme (gray-900 backgrounds)
-- Optimized font loading with next/font for Noto Sans JP
-- Mobile-first responsive design
+### 技術的改善
+- **Hydration最適化**: SSR/CSR一貫性保証、Image優先読み込み設定
+- **Import Alias**: `@/*` パス設定による可読性・保守性向上
+- **ESLint強化**: 関数ベース・アロー関数強制、相対パス禁止
+- **セキュリティ強化**: DOMPurifyによる3段階コンテンツサニタイゼーション
 
-### Blog System (App Router)
-- Server Components for improved performance
-- Static generation with generateStaticParams
-- Dynamic metadata generation with generateMetadata
-- ISR (Incremental Static Regeneration) with revalidate
-- OG image generation for social sharing
-- Client Components for interactive features (ShareButtons)
+## 環境設定
 
-### Security Features
-- **XSS Protection**: DOMPurify sanitization for all user-generated content
-- **Content Sanitization**: Three-stage sanitization process:
-  1. Initial microCMS content sanitization
-  2. highlight.js output sanitization
-  3. Final HTML output sanitization
-- **Safe HTML Rendering**: Restricted HTML tags and attributes
-- **Script Prevention**: All script tags and dangerous elements are blocked
-- **Server-side Processing**: JSDOM enables secure server-side sanitization
+### 環境変数
+`web/.env.local`ファイルを作成：
 
-## Performance & Security
+**必須:**
+- `NEXT_PUBLIC_API_KEY` - microCMS APIキー
 
-### Next.js Configuration (next.config.ts)
-- TypeScript configuration file for type safety
-- Image optimization for microCMS assets via remotePatterns
-- Package import optimization (react-share, highlight.js, cheerio, dayjs)
-- Bundle analysis with webpack-bundle-analyzer
-- Security enhancements (X-Powered-By header disabled)
-- Production optimizations (gzip compression, source maps disabled)
+**オプション:**
+- `GA_ID` - Google Analytics ID
+- `ANALYZE` - バンドル分析フラグ
 
-### Code Quality Standards
-- TypeScript strict mode with ES2022 target
-- Comprehensive ESLint rules (78+ rules)
-  - Core JavaScript quality rules
-  - React/Next.js specific rules
-  - TypeScript type safety rules
-  - Import organization (simple-import-sort)
-  - Tailwind CSS optimization rules
-  - Accessibility compliance checks
-- Prettier for consistent code formatting
+```bash
+cd web
+cp .env.example .env.local
+```
+
+## 開発ガイドライン
+
+### コーディング規約
+- **関数ベース**: クラスではなく関数を使用
+- **アロー関数**: 可能な限りアロー関数を使用
+- **機能分離**: 機能別にディレクトリを分ける
+- **共通化**: 共通機能は`shared/`に配置
+
+#### 強制ESLintルール
+以下のルールでコード品質を保証：
+
+**関数型プログラミング強制:**
+- `no-restricted-syntax`: クラス定義を完全禁止
+- `prefer-arrow-callback`: アロー関数を強制
+- `func-style`: 関数式のみ許可
+
+**インポート・エクスポート管理:**
+- `simple-import-sort`: インポート順序の自動整理
+- `@typescript-eslint/consistent-type-imports`: 型インポートの統一
+
+**React特化ルール:**
+- `react/jsx-handler-names`: イベントハンドラー命名規則
+- `react/display-name`: コンポーネント名の明示
+- `jsx-a11y/*`: アクセシビリティ強制
+
+**TypeScript強化:**
+- `@typescript-eslint/no-unused-vars`: 未使用変数の排除
+- `@typescript-eslint/naming-convention`: 命名規則の統一
+
+### セキュリティ
+- DOMPurifyによるXSS対策
+- 3段階のコンテンツサニタイゼーション
+- サーバーサイドでの安全な処理
+
+### パフォーマンス
+- 静的生成（ISR）
+- バンドル分析による最適化
+- モバイルファースト設計
+
+## 重要な開発ルール
+
+### 機能ベース開発
+- **機能分離**: `src/features/*/`内に機能別コードを配置
+- **共通リソース**: `src/shared/`は横断的関心事のみ
+- **インフラアクセス**: `src/infrastructure/`経由で外部API利用
+- **関数ベース**: サービスはクラスではなく関数で実装
+
+### ファイル配置ルール
+- **新規コンポーネント**: `src/features/*/components/`
+- **ビジネスロジック**: `src/features/*/services/`（関数）
+- **共通ユーティリティ**: `src/shared/utils/`のみ
+- **型定義**: 機能別は各フィーチャー内、グローバルは`src/types/`
+
+### 開発原則
+- **フィーチャーファースト**: 機能別のディレクトリ構造
+- **関数ベース設計**: クラスではなく関数を使用
+- **一貫したインポート**: `@/*` エイリアスの使用
+- **型安全性**: TypeScript strict mode + ESLint強制
+
