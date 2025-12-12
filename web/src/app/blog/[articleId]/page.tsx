@@ -29,7 +29,7 @@ async function processContent(data: Content): Promise<Content> {
   const purify = DOMPurify(window);
 
   // Configure DOMPurify to allow only safe HTML elements and attributes
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+   
   const purifyConfig = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ALLOWED_TAGS: [
@@ -92,7 +92,7 @@ async function processContent(data: Content): Promise<Content> {
     const result = hljs.highlightAuto(codeText);
 
     // Sanitize the highlighted result before inserting
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+     
     const sanitizedHighlight = purify.sanitize(result.value, {
       ...purifyConfig,
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -237,7 +237,7 @@ export default async function ArticleDetailPage({ params }: Props) {
           <div
             className={styles.article}
             dangerouslySetInnerHTML={{
-              // eslint-disable-next-line @typescript-eslint/naming-convention
+               
               __html: `${article.body}`,
             }}
           />

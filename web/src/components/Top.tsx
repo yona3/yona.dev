@@ -22,7 +22,7 @@ export const Top: FC = () => {
 
         <div className="mx-auto mt-6 flex justify-center">
           <ul className="flex items-center space-x-4">
-            <li className="mr-[2px] flex cursor-pointer items-center">
+            <li className="flex cursor-pointer items-center">
               <a
                 className="block transition hover:opacity-60"
                 href="https://github.com/yona3"
@@ -32,11 +32,11 @@ export const Top: FC = () => {
                 <GithubIcon
                   width="32"
                   height="32"
-                  className="flex items-center justify-center fill-gray-100"
+                  className="fill-gray-100"
                 />
               </a>
             </li>
-            <li className="mt-[2px] flex cursor-pointer items-center">
+            <li className="flex cursor-pointer items-center">
               <a
                 className="block transition hover:opacity-60"
                 href="https://twitter.com/yonah6g"
@@ -45,7 +45,8 @@ export const Top: FC = () => {
               >
                 <TwitterIcon
                   width="30"
-                  className="flex items-center justify-center fill-gray-100"
+                  height="30"
+                  className="fill-gray-100"
                 />
               </a>
             </li>
@@ -58,7 +59,8 @@ export const Top: FC = () => {
               >
                 <ZennIcon
                   width="25"
-                  className="flex items-center justify-center fill-gray-100"
+                  height="25"
+                  className="fill-gray-100"
                 />
               </a>
             </li>

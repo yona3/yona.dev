@@ -2,7 +2,7 @@ import { WORKS } from "../constants/works";
 import { SectionLayout } from "./shared/SectionLayout";
 import { WorkItem } from "./WorkItem";
 
-// eslint-disable-next-line react/display-name
+ 
 export const Works = () => {
   return (
     <div>
