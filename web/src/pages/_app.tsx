@@ -1,4 +1,4 @@
-import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
 import "highlight.js/styles/base16/atelier-sulphurpool.css";
 
 // import "highlight.js/styles/vs2015.css";

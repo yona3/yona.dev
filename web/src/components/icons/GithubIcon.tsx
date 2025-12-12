@@ -1,6 +1,6 @@
-import type { FC } from "react";
+import type { ComponentPropsWithoutRef, FC } from "react";
 
-type Props = JSX.IntrinsicElements["svg"];
+type Props = ComponentPropsWithoutRef<"svg">;
 
 export const GithubIcon: FC<Props> = (props) => {
   return (

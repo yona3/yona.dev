@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import { load } from "cheerio";
 import hljs from "highlight.js";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -182,7 +182,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   });
 
   // syntax highlighting
-  const $ = cheerio.load(data.body);
+  const $ = load(data.body);
   $("pre code").each((_, elm) => {
     const result = hljs.highlightAuto($(elm).text());
     $(elm).html(result.value);
