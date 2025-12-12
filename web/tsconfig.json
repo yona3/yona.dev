@@ -24,14 +24,21 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "*.js"
+    "*.js",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

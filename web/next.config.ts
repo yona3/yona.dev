@@ -62,9 +62,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
   poweredByHeader: false,
   experimental: {
     optimizePackageImports: ["react-share", "highlight.js", "cheerio", "dayjs"],
