@@ -1,7 +1,7 @@
 export type LinkItem = {
   name: string;
   type: "a" | "Link";
-  href?: string;
+  href: string;
 };
 
 export const MY_LINKS: LinkItem[] = [

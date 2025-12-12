@@ -1,6 +1,6 @@
-import type { ComponentPropsWithoutRef, FC } from "react";
+import type { ComponentProps, FC } from "react";
 
-type Props = ComponentPropsWithoutRef<"svg">;
+type Props = ComponentProps<"svg">;
 
 export const TwitterIcon: FC<Props> = (props) => {
   return (

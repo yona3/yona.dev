@@ -1,4 +1,4 @@
-.article>:first-child {
+.article > :first-child {
   margin-top: 0;
 }
 
@@ -43,7 +43,6 @@
   color: rgb(209 213 219 / var(--tw-text-opacity)) !important;
 }
 
-
 .article pre {
   margin: 20px 0;
   font-size: 15px;
@@ -57,7 +56,7 @@
 
 .article a {
   margin: 6px 0;
-  color: rgb(54, 149, 228); 
+  color: rgb(54, 149, 228);
   word-wrap: break-word;
 }
 

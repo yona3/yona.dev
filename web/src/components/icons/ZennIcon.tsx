@@ -1,6 +1,6 @@
-import type { ComponentPropsWithoutRef, FC } from "react";
+import type { ComponentProps, FC } from "react";
 
-type Props = ComponentPropsWithoutRef<"svg">;
+type Props = ComponentProps<"svg">;
 
 export const ZennIcon: FC<Props> = (props) => {
   return (

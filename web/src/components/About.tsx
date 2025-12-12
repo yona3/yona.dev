@@ -2,7 +2,6 @@ import { LIKES } from "../constants/like";
 import { age, universityAge } from "../utils/age";
 import { SectionLayout } from "./shared/SectionLayout";
 
-// eslint-disable-next-line react/display-name
 export const About = () => {
   return (
     <div className="pb-4 md:pb-8">
