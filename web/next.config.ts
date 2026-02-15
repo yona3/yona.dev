@@ -69,10 +69,6 @@ const nextConfig: NextConfig = {
   // パフォーマンス向上設定
   compress: true,
   productionBrowserSourceMaps: false,
-  generateBuildId: async () => {
-    // ビルドIDをgitコミットハッシュベースで生成
-    return "build-" + Date.now().toString();
-  },
   // バンドル分析用設定（環境変数で制御）
   ...(process.env.ANALYZE === "true" && {
     webpack: (config: WebpackConfig, { dev, isServer }: WebpackContext) => {
