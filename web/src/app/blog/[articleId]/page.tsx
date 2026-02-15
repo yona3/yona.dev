@@ -4,10 +4,11 @@ import hljs from "highlight.js";
 import { JSDOM } from "jsdom";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 
 import { Author } from "../../../components/shared/Author";
 import { Layout } from "../../../components/shared/Layout";
-import { ShareButtons } from "../../../components/shared/ShareButtons";
+import { ShareButtonsLazy } from "../../../components/shared/ShareButtonsLazy";
 import { formatDate } from "../../../lib/day";
 import { microcms } from "../../../lib/microcms";
 import type { Content } from "../../../types";
@@ -24,78 +25,111 @@ type Props = {
 
 export const revalidate = 60;
 
-// Secure content processing function with XSS protection
-async function processContent(data: Content): Promise<Content> {
-  // Create a virtual DOM for server-side processing
+const purifyConfig = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  ALLOWED_TAGS: [
+    "p",
+    "br",
+    "strong",
+    "em",
+    "u",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
+    "pre",
+    "code",
+    "span",
+    "div",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
+  ],
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  ALLOWED_ATTR: ["href", "src", "alt", "title", "class", "id", "target", "rel"],
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  ALLOW_DATA_ATTR: false,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  FORBID_SCRIPTS: true,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  FORBID_TAGS: ["script", "object", "embed", "form", "input", "iframe"],
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  STRIP_COMMENTS: true,
+};
+
+const domPurify = (() => {
   const { window } = new JSDOM("<!DOCTYPE html><html><body></body></html>");
-  const purify = DOMPurify(window);
+  return DOMPurify(window);
+})();
 
-  // Configure DOMPurify to allow only safe HTML elements and attributes
-   
-  const purifyConfig = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    ALLOWED_TAGS: [
-      "p",
-      "br",
-      "strong",
-      "em",
-      "u",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-      "ul",
-      "ol",
-      "li",
-      "blockquote",
-      "a",
-      "img",
-      "pre",
-      "code",
-      "span",
-      "div",
-      "table",
-      "thead",
-      "tbody",
-      "tr",
-      "th",
-      "td",
-    ],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    ALLOWED_ATTR: [
-      "href",
-      "src",
-      "alt",
-      "title",
-      "class",
-      "id",
-      "target",
-      "rel",
-    ],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    ALLOW_DATA_ATTR: false,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    FORBID_SCRIPTS: true,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    FORBID_TAGS: ["script", "object", "embed", "form", "input", "iframe"],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    STRIP_COMMENTS: true,
-  };
+const getArticle = cache(async (articleId: string): Promise<Content> => {
+  return microcms.get<Content>({
+    endpoint: "blog",
+    contentId: articleId,
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
+  });
+});
 
-  // First sanitize the raw content
-  const sanitizedBody = purify.sanitize(data.body, purifyConfig);
+const getPreviousArticle = async (publishedAt: string): Promise<Content | null> => {
+  const { contents } = await microcms.get<{ contents: Content[] }>({
+    endpoint: "blog",
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
+    queries: {
+      limit: 1,
+      filters: `publishedAt[less_than]${publishedAt}`,
+      orders: "-publishedAt",
+    },
+  });
 
-  // Apply syntax highlighting to sanitized content
+  return contents[0] ?? null;
+};
+
+const getNextArticle = async (publishedAt: string): Promise<Content | null> => {
+  const { contents } = await microcms.get<{ contents: Content[] }>({
+    endpoint: "blog",
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
+    queries: {
+      limit: 1,
+      orders: "publishedAt",
+      filters: `publishedAt[greater_than]${publishedAt}`,
+    },
+  });
+
+  return contents[0] ?? null;
+};
+
+function processContent(data: Content): Content {
+  const sanitizedBody = domPurify.sanitize(data.body, purifyConfig);
+
   const $ = cheerio.load(sanitizedBody);
   $("pre code").each((_, elm) => {
     const codeText = $(elm).text();
     const result = hljs.highlightAuto(codeText);
 
-    // Sanitize the highlighted result before inserting
-     
-    const sanitizedHighlight = purify.sanitize(result.value, {
+    const sanitizedHighlight = domPurify.sanitize(result.value, {
       ...purifyConfig,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ALLOWED_TAGS: [...purifyConfig.ALLOWED_TAGS, "span"],
@@ -108,14 +142,11 @@ async function processContent(data: Content): Promise<Content> {
   });
 
   const processedBody = $("body").html() || "";
-
-  // Final sanitization pass
-  const finalSanitizedBody = purify.sanitize(processedBody, purifyConfig);
+  const finalSanitizedBody = domPurify.sanitize(processedBody, purifyConfig);
 
   return { ...data, body: finalSanitizedBody };
 }
 
-// Generate static params for all blog articles
 export async function generateStaticParams(): Promise<Params[]> {
   const ids = await microcms.getAllContentIds({
     endpoint: "blog",
@@ -126,19 +157,9 @@ export async function generateStaticParams(): Promise<Params[]> {
   }));
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { articleId } = await params;
-
-  const data = await microcms.get<Content>({
-    endpoint: "blog",
-    contentId: articleId,
-    customRequestInit: {
-      next: {
-        revalidate,
-      },
-    },
-  });
+  const data = await getArticle(articleId);
 
   const title = data.title;
   const url = `https://yona.dev/blog/${data.id}`;
@@ -176,55 +197,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Main page component
 export default async function ArticleDetailPage({ params }: Props) {
   const { articleId } = await params;
+  const data = await getArticle(articleId);
 
-  // Fetch article data
-  const data = await microcms.get<Content>({
-    endpoint: "blog",
-    contentId: articleId,
-    customRequestInit: {
-      next: {
-        revalidate,
-      },
-    },
-  });
-
-  // Fetch previous article
-  const prevResponse = await microcms.get<{ contents: Content[] }>({
-    endpoint: "blog",
-    customRequestInit: {
-      next: {
-        revalidate,
-      },
-    },
-    queries: {
-      limit: 1,
-      filters: `publishedAt[less_than]${data.publishedAt}`,
-      orders: "-publishedAt",
-    },
-  });
-
-  // Fetch next article
-  const nextResponse = await microcms.get<{ contents: Content[] }>({
-    endpoint: "blog",
-    customRequestInit: {
-      next: {
-        revalidate,
-      },
-    },
-    queries: {
-      limit: 1,
-      orders: "publishedAt",
-      filters: `publishedAt[greater_than]${data.publishedAt}`,
-    },
-  });
-
-  // Process content for syntax highlighting
-  const article = await processContent(data);
-  const prev = prevResponse.contents[0] || null;
-  const next = nextResponse.contents[0] || null;
+  const prevPromise = getPreviousArticle(data.publishedAt);
+  const nextPromise = getNextArticle(data.publishedAt);
+  const article = processContent(data);
+  const [prev, next] = await Promise.all([prevPromise, nextPromise]);
 
   const title = article.title;
   const url = `https://yona.dev/blog/${article.id}`;
@@ -233,14 +213,12 @@ export default async function ArticleDetailPage({ params }: Props) {
     <Layout>
       <div className="pb-8 pt-10 font-noto text-gray-300 sm:pb-12 sm:pt-24">
         <div className="mx-auto max-w-2xl">
-          {/* top */}
           <div className="mb-10">
             <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
             <div className="mt-5 flex text-sm text-gray-400">
               <p className="mr-5">公開日: {formatDate(article.publishedAt)}</p>
-              <p className="">更新日: {formatDate(article.updatedAt)}</p>
+              <p>更新日: {formatDate(article.updatedAt)}</p>
             </div>
-            {/* tags */}
             <ul className="mt-5 flex space-x-2">
               {article.tags.map((tag) => (
                 <li
@@ -255,26 +233,20 @@ export default async function ArticleDetailPage({ params }: Props) {
               ))}
             </ul>
           </div>
-          {/* article */}
           <div
             className={styles.article}
             dangerouslySetInnerHTML={{
-               
-              __html: `${article.body}`,
+              __html: article.body,
             }}
           />
-          {/* author */}
           <div className="mx-auto mt-8 max-w-2xl">
             <Author />
           </div>
-          {/* share */}
-          <ShareButtons url={url} title={title} />
-          {/* footer */}
+          <ShareButtonsLazy url={url} title={title} />
           <div className="mt-10">
-            {/* prev, next */}
             <div
               className="
-              flex flex-col space-y-5 
+              flex flex-col space-y-5
               text-center sm:flex-row
               sm:justify-between sm:space-y-0
               "

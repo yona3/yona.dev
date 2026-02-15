@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from "next/image";
 import type { FC } from "react";
 
 import { GithubIcon } from "./icons/GithubIcon";
@@ -11,11 +11,12 @@ export const Top: FC = () => {
     <SectionLayout>
       <div className="mx-auto max-w-sm pt-4">
         <Image
-          className="rounded-full"
+          className="mx-auto rounded-full"
           alt="yona"
           src="/icon.jpeg"
           width={125}
           height={125}
+          priority
         />
         <h2 className="mt-2 text-2xl font-semibold">yona</h2>
         <p className="mt-4">Hello :)</p>

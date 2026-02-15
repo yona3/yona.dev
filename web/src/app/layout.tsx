@@ -1,4 +1,3 @@
-import "highlight.js/styles/base16/atelier-sulphurpool.css";
 import "../styles/globals.css";
 
 import type { Metadata } from "next";

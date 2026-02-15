@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "if [ \"$ANALYZE\" = \"true\" ]; then next build --webpack; else next build; fi",
     "start": "next start",
     "lint": "eslint '**/*.@(js|ts|tsx)'",
     "format": "prettier --write . && pnpm lint --fix"
