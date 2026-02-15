@@ -22,6 +22,8 @@ type Props = {
   params: Promise<Params>;
 };
 
+export const revalidate = 60;
+
 // Secure content processing function with XSS protection
 async function processContent(data: Content): Promise<Content> {
   // Create a virtual DOM for server-side processing
@@ -115,12 +117,12 @@ async function processContent(data: Content): Promise<Content> {
 
 // Generate static params for all blog articles
 export async function generateStaticParams(): Promise<Params[]> {
-  const data = await microcms.get<{ contents: Content[] }>({
+  const ids = await microcms.getAllContentIds({
     endpoint: "blog",
   });
 
-  return data.contents.map((content) => ({
-    articleId: content.id,
+  return ids.map((articleId) => ({
+    articleId,
   }));
 }
 
@@ -131,6 +133,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await microcms.get<Content>({
     endpoint: "blog",
     contentId: articleId,
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
   });
 
   const title = data.title;
@@ -177,11 +184,21 @@ export default async function ArticleDetailPage({ params }: Props) {
   const data = await microcms.get<Content>({
     endpoint: "blog",
     contentId: articleId,
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
   });
 
   // Fetch previous article
   const prevResponse = await microcms.get<{ contents: Content[] }>({
     endpoint: "blog",
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
     queries: {
       limit: 1,
       filters: `publishedAt[less_than]${data.publishedAt}`,
@@ -192,6 +209,11 @@ export default async function ArticleDetailPage({ params }: Props) {
   // Fetch next article
   const nextResponse = await microcms.get<{ contents: Content[] }>({
     endpoint: "blog",
+    customRequestInit: {
+      next: {
+        revalidate,
+      },
+    },
     queries: {
       limit: 1,
       orders: "publishedAt",
