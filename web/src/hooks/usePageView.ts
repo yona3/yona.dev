@@ -1,24 +1,19 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import * as gtag from "../utils/gtag";
 
 export const usePageView = () => {
-  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!gtag.GA_ID) return;
+    if (!gtag.GA_ID || !pathname) return;
 
-    const handleRouteChange = (
-      path: string,
-      { shallow }: { shallow: boolean },
-    ) => {
-      if (!shallow) gtag.pageview(path);
-    };
-
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
+    const query = searchParams.toString();
+    const path = query ? `${pathname}?${query}` : pathname;
+    gtag.pageview(path);
+  }, [pathname, searchParams]);
 };
