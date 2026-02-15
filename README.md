@@ -113,13 +113,13 @@ web/src/
 
 - API クライアント: `src/lib/microcms.ts`（サービスドメイン: `yona-home-page`）
 - コンテンツ型定義: `src/types/index.ts`（Content, Tag）
-- ブログ記事は `generateStaticParams` で SSG、ISR で 60 秒ごとに再検証
+- ブログ一覧はページネーション取得、記事詳細は SSG + ISR（60秒）
 
 ### 環境変数
 
 | 変数名 | 説明 | 必須 |
 |---|---|---|
-| `NEXT_PUBLIC_API_KEY` | microCMS API キー | はい |
+| `MICROCMS_API_KEY` | microCMS API キー（サーバー専用） | はい |
 | `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` | Google Analytics トラッキング ID | いいえ |
 | `ANALYZE` | バンドル分析の有効化（`"true"` を設定） | いいえ |
 
@@ -133,11 +133,11 @@ web/src/
 
 ### ブログ一覧（`/blog`）
 
-microCMS から記事を公開日順に取得し一覧表示。ISR により 60 秒ごとに再検証。
+microCMS から記事を公開日順にページネーション取得して一覧表示。ISR により 60 秒ごとに再検証。
 
 ### 記事詳細（`/blog/[articleId]`）
 
-- SSG + ISR による静的生成
+- SSG + ISR（60秒）
 - highlight.js によるシンタックスハイライト
 - 3 段階 XSS サニタイズ処理
 - OGP 画像の動的生成（microCMS 画像 API + base64url）
