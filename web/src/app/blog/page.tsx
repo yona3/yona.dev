@@ -105,31 +105,74 @@ export default async function BlogPage({ searchParams }: Props) {
             ))}
           </div>
 
-          <div className="mt-10 flex items-center justify-center space-x-6 text-sm">
-            {currentPage > 1 ? (
-              <Link
-                className="underline transition hover:opacity-70"
-                href={buildPageHref(currentPage - 1)}
+          {totalPages > 1 && (
+            <div className="mt-10 flex justify-center">
+              <nav
+                aria-label="ページネーション"
+                className="inline-flex items-center rounded-lg border border-gray-700/90 bg-gray-900/70 p-1"
               >
-                ← Newer
-              </Link>
-            ) : (
-              <span className="text-gray-500">← Newer</span>
-            )}
-            <span className="text-gray-400">
-              {currentPage} / {totalPages}
-            </span>
-            {currentPage < totalPages ? (
-              <Link
-                className="underline transition hover:opacity-70"
-                href={buildPageHref(currentPage + 1)}
-              >
-                Older →
-              </Link>
-            ) : (
-              <span className="text-gray-500">Older →</span>
-            )}
-          </div>
+                {currentPage > 1 ? (
+                  <Link
+                    className="
+                      inline-flex items-center rounded-md px-3 py-2
+                      text-sm font-medium text-gray-100 transition-colors duration-150
+                      hover:bg-gray-800 focus-visible:outline
+                      focus-visible:outline-2 focus-visible:outline-offset-2
+                      focus-visible:outline-gray-200
+                    "
+                    href={buildPageHref(currentPage - 1)}
+                  >
+                    <span aria-hidden>←</span>
+                    <span className="ml-1">前へ</span>
+                  </Link>
+                ) : (
+                  <span
+                    aria-disabled
+                    className="
+                      inline-flex cursor-not-allowed items-center rounded-md
+                      px-3 py-2 text-sm font-medium text-gray-500
+                    "
+                  >
+                    <span aria-hidden>←</span>
+                    <span className="ml-1">前へ</span>
+                  </span>
+                )}
+                <span aria-hidden className="mx-1 h-6 w-px bg-gray-700" />
+                <div className="min-w-14 px-2 py-2 text-center text-xs font-medium text-gray-300 tabular-nums">
+                  <span className="text-gray-100">{currentPage}</span>
+                  <span className="mx-1 text-gray-500">/</span>
+                  <span>{totalPages}</span>
+                </div>
+                <span aria-hidden className="mx-1 h-6 w-px bg-gray-700" />
+                {currentPage < totalPages ? (
+                  <Link
+                    className="
+                      inline-flex items-center rounded-md px-3 py-2
+                      text-sm font-medium text-gray-100 transition-colors duration-150
+                      hover:bg-gray-800 focus-visible:outline
+                      focus-visible:outline-2 focus-visible:outline-offset-2
+                      focus-visible:outline-gray-200
+                    "
+                    href={buildPageHref(currentPage + 1)}
+                  >
+                    <span className="mr-1">次へ</span>
+                    <span aria-hidden>→</span>
+                  </Link>
+                ) : (
+                  <span
+                    aria-disabled
+                    className="
+                      inline-flex cursor-not-allowed items-center rounded-md
+                      px-3 py-2 text-sm font-medium text-gray-500
+                    "
+                  >
+                    <span className="mr-1">次へ</span>
+                    <span aria-hidden>→</span>
+                  </span>
+                )}
+              </nav>
+            </div>
+          )}
 
           <div className="mt-12">
             <MyLinks />
