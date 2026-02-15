@@ -8,12 +8,12 @@ export const MY_LINKS: LinkItem[] = [
   {
     name: "GitHub",
     type: "a",
-    href: "http://github.com/yona3",
+    href: "https://github.com/yona3",
   },
   {
     name: "Twitter",
     type: "a",
-    href: "http://twitter.com/yonah6g",
+    href: "https://twitter.com/yonah6g",
   },
   {
     name: "Zenn",
