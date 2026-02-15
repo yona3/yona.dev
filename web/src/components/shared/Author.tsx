@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { FC } from "react";
 
-import { universityAge } from "../../utils/age";
 import { MyLinks } from "./MyLinks";
 
 export const Author: FC = () => {
@@ -24,8 +23,7 @@ export const Author: FC = () => {
             yona
           </p>
           <p className="mt-3 text-sm leading-relaxed sm:mt-2">
-            琉球大学の理学部に所属している大学{universityAge}年生です。
-            趣味と仕事でWebアプリ開発やシステム開発をしています。
+            沖縄出身のソフトウェアエンジニア。フロントエンドからバックエンド、インフラまで幅広く取り組んでいます。
           </p>
         </div>
 
