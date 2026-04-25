@@ -79,6 +79,22 @@ commit 粒度は、Pro Git、Google Engineering Practices、Conventional Commits
 
 PR 作成・更新は `pr-writer` skill を正本にします。ExecPlan の実行計画には PR 作成を既定で含め、`pr-writer` skill を使って title / body / 既存 PR 判定 / UI preview / issue 記載を委譲します。関連 issue が無い場合も blocker にせず、`issueなし` を明示入力として `pr-writer` に渡して PR 作成を継続します。
 
+## PR 作成 gate
+
+PR 作成・更新の入口は必ず `pr-writer` skill です。`gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成 API を、`pr-writer` の Phase 6 実行手段としてではなく直接呼んではいけません。
+
+PR 作成・更新前 checklist:
+
+1. `pr-writer` の CREATE / UPDATE 判定が済んでいる。
+2. base branch、current branch、既存 PR の有無を確認済み。
+3. `git diff` / `git log` による差分分析が済んでいる。
+4. issue 特定結果がある。issue が無い場合は `issueなし` を明示している。
+5. PR template 探索結果がある。template が無い場合は標準フォーマットを使う。
+6. UI 可視変化の有無と preview 要否を判定済み。
+7. title / body を `pr-writer` の Phase 5 で生成済み。
+
+PR 作成後に `pr-writer` を通していないことが判明した場合は、直ちに `pr-writer` の UPDATE モードで body を再生成し、この skill または relevant ExecPlan に再発防止の修正を残します。
+
 ## 実行フロー
 
 1. **scope 判定**: ExecPlan が必要か `AGENTS.md` で判定する。必要なら次へ進む。
@@ -89,13 +105,13 @@ PR 作成・更新は `pr-writer` skill を正本にします。ExecPlan の実�
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
 7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。
 8. **commit**: user が明示的に除外していなければ、`commit` skill を使って論理単位ごとに commit する。
-9. **PR 作成**: user が明示的に除外していなければ、`pr-writer` skill で PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
+9. **PR 作成**: user が明示的に除外していなければ、`pr-writer` skill の Phase 1-7 を通して PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
 10. **CI fix**: PR CI が失敗したらログを読み、差分起因の failure を修正する。環境・secret・外部障害は blocker として報告し、推測で隠さない。
 
 ## PR / CI 契約
 
 - ExecPlan task では、ExecPlan の `受け入れ条件` に PR 作成条件と CI 成功条件を書く。
-- PR 作成・更新は `pr-writer` skill を使う。issue が無い task でも PR 作成は止めず、PR body の関連 issue を `なし` として扱う。
+- PR 作成・更新は `pr-writer` skill を使う。issue が無い task でも PR 作成は止めず、PR body の関連 issue を `なし` として扱う。`pr-writer` を通さない direct PR creation は完了条件を満たさない。
 - commit は `commit` skill を使い、PR 作成前に論理的に独立した commit history に整える。必要なら `commit --auto` 相当の自動分割方針を使う。
 - CI fix は同じ ExecPlan の scope 内で扱う。scope を超える修正が必要なら user に確認する。
 - PR 作成後も CI が red のままなら、green まで fix loop を続けるか、具体的な blocker を報告する。

@@ -14,6 +14,8 @@ ExecPlan skill と ExecPlan schema を更新し、ExecPlan を使う作業では
 - [x] 2026-04-26 00:33+09:00 multi-agent review fix loop で P2 finding 2 件を採用し、`AGENTS.md` とこの ExecPlan を修正した。
 - [x] 2026-04-26 00:36+09:00 同じ reviewer set で再 review し、`contract-reviewer` / `ce-reviewer` とも findings なしで APPROVE だった。
 - [x] 2026-04-26 00:37+09:00 修正後に `mise run verify` を再実行し、lint / compile / TypeScript 通過と既知の env 不足停止を確認した。
+- [x] 2026-04-26 00:45+09:00 PR 作成時に `pr-writer` を通さなかった再発防止として、PR 作成 gate を `AGENTS.md`、`PLANS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md` に追加した。
+- [x] 2026-04-26 00:46+09:00 PR 作成 gate 追加後に静的検査と `mise run verify` を実行し、lint / compile / TypeScript 通過と既知の env 不足停止を確認した。
 
 ## 発見
 
@@ -63,6 +65,28 @@ Evidence:
     [build] Finished TypeScript in 3.5s
     [cause]: Error: MICROCMS_API_KEY is not set
 
+Observation: PR 作成時に `pr-writer` を通さず GitHub connector で直接作成したため、PR body を後から UPDATE モードで再生成する必要があった。
+Evidence:
+    user feedback: pr writer が利用されませんでした。
+    response: pr-writer UPDATE モードで PR #21 body を再生成。
+
+Observation: PR 作成 gate 追加後の静的検査では whitespace 問題がなく、PR 操作の入口が `pr-writer` に固定されていることを確認できた。
+Evidence:
+    git diff --check
+    # exit 0
+    rg -n '[ \t]+$' AGENTS.md PLANS.md docs/skills docs/conventions.md docs/exec-plans/active
+    # exit 1, no output
+    rg -n "PR 作成 gate|pr-writer.*Phase|GitHub connector|gh pr create|gh pr edit" AGENTS.md PLANS.md docs/skills/exec-plan/SKILL.md docs/conventions.md docs/exec-plans/active/202604260021_exec_plan_defaults_and_sections/exec-plan.md
+    # AGENTS.md, PLANS.md, docs/conventions.md, docs/skills/exec-plan/SKILL.md, this ExecPlan matched
+
+Observation: PR 作成 gate 追加後の `mise run verify` も変更起因 error ではなく既知の環境変数不足で停止した。
+Evidence:
+    mise run verify
+    [lint] Finished in 12.21s
+    [build] ✓ Compiled successfully in 7.8s
+    [build] Finished TypeScript in 4.9s
+    [cause]: Error: MICROCMS_API_KEY is not set
+
 ## 判断
 
 Decision: 新しい canonical section 名は `目的`、`進捗`、`発見`、`判断`、`契約`、`実行計画`、`受け入れ条件`、`復旧`、`未完了` とする。
@@ -73,6 +97,10 @@ Decision: ExecPlan skill では commit、PR 作成、CI fix を既定の自律�
 Rationale: ユーザーが「デフォルトで自動 commit, pr 作成, ci-fix まで自律的に実行」と指定したため。secret、破壊的変更、scope 外修正など AGENTS.md の確認条件は停止条件として維持する。
 Date/Author: 2026-04-26 / Codex
 
+Decision: PR 作成・更新の入口を `pr-writer` skill に固定し、direct `gh pr create` / GitHub connector / PR API 呼び出しは `pr-writer` Phase 6 以外では禁止する。
+Rationale: 直前の PR 作成で `pr-writer` を宣言したにもかかわらず connector 直叩きで PR を作成した。PR body 品質と issue / template / UI preview 判定を保証するには、PR 作成 tool そのものではなく `pr-writer` workflow を gate にする必要がある。
+Date/Author: 2026-04-26 / Codex
+
 ## 契約
 
 Dependency: `PLANS.md`
@@ -81,7 +109,7 @@ Contract: 新規 ExecPlan の canonical section 名を更新し、機械検査 t
 
 Dependency: `docs/skills/exec-plan/SKILL.md`
 Reason: ExecPlan 作成から実装、review、commit、PR、CI fix までの project-local workflow。
-Contract: 既定で commit / PR 作成 / CI fix を計画と実行フローに含める。ただし停止条件に該当する場合は user 確認または blocker 報告を行う。
+Contract: 既定で commit / PR 作成 / CI fix を計画と実行フローに含める。ただし停止条件に該当する場合は user 確認または blocker 報告を行う。PR 作成・更新は `pr-writer` の Phase 1-7 を通す。
 
 Dependency: `docs/skills/review/SKILL.md`
 Reason: ExecPlan gate review の記録先 section 名を参照している。
@@ -152,6 +180,15 @@ Contract: 完了済みの historical plan は無理に書き換えず、active p
     Expected outcome:
         stage / commit / PR 作成 / CI fix まで進む。権限、secret、外部 service、review 未成立などで止まる場合は具体的な blocker が記録される。
 
+7. PR 作成 gate の再発防止を追加する。
+
+    Working directory:
+        <repo-root>
+    Command:
+        rg -n "PR 作成 gate|pr-writer.*Phase|GitHub connector" AGENTS.md PLANS.md docs/skills/exec-plan/SKILL.md docs/conventions.md
+    Expected outcome:
+        `pr-writer` Phase 1-7 を通さない direct PR creation が禁止されている。
+
 ## 受け入れ条件
 
 Input: section name inspection
@@ -195,6 +232,12 @@ Observe:
 Failure signal:
     user が明示的に除外していないのに blocker を記録せず stage / commit / PR / CI を省略する。
 
+Input: PR 作成 gate inspection
+Observe:
+    `AGENTS.md`、`PLANS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md` が `pr-writer` を PR 作成・更新の入口として明示し、direct `gh pr create` / `gh pr edit` / GitHub connector / PR API 呼び出しを禁止している。
+Failure signal:
+    `pr-writer` workflow を通さず `gh pr create` / GitHub connector / PR API を直接使える余地が残る。
+
 ## 復旧
 
 1. Markdown 契約と skill 文書の変更だけなので、再実行しても外部 state を壊さない。
@@ -207,7 +250,7 @@ Failure signal:
 
 `MICROCMS_API_KEY` がない環境では `/blog` page data collection 以降の full build completion は未検証。
 
-stage / commit / PR 作成 / CI fix は、user の最新 request が review fix loop のため未実行。
+PR #21 は作成済み。PR 作成 gate 追加分は commit 後に `pr-writer` UPDATE モードで body を同期する。PR CI が red の場合は CI fix loop で対応する。
 
 Change note: 2026-04-26 00:21+09:00 ExecPlan schema section 名変更と exec-plan skill の既定 end-to-end 実行化の計画を作成した。
 
@@ -220,3 +263,7 @@ Change note: 2026-04-26 00:33+09:00 review fix loop の P2 finding 2 件を採�
 Change note: 2026-04-26 00:36+09:00 同一 reviewer set の再 review が APPROVE で完了したことを記録した。
 
 Change note: 2026-04-26 00:37+09:00 採用 finding 修正後の `mise run verify` 結果を記録した。
+
+Change note: 2026-04-26 00:45+09:00 `pr-writer` 未使用で PR 作成した再発防止として PR 作成 gate を共通契約まで追加した。
+
+Change note: 2026-04-26 00:46+09:00 PR 作成 gate 追加後の静的検査と `mise run verify` 結果を記録した。

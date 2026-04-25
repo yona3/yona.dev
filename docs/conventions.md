@@ -24,6 +24,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - 同じ規約を複数 file に長文で重複させない。必要なら参照先だけを書く。
 - lint で機械検出できる規約は、説明を最小限にし、詳細は設定 file を正本にする。
 - ExecPlan を使う task は、ユーザーが明示的に除外しない限り commit、PR 作成、CI fix までを既定の実行範囲に含める。
+- PR 作成・更新は `pr-writer` skill を入口にする。`gh pr create`、GitHub connector、その他の PR 作成 API を `pr-writer` の実行 phase 外から直接呼ばない。
 
 ## ガードレール
 

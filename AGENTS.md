@@ -77,3 +77,5 @@ root の `mise` タスクを正本にします。
 失敗コマンド、原因、未検証範囲を報告します。stage / commit は依頼された時だけ行います。
 ただし ExecPlan skill で計画実行する task では、ユーザーが明示的に除外しない限り、
 stage / commit / PR 作成 / CI fix までを既定の自律実行範囲に含めます。
+PR 作成・更新は `pr-writer` skill を入口にします。`gh pr create`、GitHub connector、
+その他の PR 作成 API を `pr-writer` の Phase 6 以外から直接実行しません。
