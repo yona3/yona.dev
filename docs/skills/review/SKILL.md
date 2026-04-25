@@ -30,7 +30,8 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 - Claude Code 経由でこの skill を実行している場合は、後述の `Claude Code 経由の実行` を優先し、reviewer 実行を `codex exec` 経由に固定する。
 - reviewer は編集しない。coordinator だけが採用 finding を検証し、必要なら修正する。
 - review artifact を固定ファイルとして repo に増やさない。結果は会話内に返す。
-- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer id、verdict、未解決 finding、未検証範囲の要約を残す。
+- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command の要約を残す。
+- review は `mise run verify` の代替ではない。deterministic verification の結果と review verdict を分けて報告する。
 - private workspace data を外部 service へ送る fallback は、user の明示承認がある時だけ使う。
 
 ## Claude Code 経由の実行
@@ -134,7 +135,8 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
     BLOCKED: reason
 
-サマリーには reviewer 数、対象 scope、検証 command、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
+サマリーには reviewer ids、対象 scope、verdict、検証 command、未解決 finding、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
+ExecPlan gate として実行した場合、coordinator は同じ summary を relevant ExecPlan の `発見` または `受け入れ条件` に追記してから完了扱いにします。
 
 ## 完了条件
 
@@ -143,3 +145,4 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 - 採用 finding は file:line と契約で検証済み。
 - fix loop 後に同じ reviewer set で再確認している。
 - `git diff --check` と必要な `mise` task の結果を報告している。
+- ExecPlan gate の場合は、review summary が relevant ExecPlan に記録されている。

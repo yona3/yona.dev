@@ -64,6 +64,18 @@ ExecPlan を使う task では、ユーザーが明示的に除外しない限�
 
 停止条件に該当する場合は、stage / commit / PR / CI fix を無理に進めず、どの条件で止まったかを `受け入れ条件` と `未完了` に残します。
 
+## review-gated completion
+
+ExecPlan task の review は `mise run verify` の代替ではありません。`mise run verify` は deterministic hard guard として実行し、project-local `review` skill は別の review gate として扱います。
+
+Approval gate 1 後は、停止条件に該当しない限り次を満たすまで完了扱いにしません。
+
+- `mise run verify` が成功する、または環境変数不足などの原因と未検証範囲が ExecPlan に記録されている。
+- `docs/skills/review/SKILL.md` の multi-agent review fix loop が成立している。
+- relevant ExecPlan の `発見` または `受け入れ条件` に reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command が残っている。
+
+Codex Desktop で subagent 起動に user 明示許可が必要な場合、許可がなければ review は `BLOCKED` として停止します。Claude Code 経由では `review` skill の `Claude Code 経由の実行` に従い、`codex exec` reviewer へ委譲します。どちらの場合も単一 reviewer、self review、degraded local check を成立済み review の代替にしてはいけません。
+
 ## stage / commit / PR 運用
 
 commit は `commit` skill を正本にします。ExecPlan task では stage / commit / PR 作成 / CI fix を既定 scope とし、承認済みファイルを `git add <approved files>` で stage してから、`commit` skill を使って小さく論理的な単位で commit します。user が `stageしない`、`commitしない`、`PRは作らない`、`CIは見ない` のように明示した場合だけ、その範囲を `契約` と `実行計画` に書いて狭めます。
@@ -103,7 +115,7 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 4. **Approval gate 1**: 大きな実装前に user の `go` / 承認を得る。承認後は stage / commit、PR 作成、CI fix までを含む scope 内を自律実行する。
 5. **実装**: `実行計画` に沿って小さく編集する。判断変更は `判断` と `Change note:` に残す。
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
-7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。
+7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。成立した場合は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を relevant ExecPlan に残す。
 8. **stage / commit**: user が明示的に除外していなければ、承認済みファイルを `git add <approved files>` で stage し、`commit` skill を使って論理単位ごとに commit する。
 9. **PR 作成**: user が明示的に除外していなければ、`pr-writer` skill の Phase 1-7 を通して PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
 10. **CI fix**: PR CI が失敗したらログを読み、差分起因の failure を修正する。環境・secret・外部障害は blocker として報告し、推測で隠さない。
@@ -128,5 +140,5 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 
 - ExecPlan が `PLANS.md` の必須 section を満たす。
 - `mise run verify` または失敗理由と未検証範囲が記録されている。
-- project-local `review` skill の multi-agent review fix loop が成立している。
+- project-local `review` skill の multi-agent review fix loop が成立し、review summary が relevant ExecPlan に記録されている。
 - user が明示的に除外していない限り、承認済みファイルが stage され、commit と PR が作成され、CI が green、または blocker が具体的に報告されている。

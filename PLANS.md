@@ -40,7 +40,7 @@ agent が自律判断します。
 2. Draft: 前提を明記して ExecPlan を作る。
 3. Approval gate 1: 広い実装前に承認を得る。
 4. Autonomous phase: 承認 scope 内で実装、検証、review fix loop、stage / commit、PR 作成、CI fix まで進める。
-5. Approval gate 2: evidence、PR / CI 状態、残リスクを報告する。
+5. Approval gate 2: verification evidence、review verdict、PR / CI 状態、残リスクを報告する。
 
 ## 記述規則
 
@@ -56,6 +56,7 @@ agent が自律判断します。
 - nested triple-backtick fence は使いません。command / transcript / diff / 例は 4-space indent で書きます。
 - `実行計画` では file、function、module、type、command を一意に指せる名前で書きます。
 - `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、stage / commit、PR 作成、CI fix までを含めます。
+- ExecPlan gate として review を実行した場合は、reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を `発見` または `受け入れ条件` に残します。
 - PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼びません。
 - commit される ExecPlan には個人の絶対 path を残さず、`Working directory:` は `<repo-root>` や repo-relative path で書きます。
 - ユーザーから見える効果は厚めに、偶発的な実装詳細は薄めに書きます。
@@ -73,6 +74,7 @@ agent が自律判断します。
 - 上から順に読めば、単独の agent または初見の人間がタスクを再開・再現できる。
 - acceptance は compile 成功だけでなく、観測可能な結果で定義する。
 - 重要な発見と検証には evidence を残す。
+- ExecPlan 対象 task は、停止条件に該当しない限り、deterministic verification と成立済み review verdict の両方を完了 evidence に含める。
 - 重要な判断には rationale、date、author を残す。
 - 現実が plan からずれたら plan を更新する。
 - タスク固有手順は `PLANS.md` ではなく各 ExecPlan に書く。
@@ -89,7 +91,7 @@ agent が自律判断します。
 | `判断` | 判断理由を残す | `Decision:` / `Rationale:` / `Date/Author:` | tradeoff を書く |
 | `契約` | dependency と成立条件を明示する | `Dependency:` / `Reason:` / `Contract:` | file/module contract を書く |
 | `実行計画` | 実装から CI fix までの手順を具体化する | `Working directory:` / `Command:` / `Expected outcome:` | numbered list を使う |
-| `受け入れ条件` | 成功と失敗を観測可能にする | `Input:` / `Observe:` / `Failure signal:` | 完了時は actual proof に置き換える |
+| `受け入れ条件` | 成功と失敗を観測可能にする | `Input:` / `Observe:` / `Failure signal:` | 完了時は actual proof と review verdict に置き換える |
 | `復旧` | retry、冪等性、cleanup を示す | 見出し必須 | 5 要件を満たす |
 | `未完了` | 残作業と残リスクを示す | 見出し必須 | なければ `None.` |
 

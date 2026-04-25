@@ -43,6 +43,8 @@ root の `mise` タスクを正本にします。
 - secret、security、server/client 境界、公開 route、microCMS HTML、ISR、UI tradeoff に関わる
 
 完了した ExecPlan は `docs/exec-plans/completed/` へ移します。
+ExecPlan 対象 task は、停止条件に該当しない限り project-local `review` skill の成立済み
+review verdict を完了条件に含め、summary を relevant ExecPlan に残します。
 
 ## 確認基準
 
@@ -77,5 +79,7 @@ root の `mise` タスクを正本にします。
 失敗コマンド、原因、未検証範囲を報告します。stage / commit は依頼された時だけ行います。
 ただし ExecPlan skill で計画実行する task では、ユーザーが明示的に除外しない限り、
 stage / commit / PR 作成 / CI fix までを既定の自律実行範囲に含めます。
+ExecPlan task の review は `mise run verify` の代替ではありません。`mise run verify` を deterministic
+hard guard として実行し、別に `review` skill の verdict を記録します。
 PR 作成・更新は `pr-writer` skill を入口にします。`gh pr create` / `gh pr edit`、GitHub connector、
 その他の PR 作成・更新 API を `pr-writer` の Phase 6 以外から直接実行しません。
