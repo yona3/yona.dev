@@ -5,7 +5,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 
 # yona.dev Multi-Agent Review Skill
 
-この skill は、yona.dev の差分を project-specific に review するための local skill です。user scope の review skill を参考にしつつ、repo 固有の Next.js / microCMS / docs / skill 変更へ必要な reviewer set だけを定義します。正本は `docs/skills/review/SKILL.md` に置き、Codex 向けの `.codex/skills/review` と Claude Code 向けの `.claude/skills/review` は同じ実体への symlink にします。
+この skill は、yona.dev の差分を project-specific に review するための local skill です。user scope の review skill を参考にしつつ、repo 固有の Next.js / Notes Markdown / docs / skill 変更へ必要な reviewer set だけを定義します。正本は `docs/skills/review/SKILL.md` に置き、Codex 向けの `.codex/skills/review` と Claude Code 向けの `.claude/skills/review` は同じ実体への symlink にします。
 
 ## 入力契約
 
@@ -68,7 +68,7 @@ untracked files は次で確認します。
 | --- | --- | --- |
 | `contract-reviewer` | 常時 | `AGENTS.md`, `PLANS.md`, local skills, `mise.toml`, ExecPlan, task scope の矛盾 |
 | `app-reviewer` | `web/` または app 挙動変更 | Next.js App Router, TypeScript, routing, ISR, metadata, tests |
-| `security-reviewer` | secret, auth, server/client, microCMS HTML, `.gitignore` | secret exposure, `server-only`, DOMPurify, XSS, generated artifact |
+| `security-reviewer` | secret, auth, server/client, Notes Markdown renderer, frontmatter, Notion sync, `dangerouslySetInnerHTML`, `.gitignore` | secret exposure, server/client boundary, Markdown renderer, XSS, generated artifact |
 | `ce-reviewer` | docs, skills, agent instruction | SSoT, context clash, lost-in-middle, artifact trail, 日本語文体 |
 | `ui-reviewer` | UI / CSS / component | responsive, accessibility, visual regression, hover/keyboard behavior |
 
@@ -114,7 +114,7 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 6. 同じ reviewer set で再 review する。
 7. 最大 2 cycle。残る場合は `REQUEST_CHANGES` として残件を報告する。
 
-`mise run verify` が `MICROCMS_API_KEY is not set` で止まる場合は既知の環境要因として扱い、lint / compile の進捗と未検証範囲を分けて報告します。
+`mise run verify` が環境変数不足や外部 service 要因で止まる場合は、失敗箇所、差分起因かどうか、未検証範囲を分けて報告します。
 
 ## 出力形式
 

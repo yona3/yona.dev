@@ -1,0 +1,368 @@
+.page {
+  min-height: 100dvh;
+  background: var(--color-background);
+  color: var(--color-primary);
+  font-family: var(--font-serif), "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+.shell {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 8px 0 48px;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.brand {
+  color: var(--color-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.nav a {
+  color: var(--color-secondary);
+  padding: 6px 8px;
+  text-decoration: none;
+  text-underline-offset: 5px;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.hero {
+  max-width: 680px;
+  padding: 80px 0 72px;
+}
+
+.kicker {
+  margin: 0 0 12px;
+  color: var(--color-muted);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: lowercase;
+}
+
+.hero h1,
+.pageTitle {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: clamp(2.4rem, 7vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 600px;
+  margin: 28px 0 0;
+  color: var(--color-secondary);
+  font-size: 1.0625rem;
+  line-height: 2;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.section {
+  padding: 32px 0 56px;
+  border-top: 1px solid var(--color-border);
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 8px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.noteList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.noteItem {
+  display: grid;
+  grid-template-columns: 148px 76px minmax(0, 1fr);
+  gap: 24px;
+  align-items: baseline;
+  padding: 17px 0 18px;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.noteItem time,
+.noteType {
+  color: var(--color-muted);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.noteType {
+  width: fit-content;
+  padding: 2px 7px 3px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 2px;
+  background: var(--color-surface-warm);
+  color: var(--color-secondary);
+}
+
+.noteItem a {
+  color: var(--color-primary);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  text-wrap: pretty;
+}
+
+.noteItem a:hover {
+  color: var(--color-link);
+  text-decoration-color: var(--color-accent);
+}
+
+.aboutCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.aboutCard p:last-child,
+.bodyText p {
+  max-width: 640px;
+  margin: 0;
+  color: var(--color-secondary);
+  font-size: 1rem;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+.tableNote {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  background: var(--color-surface-warm);
+  color: var(--color-link);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.25rem;
+}
+
+.bodyText {
+  display: grid;
+  gap: 22px;
+  padding: 32px 0 56px;
+  border-top: 1px solid var(--color-border);
+}
+
+.linkList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linkList a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 4px;
+  color: var(--color-link);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.linkList a:hover {
+  background: var(--color-surface-warm);
+}
+
+.noteArticle {
+  max-width: 700px;
+  padding: 64px 0 72px;
+}
+
+.noteMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 24px;
+  color: var(--color-muted);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.noteArticle h1 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: clamp(2.1rem, 6vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.noteDescription {
+  margin: 24px 0 0;
+  color: var(--color-secondary);
+  font-size: 1.02rem;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.markdown {
+  display: grid;
+  gap: 22px;
+  margin-top: 48px;
+  color: var(--color-secondary);
+  font-size: 1.02rem;
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  margin: 18px 0 0;
+  color: var(--color-primary);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.markdown h1 {
+  font-size: 1.7rem;
+}
+
+.markdown h2 {
+  font-size: 1.35rem;
+}
+
+.markdown h3 {
+  font-size: 1.15rem;
+}
+
+.markdown p,
+.markdown ul,
+.markdown pre {
+  margin: 0;
+}
+
+.markdown p,
+.markdown li {
+  overflow-wrap: anywhere;
+}
+
+.markdown ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.3em;
+}
+
+.markdown pre {
+  overflow-x: auto;
+  padding: 16px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-border-soft);
+  color: var(--color-muted);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+}
+
+.footer p {
+  margin: 0;
+}
+
+@media (max-width: 680px) {
+  .shell {
+    padding: 24px 18px 56px;
+  }
+
+  .header {
+    align-items: flex-start;
+    padding-bottom: 40px;
+  }
+
+  .hero {
+    padding: 64px 0 56px;
+  }
+
+  .sectionHeader,
+  .noteItem,
+  .aboutCard {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .noteItem {
+    padding: 16px 0 17px;
+  }
+
+  .tableNote {
+    justify-self: start;
+  }
+}

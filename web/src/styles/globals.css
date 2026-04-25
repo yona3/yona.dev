@@ -3,3 +3,36 @@
 @theme {
   --font-noto: "Noto Sans JP", sans-serif;
 }
+
+:root {
+  --color-primary: #211c18;
+  --color-secondary: #5f574d;
+  --color-muted: #6f665a;
+  --color-background: #fbf7ee;
+  --color-surface: #fffdf8;
+  --color-surface-warm: #f5ecd8;
+  --color-border: #ddd0bc;
+  --color-border-soft: #ece1cf;
+  --color-accent: #8f4d32;
+  --color-link: #70462c;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-background);
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-primary);
+}
+
+a {
+  color: inherit;
+}

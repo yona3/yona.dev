@@ -40,7 +40,7 @@ root の `mise` タスクを正本にします。
 - 複数 session に跨りそう
 - 3 ファイル以上、または 2 つ以上の関心事に跨る
 - acceptance criteria が複数ある
-- secret、security、server/client 境界、公開 route、microCMS HTML、ISR、UI tradeoff に関わる
+- secret、security、server/client 境界、公開 route、Markdown rendering、UI tradeoff に関わる
 
 完了した ExecPlan は `docs/exec-plans/completed/` へ移します。
 
@@ -56,11 +56,11 @@ root の `mise` タスクを正本にします。
 
 ## 禁止境界
 
-- `MICROCMS_API_KEY` を `NEXT_PUBLIC_*`、client component、log、HTML に出さない。
-- `web/src/lib/microcms.ts` の `server-only` 境界を維持する。
-- `dangerouslySetInnerHTML` は DOMPurify 済み content か既存の限定用途だけにする。
-- blog body の sanitize → highlight → sanitize を弱めない。
-- `/blog`、`/blog/[articleId]`、pagination、metadata、`revalidate = 60` の変更は user-visible 影響として扱う。
+- Notion token や外部 API key を `NEXT_PUBLIC_*`、client component、log、HTML に出さない。
+- 公開コンテンツの正本は `web/content/notes/*.md`。Notion は執筆元であり、公開 runtime から直接読まない。
+- `dangerouslySetInnerHTML` は原則使わない。使う場合は sanitize 済み content と明示し、security-sensitive として扱う。
+- Notes Markdown renderer の対応 syntax、frontmatter schema、slug 生成規則を暗黙に変えない。
+- `/notes`、`/notes/[slug]`、`/blog` redirect、metadata の変更は user-visible 影響として扱う。
 - root `package.json` / `yarn.lock` を復活させない。依存管理は `web/` の `pnpm`。
 - `.next/`、`node_modules/`、`.pnpm-store/`、`tsconfig.tsbuildinfo` など生成物を編集・追跡しない。
 
