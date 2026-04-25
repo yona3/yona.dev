@@ -100,7 +100,7 @@ export type MicroCmsApiClientType = ReturnType<typeof createMicroCmsApiClient>;
 // Default client instance
 const defaultConfig: ApiClientConfig = {
   serviceDomain: "yona-home-page",
-  apiKey: process.env.NEXT_PUBLIC_API_KEY as string,
+  apiKey: process.env.MICROCMS_API_KEY as string,
 };
 
 export const microcmsClient = createMicroCmsApiClient(defaultConfig);

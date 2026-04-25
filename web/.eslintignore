@@ -4,3 +4,4 @@
 /.eslintrc.js
 /tailwind.config.js
 /postcss.config.js
+/next-env.d.ts

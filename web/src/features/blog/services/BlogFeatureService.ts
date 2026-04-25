@@ -102,8 +102,18 @@ const processContent = async (
 
   // Final sanitization pass
   const finalSanitizedBody = purify.sanitize(processedBody, purifyConfig);
+  const normalized = cheerio.load(finalSanitizedBody);
+  normalized("a[target]").each((_, elm) => {
+    const rel = new Set(
+      (normalized(elm).attr("rel") || "").split(/\s+/).filter(Boolean),
+    );
+    rel.add("noopener");
+    rel.add("noreferrer");
+    normalized(elm).attr("target", "_blank");
+    normalized(elm).attr("rel", Array.from(rel).join(" "));
+  });
 
-  return { body: finalSanitizedBody };
+  return { body: normalized("body").html() || "" };
 };
 
 /**

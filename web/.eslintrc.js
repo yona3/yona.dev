@@ -7,6 +7,9 @@ module.exports = {
   },
   env: { browser: true, node: true, es2020: true },
   settings: {
+    next: {
+      rootDir: ".",
+    },
     react: {
       version: "detect",
     },
@@ -27,10 +30,9 @@ module.exports = {
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:tailwindcss/recommended",
-    "next",
+    "next/core-web-vitals",
     "prettier",
   ],
   rules: {
@@ -139,6 +141,7 @@ module.exports = {
         "next.config.js",
         "next.config.ts",
         ".eslintrc.js",
+        "scripts/**/*.js",
         "tailwind.config.js",
       ],
       rules: {
@@ -156,6 +159,10 @@ module.exports = {
           { selector: "TSEnumDeclaration", message: "Don't declare enums" },
         ],
       },
+    },
+    {
+      files: ["scripts/**/*.js"],
+      rules: { "@typescript-eslint/no-require-imports": "off" },
     },
   ],
 };

@@ -21,13 +21,13 @@ let cachedConfig: EnvironmentConfig | null = null;
 
 const loadConfig = (): EnvironmentConfig => {
   const nodeEnv = process.env.NODE_ENV || "development";
-  const microCmsApiKey = process.env.NEXT_PUBLIC_API_KEY;
+  const microCmsApiKey = process.env.MICROCMS_API_KEY;
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "";
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yona.dev";
 
   // Validate required environment variables
   if (!microCmsApiKey) {
-    throw new Error("NEXT_PUBLIC_API_KEY is required");
+    throw new Error("MICROCMS_API_KEY is required");
   }
 
   return {
