@@ -69,6 +69,33 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - App Router file の local override を、理由なく全体化しない。
 - Prettier は semicolon と double quote。
 
+## Testing / TDD policy（テスト規約）
+
+この repo の開発は、t-wada の TDD を前提に進めます。ここでの TDD は
+「動作するきれいなコード」を目指し、テストリストから 1 つ選び、Red → Green →
+Refactor を小さく回す進め方を指します。
+
+現時点では test runner、test dependency、test file は未導入です。これらは別タスクで
+明示的に導入するまで追加しません。`mise run verify` は引き続き唯一の hard guard です。
+
+テスト基盤がない間も、TDD の意図は維持します。
+
+- 実装前に、期待する振る舞いを test list または acceptance として明示する。
+- バグ修正では、先に失敗している振る舞いと期待する成功状態を書く。
+- 実装は観測可能な振る舞いを 1 つずつ変え、検証結果を最終報告または ExecPlan に残す。
+- test list / acceptance は、ExecPlan がある場合は ExecPlan に、ない小変更ではユーザー要求または着手前メモに置く。
+- Green 相当とは、明示した test list / acceptance を観測可能に満たした状態を指す。
+- Green 相当の状態を確認してから refactor する。挙動変更と refactor を混ぜない。
+
+テスト基盤を導入した後は、次を守ります。
+
+- user-visible behavior、public API、共有関数の契約、regression を優先してテストする。
+- 実装前に失敗するテストを書き、最小実装で Green にする。
+- Green の間だけ refactor し、test と production code の意図を保ったまま整理する。
+- テスト名は実装詳細ではなく、期待する振る舞いを説明する。
+- brittle snapshot や private implementation detail への過度な依存を primary assertion にしない。
+- 外部 service、時刻、乱数、network に依存するテストは、決定的に観測できる境界を作る。
+
 ## Question policy（確認基準）
 
 必ず確認:

@@ -67,6 +67,7 @@ root の `mise` タスクを正本にします。
 ## 参照先
 
 - 詳細規約、分割基準、レビュー観点: `docs/conventions.md`
+- テスト規約 / TDD 方針: `docs/conventions.md` の Testing / TDD policy
 - ExecPlan schema と更新規則: `PLANS.md`
 - 人間向け説明: `README.md`
 
