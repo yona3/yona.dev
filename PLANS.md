@@ -39,7 +39,7 @@ agent が自律判断します。
 1. Hearing: plan を変える質問だけ聞く。
 2. Draft: 前提を明記して ExecPlan を作る。
 3. Approval gate 1: 広い実装前に承認を得る。
-4. Autonomous phase: 承認 scope 内で実装、検証、review fix loop、commit、PR 作成、CI fix まで進める。
+4. Autonomous phase: 承認 scope 内で実装、検証、review fix loop、stage / commit、PR 作成、CI fix まで進める。
 5. Approval gate 2: evidence、PR / CI 状態、残リスクを報告する。
 
 ## 記述規則
@@ -55,8 +55,8 @@ agent が自律判断します。
 - ファイル全体を Markdown fence で囲みません。
 - nested triple-backtick fence は使いません。command / transcript / diff / 例は 4-space indent で書きます。
 - `実行計画` では file、function、module、type、command を一意に指せる名前で書きます。
-- `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、commit、PR 作成、CI fix までを含めます。
-- PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成 API を直接呼びません。
+- `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、stage / commit、PR 作成、CI fix までを含めます。
+- PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼びません。
 - commit される ExecPlan には個人の絶対 path を残さず、`Working directory:` は `<repo-root>` や repo-relative path で書きます。
 - ユーザーから見える効果は厚めに、偶発的な実装詳細は薄めに書きます。
 - `Evidence:` は成功 proof に絞り、長い transcript や巨大 diff を貼りません。
@@ -143,17 +143,18 @@ agent が自律判断します。
         Expected outcome:
             期待する結果
 
-    2. 実装後に検証、review fix loop、commit、PR 作成、CI fix まで進める手順を書く。
+    2. 実装後に検証、review fix loop、stage / commit、PR 作成、CI fix まで進める手順を書く。
 
         Working directory:
             <repo-root>
         Command:
             review fix loop
+            git add <approved files>
             commit skill
             pr-writer skill
             CI check and fix loop
         Expected outcome:
-            commit と PR が作られ、CI が green になるか具体的な blocker が報告される。
+            stage / commit と PR が作られ、CI が green になるか具体的な blocker が報告される。
 
     ## 受け入れ条件
 

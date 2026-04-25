@@ -1,11 +1,11 @@
 ---
 name: exec-plan
-description: yona.dev専用ExecPlan運用。意図ヒアリングからPLANS準拠計画、実装、multi-agent review、commit、PR作成、CI修正まで既定で進める。
+description: yona.dev専用ExecPlan運用。意図ヒアリングからPLANS準拠計画、実装、multi-agent review、stage/commit、PR作成、CI修正まで既定で進める。
 ---
 
 # yona.dev ExecPlan Skill
 
-この skill は、yona.dev で `PLANS.md` 準拠の ExecPlan を作成し、その計画から実装、検証、multi-agent review fix loop、commit、PR 作成、CI 修正まで既定で進めるための project-local skill です。正本は `docs/skills/exec-plan/SKILL.md` に置き、Codex 向けの `.codex/skills/exec-plan` と Claude Code 向けの `.claude/skills/exec-plan` は同じ実体への symlink にします。
+この skill は、yona.dev で `PLANS.md` 準拠の ExecPlan を作成し、その計画から実装、検証、multi-agent review fix loop、stage / commit、PR 作成、CI 修正まで既定で進めるための project-local skill です。正本は `docs/skills/exec-plan/SKILL.md` に置き、Codex 向けの `.codex/skills/exec-plan` と Claude Code 向けの `.claude/skills/exec-plan` は同じ実体への symlink にします。
 
 ## 入力契約
 
@@ -60,13 +60,13 @@ ExecPlan draft の前に、次の 5 軸を必ず埋めます。ユーザーが�
 
 ## 既定の実行範囲
 
-ExecPlan を使う task では、ユーザーが明示的に除外しない限り、実装後に検証、multi-agent review fix loop、commit、PR 作成、CI fix までを自律実行します。ExecPlan の `実行計画` にはこの end-to-end path を必ず含めます。
+ExecPlan を使う task では、ユーザーが明示的に除外しない限り、実装後に検証、multi-agent review fix loop、stage / commit、PR 作成、CI fix までを自律実行します。ExecPlan の `実行計画` にはこの end-to-end path を必ず含めます。
 
-停止条件に該当する場合は、commit / PR / CI fix を無理に進めず、どの条件で止まったかを `受け入れ条件` と `未完了` に残します。
+停止条件に該当する場合は、stage / commit / PR / CI fix を無理に進めず、どの条件で止まったかを `受け入れ条件` と `未完了` に残します。
 
-## commit / PR 運用
+## stage / commit / PR 運用
 
-commit は `commit` skill を正本にします。ExecPlan task では commit / PR 作成 / CI fix を既定 scope とし、`commit` skill を使って小さく論理的な単位で commit します。user が `commitしない`、`PRは作らない`、`CIは見ない` のように明示した場合だけ、その範囲を `契約` と `実行計画` に書いて狭めます。
+commit は `commit` skill を正本にします。ExecPlan task では stage / commit / PR 作成 / CI fix を既定 scope とし、承認済みファイルを `git add <approved files>` で stage してから、`commit` skill を使って小さく論理的な単位で commit します。user が `stageしない`、`commitしない`、`PRは作らない`、`CIは見ない` のように明示した場合だけ、その範囲を `契約` と `実行計画` に書いて狭めます。
 
 commit 粒度は、Pro Git、Google Engineering Practices、Conventional Commits の共通原則に従い、次を基準にします。
 
@@ -81,7 +81,7 @@ PR 作成・更新は `pr-writer` skill を正本にします。ExecPlan の実�
 
 ## PR 作成 gate
 
-PR 作成・更新の入口は必ず `pr-writer` skill です。`gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成 API を、`pr-writer` の Phase 6 実行手段としてではなく直接呼んではいけません。
+PR 作成・更新の入口は必ず `pr-writer` skill です。`gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を、`pr-writer` の Phase 6 実行手段としてではなく直接呼んではいけません。
 
 PR 作成・更新前 checklist:
 
@@ -100,11 +100,11 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 1. **scope 判定**: ExecPlan が必要か `AGENTS.md` で判定する。必要なら次へ進む。
 2. **ヒアリング**: 5 軸を埋める。Must Ask は実装前に必ず確認する。
 3. **ExecPlan 作成**: `docs/exec-plans/active/{YYYYMMDDHHmm_slug}/exec-plan.md` を作る。`PLANS.md` の skeleton を使い、冒頭準拠文と末尾 `Change note:` を含める。
-4. **Approval gate 1**: 大きな実装前に user の `go` / 承認を得る。承認後は commit、PR 作成、CI fix までを含む scope 内を自律実行する。
+4. **Approval gate 1**: 大きな実装前に user の `go` / 承認を得る。承認後は stage / commit、PR 作成、CI fix までを含む scope 内を自律実行する。
 5. **実装**: `実行計画` に沿って小さく編集する。判断変更は `判断` と `Change note:` に残す。
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
 7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。
-8. **commit**: user が明示的に除外していなければ、`commit` skill を使って論理単位ごとに commit する。
+8. **stage / commit**: user が明示的に除外していなければ、承認済みファイルを `git add <approved files>` で stage し、`commit` skill を使って論理単位ごとに commit する。
 9. **PR 作成**: user が明示的に除外していなければ、`pr-writer` skill の Phase 1-7 を通して PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
 10. **CI fix**: PR CI が失敗したらログを読み、差分起因の failure を修正する。環境・secret・外部障害は blocker として報告し、推測で隠さない。
 
@@ -112,7 +112,7 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 
 - ExecPlan task では、ExecPlan の `受け入れ条件` に PR 作成条件と CI 成功条件を書く。
 - PR 作成・更新は `pr-writer` skill を使う。issue が無い task でも PR 作成は止めず、PR body の関連 issue を `なし` として扱う。`pr-writer` を通さない direct PR creation は完了条件を満たさない。
-- commit は `commit` skill を使い、PR 作成前に論理的に独立した commit history に整える。必要なら `commit --auto` 相当の自動分割方針を使う。
+- stage は承認済みファイルだけを対象にし、PR 作成前に `commit` skill で論理的に独立した commit history に整える。必要なら `commit --auto` 相当の自動分割方針を使う。
 - CI fix は同じ ExecPlan の scope 内で扱う。scope を超える修正が必要なら user に確認する。
 - PR 作成後も CI が red のままなら、green まで fix loop を続けるか、具体的な blocker を報告する。
 
@@ -121,7 +121,7 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 - 目的、scope、acceptance のどれかが未確定で、実装結果が変わる。
 - destructive action、secret、auth、server-client boundary に関わる確認が未承認。
 - multi-agent review が runtime 制約で成立しない。
-- user が commit / PR / CI fix の一部を明示的に除外している。
+- user が stage / commit / PR / CI fix の一部を明示的に除外している。
 - CI failure が secret / 外部 service / 権限不足で、local から修正できない。
 
 ## 完了条件
@@ -129,4 +129,4 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 - ExecPlan が `PLANS.md` の必須 section を満たす。
 - `mise run verify` または失敗理由と未検証範囲が記録されている。
 - project-local `review` skill の multi-agent review fix loop が成立している。
-- user が明示的に除外していない限り、commit と PR が作成され、CI が green、または blocker が具体的に報告されている。
+- user が明示的に除外していない限り、承認済みファイルが stage され、commit と PR が作成され、CI が green、または blocker が具体的に報告されている。

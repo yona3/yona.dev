@@ -2,7 +2,7 @@
 
 ## 目的
 
-ExecPlan skill と ExecPlan schema を更新し、ExecPlan を使う作業では commit、PR 作成、CI fix までを既定の自律実行範囲として計画に含める。section 名は短く、読みやすい canonical 名へ改める。変更後の新規 ExecPlan は `目的`、`実行計画`、`受け入れ条件` を含む新しい section 名で作成される。
+ExecPlan skill と ExecPlan schema を更新し、ExecPlan を使う作業では stage / commit、PR 作成、CI fix までを既定の自律実行範囲として計画に含める。section 名は短く、読みやすい canonical 名へ改める。変更後の新規 ExecPlan は `目的`、`実行計画`、`受け入れ条件` を含む新しい section 名で作成される。
 
 ## 進捗
 
@@ -16,6 +16,8 @@ ExecPlan skill と ExecPlan schema を更新し、ExecPlan を使う作業では
 - [x] 2026-04-26 00:37+09:00 修正後に `mise run verify` を再実行し、lint / compile / TypeScript 通過と既知の env 不足停止を確認した。
 - [x] 2026-04-26 00:45+09:00 PR 作成時に `pr-writer` を通さなかった再発防止として、PR 作成 gate を `AGENTS.md`、`PLANS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md` に追加した。
 - [x] 2026-04-26 00:46+09:00 PR 作成 gate 追加後に静的検査と `mise run verify` を実行し、lint / compile / TypeScript 通過と既知の env 不足停止を確認した。
+- [x] 2026-04-26 00:52+09:00 PR 作成 gate 追加後の review fix loop で P2/P3 finding 2 件を採用し、stage 契約と PR 更新 gate の文言を修正した。
+- [x] 2026-04-26 00:55+09:00 同じ reviewer set で再 review し、`contract-reviewer` / `ce-reviewer` とも findings なしで APPROVE だった。`mise run verify` も既知の env 不足停止まで確認した。
 
 ## 発見
 
@@ -87,17 +89,35 @@ Evidence:
     [build] Finished TypeScript in 4.9s
     [cause]: Error: MICROCMS_API_KEY is not set
 
+Observation: PR 作成 gate 追加後の review fix loop で、stage 契約の抜けと PR 更新 gate の表現差が見つかった。
+Evidence:
+    ce-reviewer: P2 PLANS.md:58 ExecPlan 既定範囲から stage が抜けている。
+    contract-reviewer: P3 docs/conventions.md:27 PR gate が `pr-writer` の「実行 phase 外」とだけ書かれ、`gh pr edit` と Phase 6 限定が落ちている。
+
+Observation: PR 作成 gate 追加後の finding 修正を同じ reviewer set で再 review し、未解決 finding はなかった。
+Evidence:
+    contract-reviewer: APPROVE findings なし
+    ce-reviewer: APPROVE findings なし
+
+Observation: finding 修正後の `mise run verify` も変更起因 error ではなく既知の環境変数不足で停止した。
+Evidence:
+    mise run verify
+    [lint] Finished in 15.61s
+    [build] ✓ Compiled successfully in 11.7s
+    [build] Finished TypeScript in 4.5s
+    [cause]: Error: MICROCMS_API_KEY is not set
+
 ## 判断
 
 Decision: 新しい canonical section 名は `目的`、`進捗`、`発見`、`判断`、`契約`、`実行計画`、`受け入れ条件`、`復旧`、`未完了` とする。
 Rationale: ユーザー指定の 3 section 名を採用し、他 section も意味を保ったまま短くする。`契約` と `復旧` は内部に dependency / idempotency を残して、見出しだけを簡潔にする。
 Date/Author: 2026-04-26 / Codex
 
-Decision: ExecPlan skill では commit、PR 作成、CI fix を既定の自律実行範囲にする。
+Decision: ExecPlan skill では stage / commit、PR 作成、CI fix を既定の自律実行範囲にする。
 Rationale: ユーザーが「デフォルトで自動 commit, pr 作成, ci-fix まで自律的に実行」と指定したため。secret、破壊的変更、scope 外修正など AGENTS.md の確認条件は停止条件として維持する。
 Date/Author: 2026-04-26 / Codex
 
-Decision: PR 作成・更新の入口を `pr-writer` skill に固定し、direct `gh pr create` / GitHub connector / PR API 呼び出しは `pr-writer` Phase 6 以外では禁止する。
+Decision: PR 作成・更新の入口を `pr-writer` skill に固定し、direct `gh pr create` / `gh pr edit` / GitHub connector / PR API 呼び出しは `pr-writer` Phase 6 以外では禁止する。
 Rationale: 直前の PR 作成で `pr-writer` を宣言したにもかかわらず connector 直叩きで PR を作成した。PR body 品質と issue / template / UI preview 判定を保証するには、PR 作成 tool そのものではなく `pr-writer` workflow を gate にする必要がある。
 Date/Author: 2026-04-26 / Codex
 
@@ -108,8 +128,8 @@ Reason: ExecPlan schema、必須 section、skeleton の正本。
 Contract: 新規 ExecPlan の canonical section 名を更新し、機械検査 token は維持する。
 
 Dependency: `docs/skills/exec-plan/SKILL.md`
-Reason: ExecPlan 作成から実装、review、commit、PR、CI fix までの project-local workflow。
-Contract: 既定で commit / PR 作成 / CI fix を計画と実行フローに含める。ただし停止条件に該当する場合は user 確認または blocker 報告を行う。PR 作成・更新は `pr-writer` の Phase 1-7 を通す。
+Reason: ExecPlan 作成から実装、review、stage / commit、PR、CI fix までの project-local workflow。
+Contract: 既定で stage / commit / PR 作成 / CI fix を計画と実行フローに含める。ただし停止条件に該当する場合は user 確認または blocker 報告を行う。PR 作成・更新は `pr-writer` の Phase 1-7 を通す。
 
 Dependency: `docs/skills/review/SKILL.md`
 Reason: ExecPlan gate review の記録先 section 名を参照している。
@@ -130,14 +150,14 @@ Contract: 完了済みの historical plan は無理に書き換えず、active p
     Expected outcome:
         `目的`、`実行計画`、`受け入れ条件` を含む新 section 名が canonical になる。
 
-2. `docs/skills/exec-plan/SKILL.md` の実行フロー、commit / PR 運用、PR / CI 契約、完了条件を更新する。
+2. `docs/skills/exec-plan/SKILL.md` の実行フロー、stage / commit / PR 運用、PR / CI 契約、完了条件を更新する。
 
     Working directory:
         <repo-root>
     Command:
         sed -n '1,220p' docs/skills/exec-plan/SKILL.md
     Expected outcome:
-        ExecPlan task の既定実行範囲に commit、PR 作成、CI fix が含まれる。
+        ExecPlan task の既定実行範囲に stage / commit、PR 作成、CI fix が含まれる。
 
 3. `docs/skills/review/SKILL.md` と active ExecPlan の旧 section 名参照を更新する。
 
@@ -199,9 +219,9 @@ Failure signal:
 
 Input: exec-plan skill inspection
 Observe:
-    `docs/skills/exec-plan/SKILL.md` の既定フローが commit、PR 作成、CI fix まで進む。
+    `docs/skills/exec-plan/SKILL.md` の既定フローが stage / commit、PR 作成、CI fix まで進む。
 Failure signal:
-    commit / PR 作成が user 明示依頼時だけのまま残る。
+    stage / commit / PR 作成が user 明示依頼時だけのまま残る。
 
 Input: `git diff --check`
 Observe:
@@ -222,6 +242,12 @@ Observe:
     ce-reviewer: P2 1 件を検出し、この ExecPlan の end-to-end 手順不足を修正対象として採用した。
     再 review:
     contract-reviewer: P1/P2 findings なし, APPROVE
+    ce-reviewer: findings なし, APPROVE
+    PR 作成 gate 追加後:
+    contract-reviewer: P3 1 件を検出し、`docs/conventions.md` の PR 更新 gate 表現を修正対象として採用した。
+    ce-reviewer: P2 1 件を検出し、`PLANS.md` と `docs/skills/exec-plan/SKILL.md` の stage 契約不足を修正対象として採用した。
+    再 review:
+    contract-reviewer: findings なし, APPROVE
     ce-reviewer: findings なし, APPROVE
 Failure signal:
     修正後の再 review で P1/P2 finding が残る。
@@ -244,7 +270,7 @@ Failure signal:
 2. 旧 section 名が残った場合は `rg` の結果から対象文書を限定して更新する。
 3. active ExecPlan は新 schema に追随させ、completed ExecPlan は historical artifact として保持する。
 4. `mise run verify` が環境変数不足で止まる場合は、lint / compile 進捗と未検証範囲を分けて記録する。
-5. commit / PR / CI 自動化の既定化が停止条件と矛盾した場合は、停止条件を優先して blocker として報告する。
+5. stage / commit / PR / CI 自動化の既定化が停止条件と矛盾した場合は、停止条件を優先して blocker として報告する。
 
 ## 未完了
 
@@ -267,3 +293,7 @@ Change note: 2026-04-26 00:37+09:00 採用 finding 修正後の `mise run verify
 Change note: 2026-04-26 00:45+09:00 `pr-writer` 未使用で PR 作成した再発防止として PR 作成 gate を共通契約まで追加した。
 
 Change note: 2026-04-26 00:46+09:00 PR 作成 gate 追加後の静的検査と `mise run verify` 結果を記録した。
+
+Change note: 2026-04-26 00:52+09:00 PR 作成 gate 追加後の review fix loop finding を採用し、stage 契約と PR 更新 gate の文言を修正した。
+
+Change note: 2026-04-26 00:55+09:00 PR 作成 gate 追加後の再 review APPROVE と `mise run verify` 結果を記録した。
