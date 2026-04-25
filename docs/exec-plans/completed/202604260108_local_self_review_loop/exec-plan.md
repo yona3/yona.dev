@@ -24,7 +24,9 @@ local での self review loop を、単なる「最終回答前に見直す」�
 - [x] 2026-04-26 01:24+09:00 採用 finding 1 件を `docs/skills/review/SKILL.md` に反映した。
 - [x] 2026-04-26 01:24+09:00 同じ reviewer set で再々 review し、`contract-reviewer` / `ce-reviewer` とも APPROVE だった。
 - [x] 2026-04-26 01:24+09:00 最終静的検査と `mise run verify` を再実行した。
-- [ ] 2026-04-26 01:24+09:00 stage / commit / PR 作成 / CI fix を進める。
+- [x] 2026-04-26 01:24+09:00 `docs(harness): self review gate を明文化` として commit した。
+- [x] 2026-04-26 01:24+09:00 PR #22 を `pr-writer` flow で作成した。
+- [x] 2026-04-26 01:24+09:00 PR #22 の checks が pass であることを確認した。
 
 ## 発見
 
@@ -104,6 +106,12 @@ Evidence:
     [build] ✓ Compiled successfully in 17.3s
     [build] Finished TypeScript in 8.4s
     [cause]: Error: MICROCMS_API_KEY is not set
+
+Observation: PR #22 の checks は pass だった。
+Evidence:
+    gh pr checks 22 --watch=false
+    Vercel pass Canceled by Ignored Build Step
+    Vercel Preview Comments pass
 
 ## 判断
 
@@ -299,7 +307,9 @@ Failure signal:
 
 Input: PR / CI status
 Observe:
-    `pr-writer` skill を通して PR が作成され、CI が green になるか具体的 blocker が報告される。
+    2026-04-26 01:24+09:00 actual:
+    PR #22: https://github.com/yona3/yona.dev/pull/22
+    checks: Vercel pass, Vercel Preview Comments pass
 Failure signal:
     `pr-writer` を通さず PR を作成する、または red CI の原因を記録せず完了扱いにする。
 
@@ -313,7 +323,7 @@ Failure signal:
 
 ## 未完了
 
-`mise run verify` は既知の `MICROCMS_API_KEY is not set` で停止したため、環境変数がある環境で full build の page data collection 以降を再確認する必要がある。次に multi-agent review fix loop、stage / commit、PR 作成、CI fix を実行する。
+PR #22 の checks は pass。local `mise run verify` は既知の `MICROCMS_API_KEY is not set` で停止したため、環境変数がある環境で full build の page data collection 以降を再確認する余地が残る。
 
 Change note: 2026-04-26 01:08+09:00 local self review loop を ExecPlan/review-gated completion として設計するための draft を作成した。
 
@@ -330,3 +340,5 @@ Change note: 2026-04-26 01:24+09:00 再 review の採用 finding を反映し、
 Change note: 2026-04-26 01:24+09:00 再々 review の APPROVE verdict と review summary を acceptance evidence に記録した。
 
 Change note: 2026-04-26 01:24+09:00 最終静的検査と `mise run verify` の結果を反映し、commit / PR 作成前の状態に更新した。
+
+Change note: 2026-04-26 01:24+09:00 commit、PR #22 作成、CI pass を記録し、completed へ移動できる状態に更新した。
