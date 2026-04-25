@@ -4,7 +4,7 @@ Next.js 16（App Router）、TypeScript、microCMS で構築された個人ホ�
 
 ## 必要要件
 
-- Node.js 20.x 以上
+- Node.js 24.x
 - pnpm パッケージマネージャー
 - [mise](https://mise.jdx.dev/)（推奨、タスクランナーとして利用）
 
@@ -15,7 +15,7 @@ Next.js 16（App Router）、TypeScript、microCMS で構築された個人ホ�
 プロジェクトルートから [mise](https://mise.jdx.dev/) を使って実行できます。
 
 ```bash
-mise install              # Node.js 20 のセットアップ
+mise install              # 必要なランタイムのセットアップ
 mise run install          # 依存パッケージのインストール
 mise run dev              # 開発サーバーの起動（http://localhost:3000）
 mise run build            # プロダクションビルド
