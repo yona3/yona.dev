@@ -23,6 +23,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - README は人間が読む背景情報であり、agent の SSoT にしない。
 - 同じ規約を複数 file に長文で重複させない。必要なら参照先だけを書く。
 - lint で機械検出できる規約は、説明を最小限にし、詳細は設定 file を正本にする。
+- ExecPlan を使う task は、ユーザーが明示的に除外しない限り commit、PR 作成、CI fix までを既定の実行範囲に含める。
 
 ## ガードレール
 
@@ -55,6 +56,12 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - app 依存管理は `web/` の `pnpm`。
 - root `package.json` と `yarn.lock` は復活させない。
 - `.next/`、`node_modules/`、`.pnpm-store/`、coverage、`tsconfig.tsbuildinfo` は生成物として追跡しない。
+
+### Project-local skills
+
+- project-local skill の正本は `docs/skills/`。
+- Codex 向けの `.codex/skills/*` と Claude Code 向けの `.claude/skills/*` は `docs/skills/*` への symlink にする。
+- runtime ごとの違いは copy を分けず、対象 skill 本体の条件分岐として書く。
 
 ## Coding conventions（コード規約）
 

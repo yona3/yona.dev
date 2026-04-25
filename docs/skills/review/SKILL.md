@@ -5,7 +5,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 
 # yona.dev Multi-Agent Review Skill
 
-この skill は、yona.dev の差分を project-specific に review するための local skill です。user scope の review skill を参考にしつつ、repo 固有の Next.js / microCMS / docs / skill 変更へ必要な reviewer set だけを定義します。review の手順は変更頻度が高いため、`AGENTS.md` や `docs/` ではなくこの skill に置きます。
+この skill は、yona.dev の差分を project-specific に review するための local skill です。user scope の review skill を参考にしつつ、repo 固有の Next.js / microCMS / docs / skill 変更へ必要な reviewer set だけを定義します。正本は `docs/skills/review/SKILL.md` に置き、Codex 向けの `.codex/skills/review` と Claude Code 向けの `.claude/skills/review` は同じ実体への symlink にします。
 
 ## 入力契約
 
@@ -16,15 +16,34 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | scope | 任意 | 対象 path / route / module / ExecPlan |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
 
+## 配置契約
+
+- skill 本体の正本は `docs/skills/review/SKILL.md`。
+- `.codex/skills/review` と `.claude/skills/review` は `docs/skills/review` への symlink とし、runtime 別の copy を作らない。
+- runtime 差分が必要な場合は、分岐条件をこの skill 本体に書く。
+
 ## 原則
 
 - 2 つ以上の独立 reviewer を別コンテキストで起動できた時だけ成立済み review とする。
 - 単一 reviewer、self review、degraded local check を APPROVE / REQUEST_CHANGES の代替にしない。
 - Codex Desktop など subagent 起動に user 明示許可が必要な runtime では、許可がなければ `BLOCKED: subagent 明示許可なし` で止める。
+- Claude Code 経由でこの skill を実行している場合は、後述の `Claude Code 経由の実行` を優先し、reviewer 実行を `codex exec` 経由に固定する。
 - reviewer は編集しない。coordinator だけが採用 finding を検証し、必要なら修正する。
 - review artifact を固定ファイルとして repo に増やさない。結果は会話内に返す。
-- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `気づきと発見` または `検証と受け入れ条件` に reviewer id、verdict、未解決 finding、未検証範囲の要約を残す。
+- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer id、verdict、未解決 finding、未検証範囲の要約を残す。
 - private workspace data を外部 service へ送る fallback は、user の明示承認がある時だけ使う。
+
+## Claude Code 経由の実行
+
+Claude Code からこの project-local review skill が呼ばれた場合、review 実行は Codex CLI に委譲します。Claude Code 自身の self review、単一 reviewer、または Claude Code 内の subagent review を、この skill の `APPROVE` / `REQUEST_CHANGES` 判定の代替にしてはいけません。
+
+実行契約:
+
+1. reviewer set は通常どおりこの skill の `reviewer set` で決める。
+2. 各 reviewer について、独立した `codex exec --sandbox read-only --ephemeral -o <output-file> <prompt>` を実行する。user scope review skill の wrapper が利用できる環境では、その wrapper を使ってもよい。
+3. prompt には reviewer id、担当観点、primary scope、除外 scope、user request、relevant ExecPlan の acceptance、編集禁止、日本語出力、finding 形式を含める。
+4. `codex review` の built-in surface、raw stdout 解析、Claude Code 自身の自己点検は fallback にしない。
+5. `codex` が無い、`codex exec` が失敗する、`-o` output が生成されない、または output 形式が壊れている場合は `BLOCKED: codex exec review unavailable` として停止する。
 
 ## scope 決定
 
