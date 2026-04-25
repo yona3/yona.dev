@@ -3,8 +3,7 @@
   "private": true,
   "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": ">=22.13.0",
-    "yarn": "1.22.22"
+    "node": ">=20.9.0"
   },
   "scripts": {
     "build": "cd web && yarn build",
