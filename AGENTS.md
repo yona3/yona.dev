@@ -75,3 +75,7 @@ root の `mise` タスクを正本にします。
 
 意味のあるコード変更後は `mise run verify` を実行します。環境変数不足などで失敗した場合は、
 失敗コマンド、原因、未検証範囲を報告します。stage / commit は依頼された時だけ行います。
+ただし ExecPlan skill で計画実行する task では、ユーザーが明示的に除外しない限り、
+stage / commit / PR 作成 / CI fix までを既定の自律実行範囲に含めます。
+PR 作成・更新は `pr-writer` skill を入口にします。`gh pr create` / `gh pr edit`、GitHub connector、
+その他の PR 作成・更新 API を `pr-writer` の Phase 6 以外から直接実行しません。
