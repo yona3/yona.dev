@@ -26,7 +26,11 @@ PR 作成・更新時に `pr-writer` skill を入口にする契約を、単な�
 - [x] 2026-04-26 01:34+09:00 採用 finding をこの ExecPlan に反映した。
 - [x] 2026-04-26 01:34+09:00 最終 review で `contract-reviewer` は APPROVE、`ce-reviewer` は ExecPlan 状態更新漏れの P3 finding 1 件を報告した。
 - [x] 2026-04-26 01:34+09:00 採用 finding をこの ExecPlan の進捗と未完了に反映した。
-- [ ] 2026-04-26 01:34+09:00 final static check、commit、PR #22 更新、checks 確認を進める。
+- [x] 2026-04-26 01:34+09:00 final static check を実行した。
+- [x] 2026-04-26 01:34+09:00 `docs(harness): pr-writer receipt を必須化` として commit し、remote branch へ push した。
+- [x] 2026-04-26 01:34+09:00 `pr-writer` UPDATE モードで PR #22 body を更新し、`gh pr view` で反映を確認した。
+- [x] 2026-04-26 01:34+09:00 completed へ移動した。
+- [ ] 2026-04-26 01:34+09:00 最終 push と checks 確認を進める。
 
 ## 発見
 
@@ -120,6 +124,19 @@ Evidence:
     contract-reviewer: APPROVE findings なし
     ce-reviewer:
         P3 docs/exec-plans/active/202604260134_pr_writer_gate_receipt/exec-plan.md:289 未完了が古い状態のまま。
+
+Observation: PR #22 body は `pr-writer` UPDATE モードで再生成・更新した。
+Evidence:
+    pr-writer receipt:
+        mode: UPDATE
+        base/head: main <- codex/local-self-review-loop
+        existing PR: #22 OPEN
+        issue: issueなし
+        template: templateなし / 標準フォーマット
+        UI preview: docs / skills / ExecPlan のみで UI 可視変化なし。preview不要
+        Phase 5 title/body: title `docs(harness): self review gate を明文化`; body は概要、背景・動機、やったこと、確認方法、影響範囲とリスク、実装メモ、関連Issueの標準フォーマットで再生成
+        Phase 6 command: gh pr edit 22 --title ... --body ...
+        Phase 7 verification: gh pr view 22 --json number,title,body,url,state
 
 ## 判断
 
@@ -282,7 +299,9 @@ Failure signal:
 
 Input: PR / CI status
 Observe:
-    PR #22 が更新され、checks が green になるか具体的 blocker が報告される。
+    2026-04-26 01:34+09:00 partial actual:
+    PR #22 body は `pr-writer` UPDATE モードで更新済み。
+    checks は最終 push 後に確認する。
 Failure signal:
     PR body が古いまま、または red CI の原因を記録せず完了扱いにする。
 
@@ -296,7 +315,7 @@ Failure signal:
 
 ## 未完了
 
-契約差分の review は完了。`mise run verify` は既知の `MICROCMS_API_KEY is not set` で停止したため、環境変数がある環境で full build の page data collection 以降を再確認する余地が残る。次に final static check、commit、PR #22 更新、checks 確認まで進める。
+契約差分の review、commit、push、PR #22 body 更新は完了。`mise run verify` は既知の `MICROCMS_API_KEY is not set` で停止したため、環境変数がある環境で full build の page data collection 以降を再確認する余地が残る。次に completed へ移動し、最終 push と checks 確認を進める。
 
 Change note: 2026-04-26 01:34+09:00 `pr-writer` workflow bypass の再発防止として、receipt 契約を追加する ExecPlan draft を作成した。
 
@@ -311,3 +330,7 @@ Change note: 2026-04-26 01:34+09:00 再 review の採用 finding を反映し、
 Change note: 2026-04-26 01:34+09:00 再々 review の採用 finding を反映し、ExecPlan 内の古い引用と期待文を現行契約へ揃えた。
 
 Change note: 2026-04-26 01:34+09:00 最終 review の採用 finding を反映し、ExecPlan の進捗と未完了を現在状態へ更新した。
+
+Change note: 2026-04-26 01:34+09:00 pr-writer UPDATE receipt と PR #22 反映確認を記録し、completed 移動前の状態へ更新した。
+
+Change note: 2026-04-26 01:34+09:00 ExecPlan を completed へ移動し、最終 push 前の状態へ更新した。
