@@ -17,6 +17,9 @@
 - [x] 2026-04-25 21:50+09:00 `git diff --check`、untracked file whitespace check、targeted review を再実行した。
 - [x] 2026-04-25 21:52+09:00 `mise run lint` は成功し、`mise run verify` は既知の `MICROCMS_API_KEY is not set` で停止することを確認した。
 - [x] 2026-04-25 21:54+09:00 `exec-plan` / `review` skill の frontmatter、routing dry-run、必須契約、行数、untracked file 検査を実施した。
+- [x] 2026-04-25 22:20+09:00 PR #18 の Vercel 失敗ログを確認し、アプリ build 自体ではなく `/blog` の page data collection が `MICROCMS_API_KEY` 不足で停止していることを確認した。
+- [x] 2026-04-25 22:23+09:00 docs / skills のみの PR で Vercel Preview build を走らせないため、`web/vercel.json` に `ignoreCommand` を追加した。
+- [x] 2026-04-25 22:25+09:00 `git diff --check`、`web/vercel.json` の JSON 構文、Vercel ignore command dry-run、`mise run lint` を確認した。
 
 ## 気づきと発見
 
@@ -64,6 +67,17 @@ Evidence:
         85 .codex/skills/exec-plan/SKILL.md
         126 .codex/skills/review/SKILL.md
 
+Observation: PR #18 の失敗 check は GitHub Actions ではなく Vercel の外部 check だった。
+Evidence:
+    gh pr checks 18 --watch=false
+    # Vercel fail
+
+Observation: Vercel build は compile 完了後、`/blog` の page data collection で `MICROCMS_API_KEY` 不足により停止した。
+Evidence:
+    npx --yes vercel inspect <deployment-id> --logs
+    # Error: Failed to collect configuration for /blog
+    # [cause]: Error: MICROCMS_API_KEY is not set
+
 ## 判断記録
 
 Decision: project-local skill は `.codex/skills/` 配下に置く。
@@ -76,6 +90,10 @@ Date/Author: 2026-04-25 / Codex
 
 Decision: `review` skill は user scope review skill の multi-reviewer 契約を取り込みつつ、yona.dev 固有の reviewer set を定義する。
 Rationale: 共有 review skill を直接編集すると他 repo へ影響するため、この repo の routing / microCMS / UI / skill 変更に必要な観点だけを local skill に閉じ込める。
+Date/Author: 2026-04-25 / Codex
+
+Decision: docs / skills のみの PR では Vercel Preview build を `ignoreCommand` で skip する。
+Rationale: この PR は web app の runtime や page generation を変更しておらず、Preview build が必須環境変数不足で落ちる問題は docs / skills 変更の検証とは独立している。`MICROCMS_API_KEY` の必須契約を緩めるより、Vercel root に変更がない場合だけ deploy を止める方が影響範囲が小さい。
 Date/Author: 2026-04-25 / Codex
 
 ## 依存関係と契約
@@ -135,6 +153,16 @@ Contract: user scope review skill を参考に、2 つ以上の独立 reviewer �
     Expected outcome:
         未解決 findings が 0 件、または fix loop 後に解消済みである。
 
+5. docs / skills のみの PR で Vercel Preview build が skip される条件を追加する。
+
+    Working directory:
+        <repo-root>
+    Command:
+        cd web
+        git diff --quiet HEAD^ HEAD -- . ':(exclude)vercel.json'
+    Expected outcome:
+        web app file の変更がない場合は exit 0 になり、Vercel build が ignore される。
+
 ## 検証と受け入れ条件
 
 Input: `git diff --check`
@@ -188,13 +216,36 @@ Observe:
 Failure signal:
     `MICROCMS_API_KEY is not set` 以外の変更起因 error が出る。
 
+Input: Vercel ignore command dry-run
+Observe:
+    $ cd web
+    $ git diff --quiet HEAD -- . ':(exclude)vercel.json'
+    # exit 0
+Failure signal:
+    web app file に変更がないのに exit 1 になり、Vercel Preview build が実行される。
+
+Input: `python3 -m json.tool web/vercel.json`
+Observe:
+    $ python3 -m json.tool web/vercel.json
+    # exit 0
+Failure signal:
+    `web/vercel.json` が JSON として parse できない。
+
+Input: `mise run lint`
+Observe:
+    $ mise run lint
+    # exit 0
+Failure signal:
+    ESLint error が出る。
+
 ## 冪等性と復旧
 
 1. 追加するのは tracked skill file と ExecPlan だけなので、再実行しても外部 state を壊さない。
 2. `.codex/skills` 作成に失敗した場合は、通常権限と許可付き作成の evidence を残して停止する。
 3. review 指摘が出た場合は、指摘対象の skill file だけを修正し、同じ reviewer set で再確認する。
 4. `mise run verify` が `MICROCMS_API_KEY` 不足で止まる場合は既知の環境要因として未検証範囲を報告する。
-5. 誤って作成した空ディレクトリは、tracked file を含まないことを確認して片付ける。
+5. Vercel Preview build が docs / skills only PR で再実行される場合は、Vercel root directory と `ignoreCommand` の実行 cwd を再確認する。
+6. 誤って作成した空ディレクトリは、tracked file を含まないことを確認して片付ける。
 
 ## 未完了事項
 
@@ -213,3 +264,7 @@ Change note: 2026-04-25 21:50+09:00 実行済みの `git diff --check`、untrack
 Change note: 2026-04-25 21:52+09:00 `mise run lint` 成功と `mise run verify` の既知環境変数不足による停止を ExecPlan に記録した。
 
 Change note: 2026-04-25 21:54+09:00 project-local `exec-plan` / `review` skill の frontmatter、必須契約、routing dry-run、untracked file 検査結果を ExecPlan に記録した。
+
+Change note: 2026-04-25 22:23+09:00 PR #18 の Vercel 失敗原因を記録し、docs / skills only change では Preview build を skip する `web/vercel.json` を追加した。
+
+Change note: 2026-04-25 22:25+09:00 `web/vercel.json` の JSON 構文、Vercel ignore command dry-run、`git diff --check`、`mise run lint` の検証結果を ExecPlan に記録した。
