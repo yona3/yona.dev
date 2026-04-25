@@ -51,6 +51,21 @@ ExecPlan draft の前に、次の 5 軸を必ず埋めます。ユーザーが�
 
 質問は最大 3 問ずつに分けます。回答が `特になし` の場合も、該当軸を「制約なし」ではなく「明示制約なし」として記録します。
 
+## commit / PR 運用
+
+commit は `commit` skill を正本にします。ExecPlan の承認 scope に commit / PR 作成が含まれる場合は、`commit` skill を使って小さく論理的な単位で commit します。通常 task で commit / PR 作成が scope に含まれない場合は、`AGENTS.md` に従い user が依頼した時だけ commit します。
+
+commit 粒度は、Pro Git、Google Engineering Practices、Conventional Commits の共通原則に従い、次を基準にします。
+
+- 1 commit は 1 つの論理的に独立した changeset にする。1 issue / 1 acceptance / 1 関心事を目安にする。
+- review しやすく、あとから revert / drop しやすい単位にする。迷ったら大きすぎる commit より小さめを選ぶ。
+- feature / bug fix と大きな refactor、機械的変更、設定変更、生成物更新は原則分ける。小さな局所 cleanup は同じ commit に含めてよい。
+- 挙動変更に対応する test / docs / 型更新は、reviewer がその変更を理解・検証するために必要なら同じ commit に含める。
+- commit ごとに repo が意味的に壊れないようにする。検証が環境要因で止まる場合は ExecPlan と最終報告に未検証範囲を残す。
+- Conventional Commits の type が複数にまたがる場合は、可能な限り複数 commit に分ける。
+
+PR 作成・更新は `pr-writer` skill を正本にします。ExecPlan から PR へ進む場合は `pr-writer` skill を使い、title / body / 既存 PR 判定 / UI preview / issue 記載を委譲します。関連 issue が無い場合も blocker にせず、`issueなし` を明示入力として `pr-writer` に渡して PR 作成を継続します。
+
 ## 実行フロー
 
 1. **scope 判定**: ExecPlan が必要か `AGENTS.md` で判定する。必要なら次へ進む。
@@ -60,13 +75,15 @@ ExecPlan draft の前に、次の 5 軸を必ず埋めます。ユーザーが�
 5. **実装**: `具体手順` に沿って小さく編集する。判断変更は `判断記録` と `Change note:` に残す。
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
 7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。
-8. **commit**: 通常 task では user が commit を依頼した時だけ commit skill を使う。spec-to-PR として承認済みの task では、PR 作成に必要な commit を approved scope 内の自律実行として扱う。
-9. **PR 作成**: user が PR 作成を求めた、または task が spec-to-PR として承認済みなら PR を作る。PR body は ExecPlan の目的、検証、review 結果、未検証範囲から作る。
+8. **commit**: commit / PR 作成が承認 scope に含まれる場合は、`commit` skill を使って論理単位ごとにこまめに commit する。spec-to-PR として承認済みの task では、PR 作成に必要な commit を approved scope 内の自律実行として扱う。
+9. **PR 作成**: user が PR 作成を求めた、または task が spec-to-PR として承認済みなら `pr-writer` skill で PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
 10. **CI fix**: PR CI が失敗したらログを読み、差分起因の failure を修正する。環境・secret・外部障害は blocker として報告し、推測で隠さない。
 
 ## spec-to-PR 契約
 
 - PR まで進める task では、ExecPlan の `検証と受け入れ条件` に PR 作成条件と CI 成功条件を書く。
+- PR 作成・更新は `pr-writer` skill を使う。issue が無い task でも PR 作成は止めず、PR body の関連 issue を `なし` として扱う。
+- commit は `commit` skill を使い、PR 作成前に論理的に独立した commit history に整える。必要なら `commit --auto` 相当の自動分割方針を使う。
 - CI fix は同じ ExecPlan の scope 内で扱う。scope を超える修正が必要なら user に確認する。
 - PR 作成後も CI が red のままなら、green まで fix loop を続けるか、具体的な blocker を報告する。
 
