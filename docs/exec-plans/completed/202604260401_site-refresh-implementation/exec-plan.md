@@ -55,6 +55,10 @@ yona.dev を `DESIGN.md` / `docs/site-refresh.md` / `/demo/site-refresh` の方�
 
 変更記録: 2026-04-26 05:38+09:00 `ce-reviewer` follow-up の verdict 明記指摘を反映した。
 
+観測: PR preview 用の mobile screenshot で header navigation が右方向に逃げ、`Home` 以外が見えないことを検出した。`max-width: 680px` では header を grid に切り替え、navigation を左寄せにして全 link が見えるように修正した。
+根拠:
+    `/tmp/pr-codex-site-refresh-notes-preview/02-notes-mobile.png` で検出し、再撮影で `Home`, `About`, `Notes` が同時に表示されることを確認する。
+
 ## 判断
 
 判断: 公開正本は `web/content/notes/*.md` の Markdown + frontmatter とし、Notion sync はこの task では実装しない。

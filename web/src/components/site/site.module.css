@@ -343,8 +343,14 @@
   }
 
   .header {
+    display: grid;
     align-items: flex-start;
+    gap: 20px;
     padding-bottom: 40px;
+  }
+
+  .nav {
+    justify-content: flex-start;
   }
 
   .hero {
