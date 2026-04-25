@@ -4,7 +4,7 @@ Next.js 16（App Router）、TypeScript、microCMS で構築された個人ホ�
 
 ## 必要要件
 
-- Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`
+- Node.js 24.x
 - pnpm パッケージマネージャー
 - [mise](https://mise.jdx.dev/)（推奨、タスクランナーとして利用）
 

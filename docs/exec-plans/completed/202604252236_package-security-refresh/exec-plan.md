@@ -18,7 +18,7 @@ Observation: 依存管理は root ではなく `web/` の pnpm が正本で、ro
 Evidence:
     AGENTS.md: アプリ本体は web/、依存管理は web/ の pnpm、最終検証は mise run verify。
 
-Observation: 現在の shell 直下の Node.js は `v12.16.2` で、プロジェクト要件の Node.js `^20.19.0 || ^22.13.0 || >=24.0.0` を満たさない。
+Observation: 現在の shell 直下の Node.js は `v12.16.2` で、プロジェクト要件の Node.js 24.x を満たさない。
 Evidence:
     Command: node --version
     Output: v12.16.2
@@ -76,8 +76,8 @@ Decision: `next@16.2.4` の transitive `postcss` は `pnpm.overrides` で `8.5.1
 Rationale: direct `postcss` 更新だけでは audit に GHSA-qx2v-qp2m-jg93 が残り、override で patched version に解決できたため。
 Date/Author: 2026-04-25 / Codex
 
-Decision: `web/package.json` と README の Node.js 要件を `^20.19.0 || ^22.13.0 || >=24.0.0` に狭める。
-Rationale: resolved dependency の engine 要件と project engine 表記を一致させ、engine-strict 環境や古い Node 20/22 での install/verify 失敗を事前に防ぐ。
+Decision: `web/package.json` と README の Node.js 要件を 24.x に狭める。
+Rationale: resolved dependency の engine 要件を満たしつつ、Vercel の `engines.node` による Node.js version override が major version 指定を前提としているため。
 Date/Author: 2026-04-25 / Codex
 
 ## 依存関係と契約
@@ -107,7 +107,7 @@ Contract: sanitize → highlight → sanitize の防御を弱めない。
     Command:
         mise trust
     Expected outcome:
-        `mise run install` と `pnpm` が Node.js `^20.19.0 || ^22.13.0 || >=24.0.0` の環境で実行できる。
+        `mise run install` と `pnpm` が Node.js 24.x の環境で実行できる。
 
 2. 現在の依存関係と脆弱性を確認する。
 
@@ -176,3 +176,4 @@ ESLint 10 と `@eslint/js` 10 は、既存 ESLint plugin の peer compatibility 
 Change note: 2026-04-25 22:36+09:00 依存最新化とセキュリティ改善の実行計画を作成した。
 Change note: 2026-04-25 22:43+09:00 依存更新、postcss override、security headers、verify/audit の結果を反映した。
 Change note: 2026-04-25 22:55+09:00 review fix loop で Node.js engine 要件の不一致を修正した。
+Change note: 2026-04-25 23:09+09:00 Vercel CI 向けに Node.js engine 要件を major version 指定へ修正した。
