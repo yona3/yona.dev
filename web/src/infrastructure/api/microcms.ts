@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createClient } from "microcms-js-sdk";
 
 import type {
@@ -98,9 +100,15 @@ export const createMicroCmsApiClient = (config: ApiClientConfig) => {
 export type MicroCmsApiClientType = ReturnType<typeof createMicroCmsApiClient>;
 
 // Default client instance
+const apiKey = process.env.MICROCMS_API_KEY ?? process.env.NEXT_PUBLIC_API_KEY;
+
+if (!apiKey) {
+  throw new Error("MICROCMS_API_KEY is required");
+}
+
 const defaultConfig: ApiClientConfig = {
   serviceDomain: "yona-home-page",
-  apiKey: process.env.MICROCMS_API_KEY as string,
+  apiKey,
 };
 
 export const microcmsClient = createMicroCmsApiClient(defaultConfig);

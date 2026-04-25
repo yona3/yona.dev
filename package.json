@@ -1,0 +1,14 @@
+{
+  "name": "yona-dev-root",
+  "private": true,
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22.13.0",
+    "yarn": "1.22.22"
+  },
+  "scripts": {
+    "build": "cd web && yarn build",
+    "dev": "cd web && yarn dev",
+    "lint": "cd web && yarn lint"
+  }
+}
