@@ -10,7 +10,7 @@ runner framework、別の task artifact 形式は定義しません。
 ## 使い方
 
 ExecPlan は、大きい・危険・横断的・再開が必要なタスクの living document です。
-事実、判断、進捗、検証 evidence が変わったら、その場で更新します。
+事実、判断、進捗、検証結果が変わったら、その場で更新します。
 
 各 ExecPlan の冒頭には次の文を置きます。
 
@@ -36,31 +36,36 @@ agent が自律判断します。
 
 推奨 workflow は次の通りです。
 
-1. Hearing: plan を変える質問だけ聞く。
-2. Draft: 前提を明記して ExecPlan を作る。
-3. Approval gate 1: 広い実装前に承認を得る。
-4. Autonomous phase: 承認 scope 内で実装、検証、review fix loop、stage / commit、PR 作成、CI fix まで進める。
-5. Approval gate 2: evidence、PR / CI 状態、残リスクを報告する。
+1. 聞き取り: plan を変える質問だけ聞く。
+2. 下書き: 前提を明記して ExecPlan を作る。
+3. 承認1: 広い実装前に承認を得る。
+4. 自律実行: 承認 scope 内で実装、検証、review fix loop、stage / commit、PR 作成、CI fix まで進める。
+5. 承認2: 根拠、PR / CI 状態、残リスクを報告する。
 
 ## 記述規則
 
 - `##` 見出しは日本語を canonical にします。
-- 次の英語 token は機械検査用の固定句としてそのまま使います:
-  `Observation:`, `Evidence:`, `Decision:`, `Rationale:`, `Date/Author:`,
-  `Working directory:`, `Command:`, `Expected outcome:`, `Input:`, `Observe:`,
-  `Failure signal:`, `Dependency:`, `Reason:`, `Contract:`,
-  `Execution flow:`, `Approval gate 1:`, `Autonomous phase:`,
-  `Subagent orchestration:`, `Approval gate 2:`, `Change note:`
+- 次の日本語 token は機械検査用の固定句としてそのまま使います:
+  `観測:`, `根拠:`, `判断:`, `理由:`, `日付/担当:`,
+  `作業場所:`, `実行:`, `期待結果:`, `入力:`, `確認:`,
+  `失敗条件:`, `依存:`, `依存理由:`, `契約:`,
+  `実行フロー:`, `承認1:`, `自律実行:`,
+  `委譲:`, `承認2:`, `変更記録:`
+- この日本語 token 契約は新規 ExecPlan と active ExecPlan に適用します。既存の
+  completed artifact は作成時点の schema と token を履歴として保持してよく、
+  後から最小補足する場合もその artifact の既存 token に合わせます。
 - 各 `##` / `###` の直後は空行 1 行にします。
 - ファイル全体を Markdown fence で囲みません。
 - nested triple-backtick fence は使いません。command / transcript / diff / 例は 4-space indent で書きます。
 - `実行計画` では file、function、module、type、command を一意に指せる名前で書きます。
 - `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、stage / commit、PR 作成、CI fix までを含めます。
 - PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼びません。
-- commit される ExecPlan には個人の絶対 path を残さず、`Working directory:` は `<repo-root>` や repo-relative path で書きます。
+- commit される ExecPlan には個人の絶対 path を残さず、`作業場所:` は `<repo-root>` や repo-relative path で書きます。
 - ユーザーから見える効果は厚めに、偶発的な実装詳細は薄めに書きます。
-- `Evidence:` は成功 proof に絞り、長い transcript や巨大 diff を貼りません。
-- 各 ExecPlan の最後の非空行は必ず最新の `Change note:` にします。
+- `根拠:` は成功根拠に絞り、長い transcript や巨大 diff を貼りません。
+- 各 ExecPlan の最後の非空行は必ず最新の `変更記録:` にします。
+- 完了した ExecPlan は同じ directory 名のまま `docs/exec-plans/active/` から
+  `docs/exec-plans/completed/` へ移し、active には作業中の plan だけを残します。
 
 ## 失敗モードの保護策
 
@@ -72,8 +77,8 @@ agent が自律判断します。
 
 - 上から順に読めば、単独の agent または初見の人間がタスクを再開・再現できる。
 - acceptance は compile 成功だけでなく、観測可能な結果で定義する。
-- 重要な発見と検証には evidence を残す。
-- 重要な判断には rationale、date、author を残す。
+- 重要な発見と検証には根拠を残す。
+- 重要な判断には理由、日付、担当を残す。
 - 現実が plan からずれたら plan を更新する。
 - タスク固有手順は `PLANS.md` ではなく各 ExecPlan に書く。
 
@@ -85,11 +90,11 @@ agent が自律判断します。
 | --- | --- | --- | --- |
 | `目的` | 変更前後のユーザーから見える挙動を説明する | 見出し必須 | 内部属性だけで終えない |
 | `進捗` | timestamp 付き checkbox で状態を残す | timestamp format | 日本時間で書く |
-| `発見` | 発見と proof を残す | `Observation:` / `Evidence:` | transcript や file-scoped diff を貼る |
-| `判断` | 判断理由を残す | `Decision:` / `Rationale:` / `Date/Author:` | tradeoff を書く |
-| `契約` | dependency と成立条件を明示する | `Dependency:` / `Reason:` / `Contract:` | file/module contract を書く |
-| `実行計画` | 実装から CI fix までの手順を具体化する | `Working directory:` / `Command:` / `Expected outcome:` | numbered list を使う |
-| `受け入れ条件` | 成功と失敗を観測可能にする | `Input:` / `Observe:` / `Failure signal:` | 完了時は actual proof に置き換える |
+| `発見` | 発見と根拠を残す | `観測:` / `根拠:` | transcript や file-scoped diff を貼る |
+| `判断` | 判断理由を残す | `判断:` / `理由:` / `日付/担当:` | tradeoff を書く |
+| `契約` | 依存と成立条件を明示する | `依存:` / `依存理由:` / `契約:` | file/module の契約を書く |
+| `実行計画` | 実装から CI fix までの手順を具体化する | `作業場所:` / `実行:` / `期待結果:` | numbered list を使う |
+| `受け入れ条件` | 成功と失敗を観測可能にする | `入力:` / `確認:` / `失敗条件:` | 完了時は実測結果に置き換える |
 | `復旧` | retry、冪等性、cleanup を示す | 見出し必須 | 5 要件を満たす |
 | `未完了` | 残作業と残リスクを示す | 見出し必須 | なければ `None.` |
 
@@ -116,56 +121,73 @@ agent が自律判断します。
 
     ## 発見
 
-    Observation: 観測した事実を書く。
-    Evidence:
+    観測: 観測した事実を書く。
+    根拠:
         terminal transcript、command output、または file-scoped diff を貼る。
 
     ## 判断
 
-    Decision: 採用した判断を書く。
-    Rationale: tradeoff と理由を書く。
-    Date/Author: YYYY-MM-DD / 名前
+    判断: 採用した判断を書く。
+    理由: tradeoff と理由を書く。
+    日付/担当: YYYY-MM-DD / 名前
 
     ## 契約
 
-    Dependency: 依存する file / module / service を書く。
-    Reason: なぜ依存するかを書く。
-    Contract: 最終的に守るべき契約を書く。
+    依存: 依存する file / module / service を書く。
+    依存理由: なぜ依存するかを書く。
+    契約: 最終的に守るべき契約を書く。
 
     ## 実行計画
 
     1. file / function / module / type を具体名で書く。
 
-        Working directory:
+        作業場所:
             <repo-root>
-        Command:
+        実行:
             実行する command
-        Expected outcome:
+        期待結果:
             期待する結果
 
-    2. 実装後に検証、review fix loop、stage / commit、PR 作成、CI fix まで進める手順を書く。
+    2. 実装後に検証と review fix loop まで進める手順を書く。
 
-        Working directory:
+        作業場所:
             <repo-root>
-        Command:
+        実行:
             review fix loop
+        期待結果:
+            採用 finding がなくなり、完了処理に進める状態になる。
+
+    3. 完了条件を満たしたら、stage / commit 前にこの ExecPlan directory を completed へ移す。
+
+        作業場所:
+            <repo-root>
+        実行:
+            mv docs/exec-plans/active/{YYYYMMDDHHmm_slug} docs/exec-plans/completed/{YYYYMMDDHHmm_slug}
+        期待結果:
+            完了済みの ExecPlan が active に残らず、この移動が後続の commit / PR に含まれる。
+
+    4. stage / commit、PR 作成、CI fix まで進める。
+
+        作業場所:
+            <repo-root>
+        実行:
             git add <approved files>
             commit skill
             pr-writer skill
             CI check and fix loop
-        Expected outcome:
-            stage / commit と PR が作られ、CI が green になるか具体的な blocker が報告される。
+        期待結果:
+            stage / commit と PR が作られ、CI が green になるか具体的な blocker が報告される。CI fix や blocker 記録で completed ExecPlan を更新した場合は、追加 commit と PR 更新まで行う。
 
     ## 受け入れ条件
 
-    Input: 検証入力を書く。
-    Observe: actual transcript、test pass count、HTTP I/O、screenshot などの proof を書く。
-    Failure signal: 失敗とみなす観測結果を書く。
+    入力: 検証入力を書く。
+    確認: actual transcript、test pass count、HTTP I/O、screenshot などの確認結果を書く。
+    失敗条件: 失敗とみなす観測結果を書く。
 
     ## 復旧
 
     1. 再実行しても state を壊さない。
-    2. 失敗時は failure signal を読んで retry / adapt する。
+    2. 失敗時は `失敗条件:` を読んで retry / adapt する。
     3. migration や生成物がある場合は backup / fallback を示す。
     4. additive で testable な変更を優先する。
     5. 完了後に temporary file、dev server、生成物を clean にする。
@@ -174,15 +196,15 @@ agent が自律判断します。
 
     残作業、skip した検証、残リスクを書く。なければ `None.` と書く。
 
-    Change note: YYYY-MM-DD HH:MM+09:00 変更理由を書く。
+    変更記録: YYYY-MM-DD HH:MM+09:00 変更理由を書く。
 
 ## マイルストーン（milestone）
 
-milestone を使う場合は、各 milestone に goal / work / result / proof を narrative で書き、
+milestone を使う場合は、各 milestone に目的 / 作業 / 結果 / 根拠を文章で書き、
 単独で検証できる単位にします。
 
 ## 変更記録
 
-plan を更新したら `Change note:` を追記します。最新の `Change note:` を各 ExecPlan の最後の非空行にします。
+plan を更新したら `変更記録:` を追記します。最新の `変更記録:` を各 ExecPlan の最後の非空行にします。
 
-    Change note: YYYY-MM-DD HH:MM+09:00 変更理由を書く。
+    変更記録: YYYY-MM-DD HH:MM+09:00 変更理由を書く。

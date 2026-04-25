@@ -276,7 +276,7 @@ Failure signal:
 
 `MICROCMS_API_KEY` がない環境では `/blog` page data collection 以降の full build completion は未検証。
 
-PR #21 は作成済み。PR 作成 gate 追加分は commit 後に `pr-writer` UPDATE モードで body を同期する。PR CI が red の場合は CI fix loop で対応する。
+PR #21 は 2026-04-26 00:57+09:00 に main へ merge 済み。Vercel と Vercel Preview Comments は SUCCESS で、残る PR 更新 / CI fix 作業はない。
 
 Change note: 2026-04-26 00:21+09:00 ExecPlan schema section 名変更と exec-plan skill の既定 end-to-end 実行化の計画を作成した。
 
@@ -297,3 +297,5 @@ Change note: 2026-04-26 00:46+09:00 PR 作成 gate 追加後の静的検査と `
 Change note: 2026-04-26 00:52+09:00 PR 作成 gate 追加後の review fix loop finding を採用し、stage 契約と PR 更新 gate の文言を修正した。
 
 Change note: 2026-04-26 00:55+09:00 PR 作成 gate 追加後の再 review APPROVE と `mise run verify` 結果を記録した。
+
+Change note: 2026-04-26 01:29+09:00 PR #21 が merge 済みで Vercel check も SUCCESS のため、completed 移動と矛盾していた未完了記録を実態に合わせて更新した。
