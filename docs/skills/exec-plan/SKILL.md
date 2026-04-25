@@ -105,7 +105,18 @@ PR 作成・更新前 checklist:
 6. UI 可視変化の有無と preview 要否を判定済み。
 7. title / body を `pr-writer` の Phase 5 で生成済み。
 
-PR 作成後に `pr-writer` を通していないことが判明した場合は、直ちに `pr-writer` の UPDATE モードで body を再生成し、この skill または relevant ExecPlan に再発防止の修正を残します。
+PR 作成・更新後は、relevant ExecPlan の `発見` または `受け入れ条件` に `pr-writer receipt` を残します。receipt には次を含めます。
+
+- mode: CREATE / UPDATE
+- base/head branch と既存 PR 判定
+- issue 判定。issue が無い場合は `issueなし`
+- PR template 判定。template が無い場合は `templateなし / 標準フォーマット`
+- UI preview 判定。UI 可視変化がない場合は `preview不要`
+- Phase 5 で生成した title / body の要約
+- Phase 6 で実行した command
+- Phase 7 の `gh pr view` 検証結果
+
+PR 作成・更新後に `pr-writer` を通していないことが判明した場合は、直ちに `pr-writer` の UPDATE モードで body を再生成し、relevant ExecPlan に `pr-writer receipt` と再発防止の修正を残します。
 
 ## 実行フロー
 
@@ -141,4 +152,5 @@ PR 作成後に `pr-writer` を通していないことが判明した場合は�
 - ExecPlan が `PLANS.md` の必須 section を満たす。
 - `mise run verify` または失敗理由と未検証範囲が記録されている。
 - project-local `review` skill の multi-agent review fix loop が成立し、review summary が relevant ExecPlan に記録されている。
+- PR 作成・更新を行った場合は、`pr-writer receipt` が relevant ExecPlan に記録されている。
 - user が明示的に除外していない限り、承認済みファイルが stage され、commit と PR が作成され、CI が green、または blocker が具体的に報告されている。

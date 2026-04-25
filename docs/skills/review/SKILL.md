@@ -82,6 +82,8 @@ docs / skills だけの変更では、既定で `contract-reviewer` と `ce-revi
 - reviewer id と担当観点
 - primary scope と除外 scope
 - user request と relevant ExecPlan の acceptance
+- PR 作成・更新前の task では relevant ExecPlan の `pr-writer receipt` 記録手順
+- PR 作成・更新済みの task では relevant ExecPlan の `pr-writer receipt`
 - 編集禁止
 - 日本語出力
 - finding は `P1/P2/P3 file:line issue reason smallest fix` 形式
@@ -95,7 +97,9 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 2. 同一原因はまとめる。
 3. diff scope 外、task scope 外、既存問題だけの指摘、ExecPlan で明示的に見送った論点は除外する。
 4. 採用前に file:line と現行契約で再確認する。
-5. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
+5. PR 作成・更新前の review gate では、relevant ExecPlan の実行計画に `pr-writer receipt` を記録する手順があるか確認する。
+6. PR 作成・更新済みの completion gate では、`pr-writer receipt` がない、または mode / base/head / 既存 PR 判定 / issue / template / UI preview / title-body / command / `gh pr view` 検証のどれかが欠けていれば finding として扱う。
+7. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
 
 指摘を出す時は、可能なら inline directive を使います。
 
@@ -146,3 +150,5 @@ ExecPlan gate として実行した場合、coordinator は同じ summary を re
 - fix loop 後に同じ reviewer set で再確認している。
 - `git diff --check` と必要な `mise` task の結果を報告している。
 - ExecPlan gate の場合は、review summary が relevant ExecPlan に記録されている。
+- PR 作成・更新前の ExecPlan gate の場合は、`pr-writer receipt` を記録する手順が relevant ExecPlan に書かれている。
+- PR 作成・更新済みの completion gate の場合は、`pr-writer receipt` が relevant ExecPlan に記録されている。

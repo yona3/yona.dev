@@ -57,6 +57,7 @@ agent が自律判断します。
 - `実行計画` では file、function、module、type、command を一意に指せる名前で書きます。
 - `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、stage / commit、PR 作成、CI fix までを含めます。
 - ExecPlan gate として review を実行した場合は、reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を `発見` または `受け入れ条件` に残します。
+- PR 作成・更新を行った場合は、`pr-writer` の mode、base/head、既存 PR 判定、issue 判定、template 判定、UI preview 判定、title/body 生成、実行 command、`gh pr view` 検証を `発見` または `受け入れ条件` に残します。
 - PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼びません。
 - commit される ExecPlan には個人の絶対 path を残さず、`Working directory:` は `<repo-root>` や repo-relative path で書きます。
 - ユーザーから見える効果は厚めに、偶発的な実装詳細は薄めに書きます。
