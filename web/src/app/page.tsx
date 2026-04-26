@@ -35,13 +35,14 @@ export default async function HomePage() {
       <section className={styles.hero} aria-labelledby="home-title">
         <HomeIntro />
         <p className={styles.lead}>
-          沖縄でソフトウェアエンジニアをしています。普段は web
-          プロダクトの開発に関わっています。
+          沖縄でソフトウェアエンジニアをしています 🌺
+          <br />
+          普段の業務では Web システムの開発に携わっています。
         </p>
         <p className={styles.lead}>
           最近は AI Agent
-          と一緒に開発することと、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
-          Notes に書いています。
+          と一緒に開発すること、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
+          Notes に書いています ✏️
         </p>
         <ul className={styles.socialLinks} aria-label="外部プロフィール">
           {socialLinks.map(({ href, label, icon: Icon }) => (

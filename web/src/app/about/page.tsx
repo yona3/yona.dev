@@ -11,28 +11,33 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <SiteShell currentPage="about">
-      <section className={styles.hero} aria-labelledby="about-title">
+      <section
+        className={`${styles.hero} ${styles.heroAbout}`}
+        aria-labelledby="about-title"
+      >
         <h1 id="about-title" className={styles.pageTitle}>
           このサイトについて
         </h1>
         <p className={styles.lead}>
-          整った記事だけでなく、まとまる前のノートや作業の記録も同じ場所に置いています。
-          書きながら考えるための、小さな机のようなページです。
+          こんにちは、Koh Yonamine です。
+          <br />
+          沖縄でソフトウェアエンジニアをしています 🌺
         </p>
       </section>
 
       <section className={styles.bodyText} aria-label="プロフィール">
         <p>
-          外向けに整えた文章だけを残すと、考える途中にしかないものが残らない。
-          書き始めの粗い形でも、思いついたまま置いていけるようにしています。
+          普段の業務では Web システムの開発に携わっています。
+          最近は AI Agent と一緒に開発すること、その開発フロー自体を整えることに時間を使っています。
         </p>
         <p>
-          手を動かしながら気づいたことを忘れないうちに書き留めること、
-          実績ではなく何を面白がっているかが伝わることを大事にしています。
+          仕事の外では、自分のために小さな道具を作るのが好きです。
+          このサイトもその一つで、書きながら考えるための小さな机として手を入れ続けています。
         </p>
         <p>
-          人生に決まった意味はないからこそ、作ることや書くことを自由に楽しめる。
-          効率だけでは拾えないものを、少しずつ残していきます。
+          コーヒーと本のある時間を大切にしています ☕
+          <br />
+          人生に決まった意味はないからこそ、作ることや書くことを自由に楽しめると思っています。
         </p>
       </section>
     </SiteShell>
