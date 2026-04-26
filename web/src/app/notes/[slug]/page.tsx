@@ -66,7 +66,6 @@ export default async function NoteDetailPage({ params }: Props) {
           <span className={styles.noteType}>{noteTypeLabels[note.type]}</span>
         </div>
         <h1>{note.title}</h1>
-        <p className={styles.noteDescription}>{note.description}</p>
         <MarkdownContent content={note.content} />
         <div className={styles.noteEnd} aria-hidden="true">
           * * *

@@ -226,7 +226,6 @@
   display: grid;
   gap: 20px;
   padding: 30px 0 50px;
-  border-top: 1px solid var(--color-border-soft);
 }
 
 .socialLinks {
@@ -299,15 +298,6 @@
   line-height: 1.24;
   overflow-wrap: break-word;
   text-wrap: balance;
-}
-
-.noteDescription {
-  margin: 18px 0 0;
-  color: var(--color-secondary);
-  font-size: 0.98rem;
-  line-height: 1.95;
-  line-break: strict;
-  overflow-wrap: break-word;
 }
 
 .markdown {
