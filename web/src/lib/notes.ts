@@ -120,12 +120,12 @@ export const getAllNotes = cache(async (): Promise<Note[]> => {
     .sort((a, b) => b.date.localeCompare(a.date));
 });
 
-export const getNoteBySlug = cache(async (slug: string): Promise<Note | null> => {
+export const getNoteBySlug = async (slug: string): Promise<Note | null> => {
   const notes = await getAllNotes();
   return notes.find((note) => note.slug === slug) ?? null;
-});
+};
 
-export const getNoteSlugs = cache(async (): Promise<string[]> => {
+export const getNoteSlugs = async (): Promise<string[]> => {
   const notes = await getAllNotes();
   return notes.map((note) => note.slug);
-});
+};

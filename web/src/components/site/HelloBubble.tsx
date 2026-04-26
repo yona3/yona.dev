@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 import styles from "./site.module.css";
 
 const TEXT = "Hello, I'm yona!";
@@ -13,20 +14,12 @@ type Props = {
 };
 
 export const HelloBubble = ({ hidden = false }: Props) => {
+  const isReduced = useReducedMotion();
   const [shown, setShown] = useState("");
   const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
-    const isReduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (isReduceMotion) {
-      const fillIn = window.setTimeout(() => {
-        setShown(TEXT);
-        setIsTyping(false);
-      }, 0);
-      return () => window.clearTimeout(fillIn);
-    }
+    if (isReduced) return;
     let interval: number | undefined;
     const start = window.setTimeout(() => {
       let i = 0;
@@ -43,18 +36,20 @@ export const HelloBubble = ({ hidden = false }: Props) => {
       window.clearTimeout(start);
       if (interval !== undefined) window.clearInterval(interval);
     };
-  }, []);
+  }, [isReduced]);
 
   const className = hidden
     ? `${styles.nameSpeech} ${styles.nameSpeechHidden}`
     : styles.nameSpeech;
+  const displayedText = isReduced ? TEXT : shown;
+  const shouldShowCaret = !isReduced && isTyping && !hidden;
 
   return (
     <>
       <span className={styles.visuallyHidden}>{TEXT}</span>
       <span aria-hidden="true" className={className}>
-        <span>{shown}</span>
-        {isTyping && !hidden && <span className={styles.nameCaret} />}
+        <span>{displayedText}</span>
+        {shouldShowCaret && <span className={styles.nameCaret} />}
       </span>
     </>
   );

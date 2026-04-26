@@ -5,7 +5,6 @@ import {
   M_PLUS_Rounded_1c,
   Noto_Color_Emoji,
   Noto_Sans_JP,
-  Noto_Serif_JP,
 } from "next/font/google";
 import Script from "next/script";
 
@@ -20,13 +19,6 @@ const notoSansJP = Noto_Sans_JP({
   weight: ["300", "400", "500", "700"],
   display: "swap",
   variable: "--font-sans",
-});
-
-const notoSerifJP = Noto_Serif_JP({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-  variable: "--font-serif",
 });
 
 const mPlusRounded = M_PLUS_Rounded_1c({
@@ -92,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} ${notoSerifJP.variable} ${mPlusRounded.variable} ${notoColorEmoji.variable}`}>
+    <html lang="ja" className={`${notoSansJP.variable} ${mPlusRounded.variable} ${notoColorEmoji.variable}`}>
       <body>
         <a href="#main" className="skip-link">
           メインコンテンツへスキップ

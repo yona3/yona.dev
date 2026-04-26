@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { HedgehogEmoji } from "./HedgehogEmoji";
 import { HedgehogRunner } from "./HedgehogRunner";
 import { HelloBubble } from "./HelloBubble";
@@ -10,19 +11,13 @@ import styles from "./site.module.css";
 const LAP_DURATION_MS = 4300;
 
 export const HomeIntro = () => {
+  const isReduced = useReducedMotion();
   const [isRunning, setIsRunning] = useState(false);
   const [cycle, setCycle] = useState(0);
-  const [isReduced, setIsReduced] = useState(false);
   const timerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    const detect = window.setTimeout(() => {
-      setIsReduced(
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      );
-    }, 0);
     return () => {
-      window.clearTimeout(detect);
       if (timerRef.current !== undefined) {
         window.clearTimeout(timerRef.current);
       }

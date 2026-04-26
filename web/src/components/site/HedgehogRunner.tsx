@@ -9,8 +9,7 @@ type Props = {
   onClick: () => void;
 };
 
-export const HedgehogRunner = ({ className, isRunning, onClick }: Props) => {
-  const handleClick = () => onClick();
+export const HedgehogRunner = ({ className, isRunning, onClick: handleClick }: Props) => {
   return (
     <button
       aria-label="ハリネズミを走らせる"

@@ -138,15 +138,8 @@ export const MarkdownContent = ({ content }: Props) => {
         const key = `${block.kind}-${index}`;
 
         if (block.kind === "heading") {
-          if (block.level === 1) {
-            return <h1 key={key}>{block.text}</h1>;
-          }
-
-          if (block.level === 2) {
-            return <h2 key={key}>{block.text}</h2>;
-          }
-
-          return <h3 key={key}>{block.text}</h3>;
+          const Tag = `h${block.level}` as "h1" | "h2" | "h3";
+          return <Tag key={key}>{block.text}</Tag>;
         }
 
         if (block.kind === "list") {
