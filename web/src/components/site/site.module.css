@@ -105,7 +105,7 @@
   padding-bottom: 32px;
 }
 
-.hero h1 {
+.hero h1:not(.pageTitle) {
   margin: 0;
   color: var(--color-primary);
   font-size: clamp(0.95rem, 1.55vw, 1.05rem);

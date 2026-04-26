@@ -14,9 +14,10 @@
 - [x] 2026-04-26 17:48+09:00 Home / About / Notes / note detail のコンテンツを精査し、公開する文章として整える。 (Notes 3 本書き直し / Home 文言調整 / About 段落重複整理 / note detail description 削除を反映済。)
 - [x] 2026-04-26 17:08+09:00 `DESIGN.md` を最終 UI と整合させる。 (Layout 章を Home の通称 yona / About 専用ページとして固定するよう更新。`DESIGN.md` commit 5205066。)
 - [x] 2026-04-26 17:55+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。 (現状確認: src / lockfile / env から microCMS 参照は撤去済、`/blog` は redirect のみ。`docs/conventions.md` に Content management 方針として、microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補 (手動 / build 前) を明文化。)
-- [x] 2026-04-26 17:30+09:00 `mise run verify`、browser 確認、project-local review fix loop を最終実行する。 (lint + build green、project-local review skill REQUEST_CHANGES → 3 件反映、4 件 user 判断確定。browser 確認は user 側で実施予定。)
+- [x] 2026-04-26 17:30+09:00 `mise run verify` と project-local review fix loop を実行する。 (lint + build green、project-local review skill REQUEST_CHANGES → 3 件反映、4 件 user 判断確定。)
 - [x] 2026-04-26 17:32+09:00 論理単位の commit を揃え、`pr-writer` で PR を作成または更新する。 (4 commit: 3a75af4 feat(site) / c66f674 docs(notes) / 5205066 docs(design) / 4afc271 docs(exec-plan)。PR #24 OPEN: https://github.com/yona3/yona.dev/pull/24 。)
 - [x] 2026-04-26 23:03+09:00 `review` skill に Claude Code CLI を使う `claude-design-reviewer` の恒久的な起動条件を追加する。
+- [x] 2026-04-26 23:46+09:00 review fix loop で stale finding を確認し、Claude 指摘の page title CSS 詳細度と親 ExecPlan の記録同期を修正した。`git diff --check` / `mise run verify` は成功し、in-app browser で `/about` と `/notes` の見出し階層を確認した。
 - [ ] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。
 - [ ] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。
 
@@ -289,3 +290,5 @@
 - 2026-04-26 22:40+09:00 commit b8a7e39 (Noto Color Emoji + 工事中 banner) と e639082 (ダミー note 撤去 / site-renewal / test-blocks) に対して project-local review skill を 2 cycle 回した。cycle 1 で contract / app / ui / design 4 reviewer 全員が REQUEST_CHANGES を返し、採用 finding 6 件のうち 5 件を反映: `.constructionNotice` の color を `var(--color-secondary)` に変更し WCAG 4.5:1 を満たす / `test-blocks.md` を `published: false` にして公開対象から除外 / 工事中 banner を `<header>` 直後から `<main>` 直後 (footer の前) に移動し最初の意味情報を site identity に戻す / `.page` と `.nameSpeech` の font-family stack で `var(--font-emoji)` を generic `sans-serif` の前に移動 / 直前の `bookish-site.md` 維持判断に「commit e639082 で削除済、historical record」を注記。`site-renewal.md:18` の serif 文言は user 編集中につき cycle 2 では再提出せず保留。cycle 2 で app / ui / design は APPROVE、contract が ExecPlan 変更記録 の追記漏れを P3 として指摘したためこの entry を追記。`mise run verify` green、`git diff --check` 通過。残作業は browser 確認、ユーザー承認、PR push、CI、merge。
 - 2026-04-26 23:03+09:00 `review` skill に `claude_design_review` 入力と `claude-design-reviewer` を追加し、Claude Code CLI (`claude -p`) を design review の追加 reviewer として使えるようにした。
 - 2026-04-26 23:08+09:00 ユーザー指示に合わせ、design review では `claude-design-reviewer` をデフォルト起動し、追加許可を不要とする standing approval を契約化した。通常 design-reviewer は置き換えず、無効化は `claude_design_review:off` で行う。
+
+変更記録: 2026-04-26 23:52+09:00 review fix loop の current diff に対する `git diff --check` / `mise run verify` 成功、in-app browser での `/about` と `/notes` 確認、ui reviewer / claude-design-reviewer APPROVE を記録した。contract reviewer の残指摘は検証記録不足のみで、この変更で反映した。
