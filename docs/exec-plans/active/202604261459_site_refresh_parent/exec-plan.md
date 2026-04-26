@@ -37,6 +37,22 @@
 根拠:
     `docs/exec-plans/completed/202604261439_hedgehog_emoji_footer/exec-plan.md` と `docs/exec-plans/completed/202604261451_hedgehog_position_coffee_size/exec-plan.md`。
 
+観測: 2026-04-26 に design 中心の project-local review skill を実行し、`contract-reviewer` / `design-reviewer` / `ui-reviewer` の 3 reviewer が `codex exec --sandbox read-only --ephemeral` で並列実行され、いずれも `REQUEST_CHANGES` を返した。採用 finding は 7 件 (P2 が 3、P3 が 4)。
+根拠:
+    reviewer 出力 (`/tmp/yona-review-20260426/out-*.md`)、source: contract / design / ui の集約。重複は Home 主見出し finding を contract+design で 1 件に統合。
+
+観測: 上記 7 件のうち、user 判断不要な 3 件は反映済み。残 4 件は user 判断で反映 / 維持を確定した。
+根拠:
+    - 反映済 (P2): `web/src/components/site/site.module.css:245` の `.socialLinks a` の `color` を `--color-faint` → `--color-muted` (WCAG 1.4.11 で 3:1 を満たすため)。
+    - 反映済 (P3): `web/src/components/site/site.module.css:191` の `.noteItem a` に `min-width: 0` を追加 (長語 overflow 予防)。
+    - 反映済 (P3): `web/src/components/site/SiteShell.tsx:86-88` を `<footer>` から `<div aria-hidden="true">` に戻し、空 contentinfo landmark を解消。
+    - DESIGN.md 更新済: `DESIGN.md` の Layout 章で Home の主見出しを `Koh Yonamine` から通称 `yona` の挨拶に変更し、About を「このサイトについて」専用と固定する記述を追加。
+    - 維持判断: skip-link の塗り面表現と、`web/content/notes/bookish-site.md` の本文と実装罫線の併存は user 判断で維持。
+
+観測: 上記 review fix loop 後に、同じ reviewer set による再 review、`mise run verify`、browser 確認は実行していない。
+根拠:
+    user 指示が「user 判断不要な 3 件だけ先行反映」であり、fix loop 完走ではなく中間反映であるため。`git diff --check` は通過済み。
+
 ## 判断
 
 判断: この親 ExecPlan は PR merge まで active に残す。
@@ -54,6 +70,22 @@
 判断: Notion は執筆元の候補として扱い、公開 runtime の正本は `web/content/notes/*.md` のまま維持する。
 理由: `AGENTS.md` の禁止境界が「公開コンテンツの正本は `web/content/notes/*.md`。Notion は執筆元であり、公開 runtime から直接読まない」と定めているため。
 日付/担当: 2026-04-26 / Codex
+
+判断: Home の主見出しは通称 `yona` の挨拶で示し、本名 `Koh Yonamine` は metadata / OGP / About 補助に留める。
+理由: 公開する個人ブランディングを通称 `yona` (X / GitHub / Zenn の handle と一致) に寄せ、本名は補助に留めるほうが内省的な入口の温度に合うとユーザーが判断した。`DESIGN.md` の Layout を実装に合わせて更新済み。
+日付/担当: 2026-04-26 / Codex (review fix loop)
+
+判断: About は「このサイトについて」専用ページとし、人物の自己紹介と技術的関心は Home に集約する。
+理由: design-reviewer の「About が人ではなくサイト説明に偏っている」指摘に対し、Home に挨拶と関心が並んでいるため二重化を避け、About はサイトの性格と書く姿勢を置く役割に固定する設計判断をユーザーが選んだ。`DESIGN.md` の Layout を更新済み。
+日付/担当: 2026-04-26 / Codex (review fix loop)
+
+判断: skip-link の focus 表示は現状の塗り面表現を維持する。
+理由: WCAG 2.4.1 Bypass Blocks の意図と、keyboard-only ユーザーの最初の focus target としての可視性を優先し、`DESIGN.md` の focus 方針より a11y を優先するとユーザーが判断した。
+日付/担当: 2026-04-26 / Codex (review fix loop)
+
+判断: `web/content/notes/bookish-site.md` の本文「Notes の罫だけを残し」と、実装の `header.border-bottom` / `bodyText.border-top` の併存は許容する。
+理由: 公開 note は執筆当時の方向性を残す回想的な文章として書いており、現在の実装の罫線最小化と完全一致させる必要はないとユーザーが判断した。
+日付/担当: 2026-04-26 / Codex (review fix loop)
 
 ## 契約
 
