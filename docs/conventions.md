@@ -31,26 +31,34 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 
 ### 秘密情報と外部 service
 
-- `MICROCMS_API_KEY` は server-only。
 - `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` は現在文書化されている唯一の public runtime env。
-- `web/src/lib/microcms.ts` の `server-only` import を維持する。
+- Notion token や外部 API key は server-only。公開 runtime から Notion API を直接読まない。
 - secret を log、metadata、client component、HTML に出さない。
 
-### Blog content safety（記事 HTML の安全性）
+### Notes content safety（投稿 Markdown の安全性）
 
-- microCMS 由来の blog body HTML は信頼できない入力として扱う。
-- `dangerouslySetInnerHTML` は
-  `web/src/app/blog/[articleId]/page.tsx` の DOMPurify/JSDOM sanitize 後だけに限定する。
-- `purifyConfig`、allowed tags、allowed attributes、highlight.js 後処理を変える変更は
+- 公開コンテンツの正本は `web/content/notes/*.md`。
+- frontmatter は `title`, `slug`, `date`, `type`, `description`, `published` を基本 schema とする。
+- `type` は `article`, `note`, `log` のいずれか。表示は `記事`, `ノート`, `記録`。
+- 本文先頭の `# {title}` は page title と重複するため、loader で本文から除外する。
+- Markdown renderer は HTML を直接挿入しない。`dangerouslySetInnerHTML` を使う変更は
   security-sensitive として最終報告で明示する。
-- syntax highlight 後の最終 sanitize を bypass しない。
+- Notion sync は repo 内 Markdown を生成する境界に閉じる。公開 page は repo 内 content を読む。
+
+### Content management 方針
+
+- 公開 runtime は `web/content/notes/*.md` のみを読む。microCMS / 外部 CMS への runtime 依存は無い (`web/src/lib/microcms.ts`、microcms 関連 env、microcms-js-sdk は撤去済)。
+- `/blog` と `/blog/[articleId]` は `/notes` への redirect だけを残し、旧記事 URL の互換を保つ。撤去や redirect map の更新は user-visible 影響として扱い、別 ExecPlan で判断する。
+- Notion を執筆元として使う場合は、次のいずれかに限定する。runtime から Notion API を直接読む構成は採用しない。
+    - 手動同期: 執筆者が Notion 上で書いた内容を `web/content/notes/*.md` へ手で move する。
+    - build 前同期: build 前に Notion API を読む sync script を実行し、生成された Markdown を repo に commit する。Notion token は CI / local の server-only env として扱い、`NEXT_PUBLIC_*` や client component、log、HTML に出さない。
+- いずれの方式でも、上記 Notes content safety の frontmatter schema と loader 側の `# {title}` 除去を維持する。
 
 ### Routing / ISR / metadata
 
-- blog list/detail の canonical `revalidate` は 60 秒。
-- `/blog` と `/blog/[articleId]` の route behavior を壊さない。
-- pagination の不正 page は `notFound()` で観測可能にする。
-- Open Graph、Twitter metadata、canonical URL、OGP image は user-visible behavior として扱う。
+- `/`, `/about`, `/notes`, `/notes/[slug]` は user-visible route として扱う。
+- `/blog` と `/blog/[articleId]` は `/notes` への移行導線として扱う。
+- Open Graph、Twitter metadata、canonical URL は user-visible behavior として扱う。
 
 ### Workspace 境界
 
@@ -169,16 +177,15 @@ IVSE で task を切ります。
     mise run install
     mise run verify
 
-`MICROCMS_API_KEY` など環境変数不足で build できない場合は、失敗 command、原因、
-未検証範囲を報告します。
+環境変数不足などで build できない場合は、失敗 command、原因、未検証範囲を報告します。
 
 ## Review calibration（レビュー観点）
 
 優先順位:
 
 1. secret exposure / server-client boundary regression
-2. microCMS HTML、DOMPurify、highlight.js、`dangerouslySetInnerHTML` 周辺の XSS regression
-3. blog routing、pagination、ISR、metadata regression
+2. Notes Markdown renderer、frontmatter schema、`dangerouslySetInnerHTML` 周辺の XSS regression
+3. `/notes` routing、slug、metadata regression
 4. build / lint / TypeScript regression
 5. accessibility / responsive UI regression
 6. lint で検出可能な style / naming issue

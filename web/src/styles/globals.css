@@ -3,3 +3,56 @@
 @theme {
   --font-noto: "Noto Sans JP", sans-serif;
 }
+
+:root {
+  --color-primary: #2c261f;
+  --color-secondary: #675d51;
+  --color-muted: #7a6e60;
+  --color-faint: #b8aa98;
+  --color-background: #fcf8f0;
+  --color-surface: #fffdf8;
+  --color-surface-warm: #f6efdf;
+  --color-border: #e6d9c7;
+  --color-border-soft: #efe5d6;
+  --color-accent: #9b7657;
+  --color-link: #6c4d35;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-background);
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-primary);
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--color-primary);
+  color: var(--color-background);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}

@@ -28,7 +28,7 @@ description: yona.dev専用ExecPlan運用。意図ヒアリングからPLANS準�
 
 - `AGENTS.md` の ExecPlan 条件に該当する task。
 - ユーザーが「exec-plan」「spec to PR」「計画からPRまで」「CI fixまで」と依頼した時。
-- 複数 session、3 files 以上、2 concerns 以上、複数 acceptance、security / server-client / public route / microCMS / ISR / UI tradeoff に触れる時。
+- 複数 session、3 files 以上、2 concerns 以上、複数 acceptance、security / server-client / public route / Notes Markdown renderer / frontmatter / Notion sync / UI tradeoff に触れる時。
 
 ## 使わない場面
 
