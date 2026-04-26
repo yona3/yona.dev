@@ -82,6 +82,10 @@ export const SiteShell = ({ children, currentPage }: Props) => {
             ))}
           </nav>
         </header>
+        <p className={styles.constructionNotice} role="note">
+          <span aria-hidden="true">🚧</span>
+          <span>このサイトは現在工事中です</span>
+        </p>
         <main id="main">{children}</main>
         <div className={styles.footer} aria-hidden="true">
           <CoffeeEmoji />
