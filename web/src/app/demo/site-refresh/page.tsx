@@ -36,7 +36,7 @@ export default function SiteRefreshDemoPage() {
       <div className={styles.shell}>
         <header className={styles.header}>
           <a className={styles.brand} href="/demo/site-refresh">
-            Koh Yonamine
+            yona.dev
           </a>
           <nav className={styles.nav} aria-label="Demo navigation">
             <a aria-current="page" href="/demo/site-refresh">
@@ -48,17 +48,16 @@ export default function SiteRefreshDemoPage() {
         </header>
 
         <section className={styles.hero} aria-labelledby="demo-title">
-          <p className={styles.kicker}>personal notes</p>
           <h1 id="demo-title">Koh Yonamine</h1>
           <p className={styles.lead}>
-            ソフトウェアを作ること、その過程で考えたことを書いています。
-            技術、生活、創造性についての個人的な記録です。
+            ソフトウェアを作る人です。AI Agent と開発すること、個人のための小さな道具、
+            生活の中で考えたことを、まとまる前の温度のまま書いています。
           </p>
         </section>
 
         <section id="notes" className={styles.notes} aria-labelledby="notes-title">
           <div className={styles.sectionHeader}>
-            <p className={styles.kicker}>recent</p>
+            <p className={styles.kicker}>最近</p>
             <h2 id="notes-title">Notes</h2>
           </div>
 
@@ -67,23 +66,17 @@ export default function SiteRefreshDemoPage() {
               <li className={styles.noteItem} key={`${note.date}-${note.title}`}>
                 <time dateTime={note.date.replaceAll(".", "-")}>{note.date}</time>
                 <span className={styles.noteType}>{note.type}</span>
-                <a href="#notes">{note.title}</a>
+                <span className={styles.noteTitle}>{note.title}</span>
               </li>
             ))}
           </ol>
         </section>
 
-        <aside id="about" className={styles.aside} aria-label="About preview">
-          <div>
-            <p className={styles.kicker}>about</p>
-            <p>
-              AI Agent とともに開発する体験、道具を育てること、偶然から生まれる創造性に関心があります。
-            </p>
-          </div>
-          <div className={styles.tableNote} aria-hidden="true">
-            <span>☕</span>
-          </div>
-        </aside>
+        <section id="about" className={styles.aboutBlock} aria-label="About preview">
+          <p>
+            AI Agent とともに開発する体験、道具を育てること、偶然から生まれる創造性に関心があります。
+          </p>
+        </section>
       </div>
     </main>
   );

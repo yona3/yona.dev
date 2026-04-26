@@ -7,7 +7,7 @@ import { getAllNotes } from "../../lib/notes";
 
 export const metadata: Metadata = {
   title: "Notes | Koh Yonamine",
-  description: "Koh Yonamine の技術記事、ノート、記録。",
+  description: "技術記事、ノート、日々の記録。",
 };
 
 export default async function NotesPage() {
@@ -16,17 +16,16 @@ export default async function NotesPage() {
   return (
     <SiteShell currentPage="notes">
       <section className={styles.hero} aria-labelledby="notes-title">
-        <p className={styles.kicker}>archive</p>
         <h1 id="notes-title" className={styles.pageTitle}>
           Notes
         </h1>
         <p className={styles.lead}>
           技術記事、考えたことのノート、作業記録を同じ場所に置いています。
-          日付順に、少しずつ積もっていく個人的な記録です。
+          まとまる前のことも、日付順にそのまま残します。
         </p>
       </section>
 
-      <section className={styles.section} aria-label="Notes list">
+      <section className={styles.section} aria-label="ノート一覧">
         <NoteList notes={notes} />
       </section>
     </SiteShell>

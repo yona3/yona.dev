@@ -5,10 +5,21 @@
   font-family: var(--font-serif), "Hiragino Mincho ProN", "Yu Mincho", serif;
 }
 
+.page a {
+  touch-action: manipulation;
+}
+
+.page a:focus-visible {
+  border-radius: 2px;
+  outline: 1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
 .shell {
-  width: min(100%, 920px);
+  width: auto;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 32px 24px 72px;
+  padding: 30px 24px 68px;
 }
 
 .header {
@@ -16,14 +27,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 8px 0 48px;
+  padding: 4px 0 38px;
   border-bottom: 1px solid var(--color-border-soft);
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-primary);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 400;
   text-decoration: none;
 }
 
@@ -33,13 +47,16 @@
   gap: 4px;
   align-items: center;
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
 .nav a {
-  color: var(--color-secondary);
-  padding: 6px 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-muted);
+  padding: 0 7px;
   text-decoration: none;
   text-underline-offset: 5px;
 }
@@ -51,12 +68,12 @@
 }
 
 .hero {
-  max-width: 680px;
-  padding: 80px 0 72px;
+  max-width: 590px;
+  padding: 62px 0 54px;
 }
 
 .kicker {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: var(--color-muted);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.75rem;
@@ -69,31 +86,32 @@
 .pageTitle {
   margin: 0;
   color: var(--color-primary);
-  font-size: clamp(2.4rem, 7vw, 4.75rem);
-  font-weight: 500;
-  line-height: 1.08;
+  font-size: clamp(1.85rem, 3vw, 2rem);
+  font-weight: 400;
+  line-height: 1.18;
   text-wrap: balance;
 }
 
 .lead {
-  max-width: 600px;
-  margin: 28px 0 0;
+  max-width: 540px;
+  margin: 22px 0 0;
   color: var(--color-secondary);
-  font-size: 1.0625rem;
-  line-height: 2;
+  font-size: 0.98rem;
+  line-height: 2.05;
+  line-break: strict;
   overflow-wrap: anywhere;
-  text-wrap: pretty;
+  word-break: normal;
 }
 
 .section {
-  padding: 32px 0 56px;
-  border-top: 1px solid var(--color-border);
+  padding: 28px 0 46px;
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .sectionHeader {
   display: grid;
-  grid-template-columns: 148px 1fr;
-  gap: 24px;
+  grid-template-columns: 112px 1fr;
+  gap: 20px;
   align-items: end;
   margin-bottom: 8px;
 }
@@ -101,8 +119,8 @@
 .sectionHeader h2 {
   margin: 0;
   color: var(--color-primary);
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 400;
   line-height: 1.4;
 }
 
@@ -115,10 +133,10 @@
 
 .noteItem {
   display: grid;
-  grid-template-columns: 148px 76px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 112px 64px minmax(0, 1fr);
+  gap: 20px;
   align-items: baseline;
-  padding: 17px 0 18px;
+  padding: 14px 0 15px;
   border-bottom: 1px solid var(--color-border-soft);
 }
 
@@ -126,7 +144,7 @@
 .noteType {
   color: var(--color-muted);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
@@ -134,22 +152,26 @@
 
 .noteType {
   width: fit-content;
-  padding: 2px 7px 3px;
-  border: 1px solid var(--color-border-soft);
-  border-radius: 2px;
-  background: var(--color-surface-warm);
-  color: var(--color-secondary);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-muted);
 }
 
 .noteItem a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-primary);
-  font-size: 1.02rem;
-  line-height: 1.7;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  line-break: strict;
   overflow-wrap: anywhere;
   text-decoration-color: transparent;
   text-decoration-thickness: 1px;
   text-underline-offset: 6px;
-  text-wrap: pretty;
+  word-break: normal;
 }
 
 .noteItem a:hover {
@@ -157,46 +179,29 @@
   text-decoration-color: var(--color-accent);
 }
 
-.aboutCard {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  margin-top: 24px;
-  padding: 24px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-surface);
-}
-
-.aboutCard p:last-child,
 .bodyText p {
-  max-width: 640px;
+  max-width: 600px;
   margin: 0;
   color: var(--color-secondary);
-  font-size: 1rem;
-  line-height: 1.9;
-  text-wrap: pretty;
+  font-size: 0.96rem;
+  line-height: 2;
+  line-break: strict;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
-.tableNote {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--color-border-soft);
-  border-radius: 8px;
-  background: var(--color-surface-warm);
+.textLink {
   color: var(--color-link);
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 1.25rem;
+  margin: 0 0.25em;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 5px;
 }
 
 .bodyText {
   display: grid;
-  gap: 22px;
-  padding: 32px 0 56px;
-  border-top: 1px solid var(--color-border);
+  gap: 20px;
+  padding: 30px 0 50px;
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .linkList {
@@ -211,10 +216,12 @@
 .linkList a {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  padding: 4px 10px;
-  border: 1px solid var(--color-border-soft);
-  border-radius: 4px;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 0;
   color: var(--color-link);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8125rem;
@@ -223,12 +230,14 @@
 }
 
 .linkList a:hover {
-  background: var(--color-surface-warm);
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .noteArticle {
-  max-width: 700px;
-  padding: 64px 0 72px;
+  max-width: 640px;
+  padding: 58px 0 68px;
 }
 
 .noteMeta {
@@ -236,40 +245,40 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: var(--color-muted);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
 .noteArticle h1 {
   margin: 0;
   color: var(--color-primary);
-  font-size: clamp(2.1rem, 6vw, 3.75rem);
-  font-weight: 500;
-  line-height: 1.18;
+  font-size: clamp(1.7rem, 3.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.24;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
 .noteDescription {
-  margin: 24px 0 0;
+  margin: 22px 0 0;
   color: var(--color-secondary);
-  font-size: 1.02rem;
-  line-height: 1.9;
+  font-size: 0.98rem;
+  line-height: 1.95;
+  line-break: strict;
   overflow-wrap: anywhere;
-  text-wrap: pretty;
+  word-break: normal;
 }
 
 .markdown {
   display: grid;
-  gap: 22px;
-  margin-top: 48px;
+  gap: 20px;
+  margin-top: 42px;
   color: var(--color-secondary);
-  font-size: 1.02rem;
+  font-size: 0.98rem;
   line-height: 1.95;
-  text-wrap: pretty;
 }
 
 .markdown h1,
@@ -277,16 +286,16 @@
 .markdown h3 {
   margin: 18px 0 0;
   color: var(--color-primary);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.45;
 }
 
 .markdown h1 {
-  font-size: 1.7rem;
+  font-size: 1.45rem;
 }
 
 .markdown h2 {
-  font-size: 1.35rem;
+  font-size: 1.2rem;
 }
 
 .markdown h3 {
@@ -301,7 +310,9 @@
 
 .markdown p,
 .markdown li {
+  line-break: strict;
   overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .markdown ul {
@@ -324,29 +335,32 @@
 
 .footer {
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  padding-top: 40px;
+  justify-content: flex-end;
+  padding-top: 34px;
   border-top: 1px solid var(--color-border-soft);
   color: var(--color-muted);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
 }
 
-.footer p {
-  margin: 0;
+.coffeeEmoji {
+  display: block;
+  width: 24px;
+  height: 24px;
+  color: var(--color-border);
+  opacity: 0.9;
 }
 
 @media (max-width: 680px) {
   .shell {
-    padding: 24px 18px 56px;
+    padding: 24px 18px 54px;
   }
 
   .header {
     display: grid;
     align-items: flex-start;
-    gap: 20px;
-    padding-bottom: 40px;
+    gap: 18px;
+    padding-bottom: 34px;
   }
 
   .nav {
@@ -354,21 +368,16 @@
   }
 
   .hero {
-    padding: 64px 0 56px;
+    padding: 54px 0 48px;
   }
 
   .sectionHeader,
-  .noteItem,
-  .aboutCard {
+  .noteItem {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .noteItem {
     padding: 16px 0 17px;
-  }
-
-  .tableNote {
-    justify-self: start;
   }
 }

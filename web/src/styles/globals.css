@@ -5,16 +5,16 @@
 }
 
 :root {
-  --color-primary: #211c18;
-  --color-secondary: #5f574d;
-  --color-muted: #6f665a;
-  --color-background: #fbf7ee;
+  --color-primary: #2c261f;
+  --color-secondary: #675d51;
+  --color-muted: #7a6e60;
+  --color-background: #fcf8f0;
   --color-surface: #fffdf8;
-  --color-surface-warm: #f5ecd8;
-  --color-border: #ddd0bc;
-  --color-border-soft: #ece1cf;
-  --color-accent: #8f4d32;
-  --color-link: #70462c;
+  --color-surface-warm: #f6efdf;
+  --color-border: #e6d9c7;
+  --color-border-soft: #efe5d6;
+  --color-accent: #9b7657;
+  --color-link: #6c4d35;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   color-scheme: light;
 }

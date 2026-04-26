@@ -6,6 +6,10 @@ import Script from "next/script";
 
 import { GA_ID } from "../utils/gtag";
 
+const faviconSvg = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M18 28h24v12a12 12 0 0 1-12 12 12 12 0 0 1-12-12V28Z" fill="none" stroke="#6c4d35" stroke-width="4" stroke-linejoin="round"/><path d="M42 32h5a6 6 0 0 1 0 12h-5" fill="none" stroke="#6c4d35" stroke-width="4" stroke-linecap="round"/><path d="M25 12c-3 5 3 7 0 12M35 12c-3 5 3 7 0 12" fill="none" stroke="#7a6e60" stroke-width="3" stroke-linecap="round"/></svg>',
+)}`;
+
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
@@ -25,10 +29,10 @@ export const metadata: Metadata = {
     default: "Koh Yonamine",
     template: "%s",
   },
-  description: "ソフトウェアを作ること、その過程で考えたことを書いています。",
+  description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
   openGraph: {
     title: "Koh Yonamine",
-    description: "ソフトウェアを作ること、その過程で考えたことを書いています。",
+    description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
     url: "https://yona.dev",
     siteName: "yona.dev",
     images: [
@@ -45,19 +49,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Koh Yonamine",
-    description: "ソフトウェアを作ること、その過程で考えたことを書いています。",
+    description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
     images: ["https://yona.dev/icon.jpeg"],
     site: "@yonakinTV",
   },
   icons: {
     icon: [
       {
-        url: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>☕</text></svg>",
+        url: faviconSvg,
         type: "image/svg+xml",
-      },
-      {
-        url: "https://twemoji.maxcdn.com/v/13.1.0/72x72/2615.png",
-        type: "image/png",
       },
     ],
   },
