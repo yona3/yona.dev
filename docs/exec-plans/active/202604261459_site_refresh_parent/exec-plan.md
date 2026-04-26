@@ -13,7 +13,7 @@
 - [ ] 2026-04-26 17:48+09:00 デザイン微調整 loop を、ユーザーが納得するまで継続する。 (codex 3 reviewer の REQUEST_CHANGES 7 件は反映 / 維持で確定済。Claude Code subagent 補助 review の新規 P3 × 3 も commit ec0e477 で反映済。残: in-app browser 確認、ユーザー納得の明示記録。)
 - [x] 2026-04-26 17:48+09:00 Home / About / Notes / note detail のコンテンツを精査し、公開する文章として整える。 (Notes 3 本書き直し / Home 文言調整 / About 段落重複整理 / note detail description 削除を反映済。)
 - [x] 2026-04-26 17:08+09:00 `DESIGN.md` を最終 UI と整合させる。 (Layout 章を Home の通称 yona / About 専用ページとして固定するよう更新。`DESIGN.md` commit 5205066。)
-- [ ] 2026-04-26 17:35+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。 (未着手。次の作業項目。)
+- [x] 2026-04-26 17:55+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。 (現状確認: src / lockfile / env から microCMS 参照は撤去済、`/blog` は redirect のみ。`docs/conventions.md` に Content management 方針として、microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補 (手動 / build 前) を明文化。)
 - [x] 2026-04-26 17:30+09:00 `mise run verify`、browser 確認、project-local review fix loop を最終実行する。 (lint + build green、project-local review skill REQUEST_CHANGES → 3 件反映、4 件 user 判断確定。browser 確認は user 側で実施予定。)
 - [x] 2026-04-26 17:32+09:00 論理単位の commit を揃え、`pr-writer` で PR を作成または更新する。 (4 commit: 3a75af4 feat(site) / c66f674 docs(notes) / 5205066 docs(design) / 4afc271 docs(exec-plan)。PR #24 OPEN: https://github.com/yona3/yona.dev/pull/24 。)
 - [ ] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。
@@ -86,6 +86,10 @@
 判断: `web/content/notes/bookish-site.md` の本文「Notes の罫だけを残し」と、実装の `header.border-bottom` / `bodyText.border-top` の併存は許容する。
 理由: 公開 note は執筆当時の方向性を残す回想的な文章として書いており、現在の実装の罫線最小化と完全一致させる必要はないとユーザーが判断した。
 日付/担当: 2026-04-26 / Codex (review fix loop)
+
+判断: 公開 runtime は `web/content/notes/*.md` のみを読む構成に固定し、Notion を執筆元として使う場合も runtime から Notion API を直接読まない方式 (手動同期 or build 前同期) のみを採用する。
+理由: ブランチ作業で microCMS への runtime 依存はすでに撤去済 (src / lockfile / env いずれも参照なし、`/blog` は `/notes` への redirect のみ)。Notion 移行を将来検討する余地は残しつつ、secret の client / log / HTML 露出を避け、`AGENTS.md` 禁止境界と整合させる。
+日付/担当: 2026-04-26 / Codex (Content management 方針整理、`docs/conventions.md` に明文化)
 
 ## 契約
 
@@ -261,7 +265,6 @@
 親 ExecPlan は PR merge まで未完了。現時点の残作業は次の通り。
 
 - in-app browser での Home / About / Notes / note detail の最終視覚確認と、ユーザー納得の明示記録。
-- CMS 依存の扱いと Notion ベース管理方針の整理 (`/blog` redirect の存続範囲、Notion を執筆元として扱う場合の手動 / build 前同期の候補、runtime secret / client exposure を避ける契約)。
 - PR #24 https://github.com/yona3/yona.dev/pull/24 の CI / Vercel check 監視と、差分起因の failure があれば修正。
 - ユーザー承認後の merge と、この親 ExecPlan の `docs/exec-plans/completed/` 移動。
 
@@ -269,3 +272,4 @@
 - 2026-04-26 14:59+09:00 PR merge まで維持する親 ExecPlan として作成した。
 - 2026-04-26 17:35+09:00 review fix loop 1 周目と PR 作成までを反映 (`DESIGN.md` 同期 / `mise run verify` green / 4 commit / PR #24 OPEN)。残作業を補助 review P3、browser 確認、CMS 方針、CI、merge に整理した。
 - 2026-04-26 17:48+09:00 補助 review P3 × 3 を commit ec0e477 で反映 (About 罫線除去 / About 段落重複整理 / note detail description 表示削除)。`mise run verify` green、`git diff --check` 通過。残作業を browser 確認、CMS 方針、CI、merge に絞った。
+- 2026-04-26 17:55+09:00 CMS 依存 / Notion 方針整理を完了。runtime はすでに microCMS 依存ゼロであることを確認し、`docs/conventions.md` に Content management 方針 (microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補) を追加。残作業を browser 確認、PR CI、merge に絞った。
