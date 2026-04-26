@@ -104,11 +104,11 @@ Home と共通 shell の情報重複を減らし、`Koh Yonamine` が名前で�
 
 ## 未完了
 
-stage / commit / PR / CI は未実施。PR 作成は GitHub への外部変更で action-time confirmation が必要なため、ユーザーが PR 作成を承認するまで delivery は保留。
+この中間 UI 調整の delivery は後続の branch-level delivery に統合した。stage / commit は後続 commit で完了し、PR / CI は最終 branch delivery の残作業として扱う。
 
 変更記録: 2026-04-26 05:39+09:00 reduce identity duplication の ExecPlan を作成した。
 変更記録: 2026-04-26 05:45+09:00 header/footer/home の重複、紹介文、coffee 表示を修正した。
 変更記録: 2026-04-26 05:52+09:00 verify と desktop/mobile preview を確認した。
 変更記録: 2026-04-26 05:55+09:00 metadata description の名前反復を削り、`mise run verify` を再実行した。
 変更記録: 2026-04-26 12:31+09:00 design review finding に従い、stage / commit / PR 未実施の停止条件を記録した。
-変更記録: 2026-04-26 13:31+09:00 delivery stop を PR 作成の action-time confirmation 待ち blocker として具体化した。
+変更記録: 2026-04-26 13:31+09:00 delivery stop を後続 branch-level delivery への統合として具体化した。

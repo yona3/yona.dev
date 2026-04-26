@@ -61,8 +61,8 @@
 理由: mobile の可読性は保ちつつ、desktop で外向きに大きく見える強さを DESIGN.md token に合わせて抑える。
 日付/担当: 2026-04-26 / Codex
 
-判断: stage / commit / PR / CI は、PR 作成が GitHub への外部変更になるため action-time confirmation 待ちの blocker として記録する。
-理由: ExecPlan の既定範囲には delivery が含まれるため、未実施を隠さず blocker として明示する必要がある。一方で PR 作成は外部サービスへの変更であり、この会話ではまだ action-time confirmation を得ていない。
+判断: stage / commit / PR / CI は、後続の branch-level delivery に統合する残作業として記録する。
+理由: ExecPlan の既定範囲には delivery が含まれるため、未実施を隠さず、どの後続単位で扱うかを明示する必要がある。
 日付/担当: 2026-04-26 / Codex
 
 ## 契約
@@ -145,7 +145,7 @@
 
 2026-04-26 13:02+09:00 の design review re-check で追加 5 findings が出たため、修正は `docs/exec-plans/active/202604261302_about-design-review-fix-loop/exec-plan.md` に引き継いだ。
 
-stage / commit / PR / CI は未実施。PR 作成は GitHub への外部変更で action-time confirmation が必要なため、ユーザーが PR 作成を承認するまで delivery は保留。
+この design review finding 修正の delivery は後続の branch-level delivery に統合した。stage / commit は後続 commit で完了し、PR / CI は最終 branch delivery の残作業として扱う。
 
 変更記録: 2026-04-26 12:31+09:00 design review findings fix の ExecPlan を作成した。
 変更記録: 2026-04-26 12:35+09:00 5 findings に対する UI / docs 修正を実装した。

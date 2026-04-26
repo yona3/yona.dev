@@ -33,7 +33,7 @@
 根拠:
     `web/src/components/site/site.module.css`, `web/src/app/demo/site-refresh/page.module.css`。
 
-観測: `202604261231_design-review-findings-fix` に review re-check で追加 findings が出たことと、PR 作成の action-time confirmation 待ち blocker を記録した。
+観測: `202604261231_design-review-findings-fix` に review re-check で追加 findings が出たことと、後続 branch-level delivery に統合する残作業を記録した。
 根拠:
     `docs/exec-plans/completed/202604261231_design-review-findings-fix/exec-plan.md`。
 
@@ -49,7 +49,7 @@
 根拠:
     reviewer outputs: `019dc7fc-69c5-70f0-8132-53fed87cef78`, `019dc7fc-9c3b-75e0-bda4-b88590f865f3`, `019dc7fc-6958-74f2-899c-747055e24ce2`, `019dc7fc-9c64-7b60-82a9-c358b424ce77`。
 
-観測: 追加で提示された 10 findings を照合し、UI/code 側は反映済みだった。`202604260513_inward-minimal-ui` と `202604260539_reduce-identity-duplication` の delivery stop だけは文言が弱かったため、PR 作成の action-time confirmation 待ち blocker として具体化した。
+観測: 追加で提示された 10 findings を照合し、UI/code 側は反映済みだった。`202604260513_inward-minimal-ui` と `202604260539_reduce-identity-duplication` の delivery stop だけは文言が弱かったため、後続 branch-level delivery に統合する残作業として具体化した。
 根拠:
     `web/src/components/site/site.module.css`, `web/src/app/demo/site-refresh/page.module.css`, `web/src/app/demo/site-refresh/page.tsx`, `web/src/components/site/SiteShell.tsx`, `docs/exec-plans/completed/202604260513_inward-minimal-ui/exec-plan.md`, `docs/exec-plans/completed/202604260539_reduce-identity-duplication/exec-plan.md`。
 
@@ -87,8 +87,8 @@
 理由: 操作性は上げる必要があるが、現在のミニマルな text-link 表現は維持したい。
 日付/担当: 2026-04-26 / Codex
 
-判断: stage / commit / PR / CI は、PR 作成が GitHub への外部変更になるため action-time confirmation 待ちの blocker として記録する。
-理由: ExecPlan 契約では delivery が既定だが、PR 作成は外部サービスへの変更であり、この会話ではまだ action-time confirmation を得ていない。
+判断: stage / commit / PR / CI は、後続の branch-level delivery に統合する残作業として記録する。
+理由: ExecPlan 契約では delivery が既定のため、未実施を隠さず、どの後続単位で扱うかを明示する必要がある。
 日付/担当: 2026-04-26 / Codex
 
 ## 契約
@@ -150,14 +150,14 @@
     期待結果:
         完了済みの ExecPlan が active に残らず、stage / commit / PR / CI の未実施理由が隠れない。
 
-6. delivery gate を扱う。
+6. branch-level delivery への統合を扱う。
 
     作業場所:
         <repo-root>
     実行:
-        ユーザーが PR 作成を action-time confirmation した場合だけ、stage / commit / PR / CI へ進む。確認がない場合は `未完了` に blocker として残す。
+        この fix loop の stage / commit / PR / CI は後続の branch-level delivery に統合し、`未完了` に残作業として残す。
     期待結果:
-        ExecPlan の delivery 既定範囲と、外部 GitHub 変更の確認要件が矛盾しない。
+        ExecPlan の delivery 既定範囲と、中間 UI fix loop の完了記録が矛盾しない。
 
 ## 受け入れ条件
 
@@ -181,7 +181,7 @@
 
 `.codex/config.toml` は未追跡で `sandbox_mode = "danger-full-access"` を含むが、ユーザーの「config.toml は無視」指示によりこの fix loop では scope 外とする。
 
-stage / commit / PR / CI は未実施。PR 作成は GitHub への外部変更で action-time confirmation が必要なため、ユーザーが PR 作成を承認するまで delivery は保留。
+この fix loop の delivery は後続の branch-level delivery に統合した。stage / commit は後続 commit で完了し、PR / CI は最終 branch delivery の残作業として扱う。
 
 変更記録: 2026-04-26 13:02+09:00 about design review fix loop の ExecPlan を作成した。
 変更記録: 2026-04-26 13:08+09:00 prose wrapping、tap target、completed ExecPlan 記録を修正した。

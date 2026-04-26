@@ -42,8 +42,8 @@ export default function SiteRefreshDemoPage() {
             <a aria-current="page" href="/demo/site-refresh">
               Home
             </a>
-            <a href="#about">About</a>
             <a href="#notes">Notes</a>
+            <a href="#about">About</a>
           </nav>
         </header>
 

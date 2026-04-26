@@ -131,7 +131,7 @@ Home / About / Notes の補助ラベルと導線を見直し、説明的な UI �
 
 ## 未完了
 
-PR 作成 confirmation 待ち。
+PR / CI は最終 branch delivery の残作業として扱う。
 
 変更記録: 2026-04-26 13:47+09:00 trim labels / coffee emoji / commits の ExecPlan を作成した。
 変更記録: 2026-04-26 13:52+09:00 補助ラベル、Home 導線、footer coffee emoji を修正した。

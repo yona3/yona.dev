@@ -100,10 +100,10 @@
 
 ## 未完了
 
-stage / commit / PR / CI は未実施。PR 作成は GitHub への外部変更で action-time confirmation が必要なため、ユーザーが PR 作成を承認するまで delivery は保留。
+この中間 UI 調整の delivery は後続の branch-level delivery に統合した。stage / commit は後続 commit で完了し、PR / CI は最終 branch delivery の残作業として扱う。
 
 変更記録: 2026-04-26 05:13+09:00 inward minimal UI 調整の ExecPlan を作成した。
 変更記録: 2026-04-26 05:13+09:00 typography scale、Home copy、About preview、DESIGN.md token を内省的な方向へ調整した。
 変更記録: 2026-04-26 05:29+09:00 verify と desktop/mobile preview を完了した。
 変更記録: 2026-04-26 12:31+09:00 design review finding に従い、stage / commit / PR 未実施の停止条件を記録した。
-変更記録: 2026-04-26 13:31+09:00 delivery stop を PR 作成の action-time confirmation 待ち blocker として具体化した。
+変更記録: 2026-04-26 13:31+09:00 delivery stop を後続 branch-level delivery への統合として具体化した。
