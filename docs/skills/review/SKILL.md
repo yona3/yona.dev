@@ -16,6 +16,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | scope | 任意 | 対象 path / route / module / ExecPlan |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
 | design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`on` はデザイン観点を明示追加、`off` は明示除外 |
+| claude_design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`auto` は design review 起動時に Claude reviewer を既定追加、`on` は明示追加、`off` は明示除外 |
 
 ## 配置契約
 
@@ -32,11 +33,14 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 - reviewer は編集しない。coordinator だけが採用 finding を検証し、必要なら修正する。
 - review artifact を固定ファイルとして repo に増やさない。結果は会話内に返す。
 - ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer id、verdict、未解決 finding、未検証範囲の要約を残す。
-- private workspace data を外部 service へ送る fallback は、user の明示承認がある時だけ使う。
+- private workspace data を外部 service へ送る reviewer は、design review に限り user の standing approval 済みとして扱う。`claude_design_review:off` が指定された時だけ Claude reviewer を無効化する。
+- `claude-design-reviewer` は通常の `design-reviewer` を置き換える fallback ではなく、デザイン観点の追加 reviewer として扱う。
 
 ## Claude Code 経由の実行
 
 Claude Code からこの project-local review skill が呼ばれた場合、review 実行は Codex CLI に委譲します。Claude Code 自身の self review、単一 reviewer、または Claude Code 内の subagent review を、この skill の `APPROVE` / `REQUEST_CHANGES` 判定の代替にしてはいけません。
+
+例外として、design review 起動判定に該当し `claude_design_review` が `off` でない場合は、後述の `claude-design-reviewer` を別プロセスの `claude -p` で追加実行する。この場合も Claude Code の自己点検ではなく、scoped prompt bundle を入力とする独立 reviewer として扱います。
 
 実行契約:
 
@@ -79,6 +83,32 @@ untracked files は次で確認します。
 
 `design-reviewer` と `ui-reviewer` は役割を分けます。`ui-reviewer` は accessibility、responsive、hover / keyboard、visual regression を主に見る。`design-reviewer` はコンセプト、体験、情報設計、視覚言語の整合を主に見る。
 
+## Claude design review 起動判定
+
+`claude-design-reviewer` は、Claude Code CLI を使う design review 専用の追加 reviewer です。通常の `design-reviewer` を置き換えず、design review 起動時の既定追加 reviewer として起動します。
+
+起動する条件:
+
+- `design review 起動判定` に該当している。
+- `claude_design_review` が `auto` または `on` である。既定は `auto`。
+- `claude` CLI が利用でき、`claude -p` / `claude --print` の非対話実行が可能である。
+- coordinator が Claude に送る scoped prompt bundle の内容を説明できる。
+
+起動しない条件:
+
+- `claude_design_review` が `off`。
+- design review 条件に該当しない。
+- private workspace data を外部 model に送ることを user が明示的に拒否している。
+- `claude` CLI が無い、auth / network / quota で実行できない、または output が壊れている。この場合、`claude_design_review:on` なら `BLOCKED: claude design review unavailable`、`auto` なら `claude-design-reviewer skipped` として未検証範囲に残し、他の reviewer で継続する。
+
+実行契約:
+
+1. coordinator が先に scope を決め、branch diff / staged diff / working tree diff の必要部分、対象 file snippets、`DESIGN.md`、relevant ExecPlan acceptance、browser verification summary を scoped prompt bundle にまとめる。
+2. `claude -p --output-format json` で実行する。Claude には編集権限を渡さず、reviewer id、担当観点、除外 scope、finding 形式、好みだけの提案禁止を prompt に含める。
+3. Claude の output が parse でき、reviewer id と verdict / findings が確認できた場合だけ独立 reviewer として数える。
+4. Claude の finding も coordinator が file:line、user_request、`DESIGN.md`、対象 route、画面確認で再検証する。好みだけの提案、scope 外の全面リデザイン、画面確認なしの断定は採用しない。
+5. 実行した場合は、最終出力または relevant ExecPlan に `claude-design-reviewer` の使用有無、送った scope の要約、未検証範囲を残す。
+
 ## reviewer set
 
 最小 set は 2 reviewer です。差分に応じて追加します。
@@ -91,6 +121,7 @@ untracked files は次で確認します。
 | `ce-reviewer` | docs, skills, agent instruction | SSoT, context clash, lost-in-middle, artifact trail, 日本語文体 |
 | `ui-reviewer` | UI / CSS / component | responsive, accessibility, visual regression, hover/keyboard behavior |
 | `design-reviewer` | `design review 起動判定` に該当 | Design Thinking, UX Design, Information Architecture, Visual Design |
+| `claude-design-reviewer` | `Claude design review 起動判定` に該当 | Claude Code CLI による Design Thinking, UX Design, Information Architecture, Visual Design の追加レビュー |
 
 docs / skills だけの変更では、既定で `contract-reviewer` と `ce-reviewer` を使います。security 境界に触れる場合は `security-reviewer` を追加します。
 
@@ -152,6 +183,14 @@ finding にしてはいけないもの:
 - finding にしてよいもの / してはいけないものの基準
 - visual finding は、画面確認または CSS / markup から再現可能な根拠がある場合だけ出すこと
 
+`claude-design-reviewer` には、`design-reviewer` の追加情報に加えて次を渡します。
+
+- reviewer id は必ず `claude-design-reviewer`
+- `claude -p` で実行される read-only reviewer であり、編集、commit、PR 操作、shell command 実行をしないこと
+- output は `APPROVE` / `REQUEST_CHANGES` / `BLOCKED` の verdict と、採用候補 finding を `P1/P2/P3 file:line issue reason smallest fix` 形式で返すこと
+- scoped prompt bundle に含まれていない画面やファイルについて断定しないこと
+- user の好みや全面リデザイン提案ではなく、user_request、DESIGN.md、対象 route、画面確認に根拠がある指摘だけ出すこと
+
 reviewer には `git diff` の再発見を任せません。coordinator が scope を確定し、必要な差分または対象 path を渡します。reviewer は必要な現在ファイルを読むことだけ許可されます。
 
 ## 集約と検証
@@ -160,8 +199,9 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 2. 同一原因はまとめる。
 3. diff scope 外、task scope 外、既存問題だけの指摘、ExecPlan で明示的に見送った論点は除外する。
 4. design-reviewer の指摘は、user_request、DESIGN.md、対象 route、または画面確認に根拠があるかを確認し、好みだけの提案は除外する。
-5. 採用前に file:line と現行契約で再確認する。
-6. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
+5. claude-design-reviewer の指摘は、外部 reviewer 由来であることを source reviewer として残し、採用前に同じ基準で再検証する。
+6. 採用前に file:line と現行契約で再確認する。
+7. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
 
 指摘を出す時は、可能なら inline directive を使います。
 

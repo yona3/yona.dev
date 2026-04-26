@@ -16,6 +16,7 @@
 - [x] 2026-04-26 17:55+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。 (現状確認: src / lockfile / env から microCMS 参照は撤去済、`/blog` は redirect のみ。`docs/conventions.md` に Content management 方針として、microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補 (手動 / build 前) を明文化。)
 - [x] 2026-04-26 17:30+09:00 `mise run verify`、browser 確認、project-local review fix loop を最終実行する。 (lint + build green、project-local review skill REQUEST_CHANGES → 3 件反映、4 件 user 判断確定。browser 確認は user 側で実施予定。)
 - [x] 2026-04-26 17:32+09:00 論理単位の commit を揃え、`pr-writer` で PR を作成または更新する。 (4 commit: 3a75af4 feat(site) / c66f674 docs(notes) / 5205066 docs(design) / 4afc271 docs(exec-plan)。PR #24 OPEN: https://github.com/yona3/yona.dev/pull/24 。)
+- [x] 2026-04-26 23:03+09:00 `review` skill に Claude Code CLI を使う `claude-design-reviewer` の恒久的な起動条件を追加する。
 - [ ] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。
 - [ ] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。
 
@@ -52,6 +53,10 @@
 観測: 上記 review fix loop 後に、同じ reviewer set による再 review、`mise run verify`、browser 確認は実行していない。
 根拠:
     user 指示が「user 判断不要な 3 件だけ先行反映」であり、fix loop 完走ではなく中間反映であるため。`git diff --check` は通過済み。
+
+観測: ユーザーは design review で Claude Code を使えるようにする恒久運用案を選択し、その後「デザイン面はデフォルトで Claude、許可不要」と明示した。
+根拠:
+    2026-04-26 23:03+09:00 user reply `2`。2026-04-26 23:08+09:00 user request `デザイン面はデフォルトで claude でレビューさせるようにしたい。許可とかは不要。`。`claude --help` で `claude -p` / `--print` と `--output-format` を確認済み。
 
 ## 判断
 
@@ -92,6 +97,10 @@
 理由: ブランチ作業で microCMS への runtime 依存はすでに撤去済 (src / lockfile / env いずれも参照なし、`/blog` は `/notes` への redirect のみ)。Notion 移行を将来検討する余地は残しつつ、secret の client / log / HTML 露出を避け、`AGENTS.md` 禁止境界と整合させる。
 日付/担当: 2026-04-26 / Codex (Content management 方針整理、`docs/conventions.md` に明文化)
 
+判断: Claude Code は通常 design-reviewer を置き換えるのではなく、design review 条件に該当した時の既定追加 reviewer として `claude-design-reviewer` を起動する。
+理由: ユーザーが design review では Claude をデフォルトで使い、追加許可を不要にしたいと明示したため。design review 以外の通常レビューまでは対象にしない。
+日付/担当: 2026-04-26 / Codex (`review` skill 拡張)
+
 ## 契約
 
 依存: `web/src/app/page.tsx`, `web/src/app/about/page.tsx`, `web/src/app/notes/page.tsx`, `web/src/app/notes/[slug]/page.tsx`, `web/src/components/site/*`, `web/src/styles/globals.css`, `web/content/notes/*.md`, `web/src/lib/notes.ts`, `DESIGN.md`, `docs/skills/review/SKILL.md`, `docs/exec-plans/completed/*`
@@ -107,6 +116,7 @@
 契約: root `package.json` / `yarn.lock` を復活させない。依存管理は `web/` の `pnpm`。
 契約: `.next/`, `node_modules/`, `.pnpm-store/`, `tsconfig.tsbuildinfo`, `web/next-env.d.ts` など生成物を編集・追跡しない。
 契約: PR 作成・更新は `pr-writer` skill から実施し、直接 `gh pr create` / `gh pr edit` / GitHub connector で作成・更新しない。
+契約: Claude Code で design review を行う場合は、`review` skill の既定として `claude-design-reviewer` を追加し、scoped prompt bundle だけを `claude -p` に渡す。無効化する場合は `claude_design_review:off` を明示する。
 
 ## 実行計画
 
@@ -164,6 +174,7 @@
         `mise run verify`
         browser preview
         project-local `review` skill の design review / fix loop
+        design review 時は既定で `claude-design-reviewer`
     期待結果:
         lint/build が通り、mobile / desktop の overflow、tap target、a11y landmark、情報重複、visual hierarchy の主要 finding が解消される。
 
@@ -276,3 +287,5 @@
 - 2026-04-26 17:55+09:00 CMS 依存 / Notion 方針整理を完了。runtime はすでに microCMS 依存ゼロであることを確認し、`docs/conventions.md` に Content management 方針 (microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補) を追加。残作業を browser 確認、PR CI、merge に絞った。
 - 2026-04-26 22:00+09:00 Home に挨拶吹き出し + ハリネズミ click lap + hover wobble + 丸文字 (吹き出しのみ) を追加し、project-local review skill を 2 cycle 回した。cycle 1 で contract / design / ui の REQUEST_CHANGES を計 6 件採用し反映 (reduced-motion 早期 return / sr-only h1 名 / setTimeout cleanup / `overflow-x: clip` / DESIGN.md Typography 更新 / motion 例外明文化)。cycle 2 で REQUEST_CHANGES 3 件追加採用し反映 (`prefers-reduced-motion: reduce` 時はハリネズミを button ではなく装飾表示に切替 / nav 系 font-family override 削除 / hedgehog button hit area 44x44)。`mise run verify` green、`git diff --check` 通過、PR #24 commit 5ee7bf3 / 82c2296 で push 済。残作業は browser 確認、ユーザー承認、merge。
 - 2026-04-26 22:40+09:00 commit b8a7e39 (Noto Color Emoji + 工事中 banner) と e639082 (ダミー note 撤去 / site-renewal / test-blocks) に対して project-local review skill を 2 cycle 回した。cycle 1 で contract / app / ui / design 4 reviewer 全員が REQUEST_CHANGES を返し、採用 finding 6 件のうち 5 件を反映: `.constructionNotice` の color を `var(--color-secondary)` に変更し WCAG 4.5:1 を満たす / `test-blocks.md` を `published: false` にして公開対象から除外 / 工事中 banner を `<header>` 直後から `<main>` 直後 (footer の前) に移動し最初の意味情報を site identity に戻す / `.page` と `.nameSpeech` の font-family stack で `var(--font-emoji)` を generic `sans-serif` の前に移動 / 直前の `bookish-site.md` 維持判断に「commit e639082 で削除済、historical record」を注記。`site-renewal.md:18` の serif 文言は user 編集中につき cycle 2 では再提出せず保留。cycle 2 で app / ui / design は APPROVE、contract が ExecPlan 変更記録 の追記漏れを P3 として指摘したためこの entry を追記。`mise run verify` green、`git diff --check` 通過。残作業は browser 確認、ユーザー承認、PR push、CI、merge。
+- 2026-04-26 23:03+09:00 `review` skill に `claude_design_review` 入力と `claude-design-reviewer` を追加し、Claude Code CLI (`claude -p`) を design review の追加 reviewer として使えるようにした。
+- 2026-04-26 23:08+09:00 ユーザー指示に合わせ、design review では `claude-design-reviewer` をデフォルト起動し、追加許可を不要とする standing approval を契約化した。通常 design-reviewer は置き換えず、無効化は `claude_design_review:off` で行う。
