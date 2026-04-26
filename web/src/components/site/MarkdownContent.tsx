@@ -21,7 +21,17 @@ type CodeBlock = {
   code: string;
 };
 
-type MarkdownBlock = HeadingBlock | ParagraphBlock | ListBlock | CodeBlock;
+type BlockquoteBlock = {
+  kind: "blockquote";
+  text: string;
+};
+
+type MarkdownBlock =
+  | HeadingBlock
+  | ParagraphBlock
+  | ListBlock
+  | CodeBlock
+  | BlockquoteBlock;
 
 type Props = {
   content: string;
@@ -98,6 +108,19 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
       continue;
     }
 
+    if (trimmed.startsWith("> ")) {
+      flushParagraph(blocks, paragraph);
+      const quoteLines: string[] = [];
+
+      while (index < lines.length && lines[index]?.trim().startsWith("> ")) {
+        quoteLines.push((lines[index] ?? "").trim().slice(2));
+        index += 1;
+      }
+
+      blocks.push({ kind: "blockquote", text: quoteLines.join(" ") });
+      continue;
+    }
+
     paragraph.push(trimmed);
     index += 1;
   }
@@ -142,6 +165,10 @@ export const MarkdownContent = ({ content }: Props) => {
               <code>{block.code}</code>
             </pre>
           );
+        }
+
+        if (block.kind === "blockquote") {
+          return <blockquote key={key}>{block.text}</blockquote>;
         }
 
         return <p key={key}>{block.text}</p>;
