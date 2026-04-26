@@ -1,0 +1,231 @@
+この ExecPlan は ../../../../PLANS.md の契約に準拠する。
+
+## 目的
+
+`codex/site-refresh-notes` ブランチで進めている yona.dev の刷新作業を、PR merge まで追跡する親 ExecPlan として維持する。現在は細かいデザイン調整中であり、完了条件はユーザーが in-app browser で見て納得すること、コンテンツ調整まで終えること、PR が作成され CI が green になり merge されることとする。
+
+この親 ExecPlan は、細かい UI 調整ごとの子 ExecPlan を置き換えるものではない。子 ExecPlan は必要に応じて作成・完了させ、この親 ExecPlan には全体の状態、未完了タスク、ユーザー判断、PR / CI / merge 状態を更新し続ける。
+
+## 進捗
+
+- [x] 2026-04-26 14:59+09:00 親 ExecPlan の目的、完了条件、既存の子タスクを整理した。
+- [x] 2026-04-26 14:59+09:00 `codex/site-refresh-notes` の現在の commit 履歴と completed ExecPlan を確認した。
+- [ ] 2026-04-26 14:59+09:00 デザイン微調整 loop を、ユーザーが納得するまで継続する。
+- [ ] 2026-04-26 14:59+09:00 Home / About / Notes / note detail のコンテンツを精査し、公開する文章として整える。
+- [ ] 2026-04-26 14:59+09:00 `DESIGN.md` を最終 UI と整合させる。
+- [ ] 2026-04-26 14:59+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。
+- [ ] 2026-04-26 14:59+09:00 `mise run verify`、browser 確認、project-local review fix loop を最終実行する。
+- [ ] 2026-04-26 14:59+09:00 論理単位の commit を揃え、`pr-writer` で PR を作成または更新する。
+- [ ] 2026-04-26 14:59+09:00 PR CI を green にし、ユーザー承認後に merge する。
+- [ ] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。
+
+## 発見
+
+観測: 現在の作業ブランチは `codex/site-refresh-notes` である。
+根拠:
+    `git status --short --branch --untracked-files=all` が `## codex/site-refresh-notes` を返した。
+
+観測: このブランチでは、Notes 中心の個人サイト刷新、デザインレビュー観点追加、review fix loop、ラベル整理、ハリネズミ / coffee emoji 調整がすでに commit されている。
+根拠:
+    `git log --oneline --decorate --max-count=12` に `3b1e6ab feat(site): 個人サイトを内省的な Notes 体験に刷新`、`9a10e9b docs(review): デザインレビュー観点を追加`、`b533aef fix(review): review fix loop の指摘を反映`、`c9c084b fix(site): ハリネズミ emoji の見え方を調整` が含まれる。
+
+観測: 完了済みの子 ExecPlan は `docs/exec-plans/completed/` に整理されており、現在 `docs/exec-plans/active/` には `.gitkeep` だけが残っていた。
+根拠:
+    `find docs/exec-plans/active -maxdepth 2 -type f -print` が `docs/exec-plans/active/.gitkeep` だけを返した。
+
+観測: 直近の子 ExecPlan には、名前横のハリネズミ emoji、footer coffee、mobile overflow、H1 accessible text content の検証結果が記録されている。
+根拠:
+    `docs/exec-plans/completed/202604261439_hedgehog_emoji_footer/exec-plan.md` と `docs/exec-plans/completed/202604261451_hedgehog_position_coffee_size/exec-plan.md`。
+
+## 判断
+
+判断: この親 ExecPlan は PR merge まで active に残す。
+理由: ユーザーが「PR merge まで維持される親 ExecPlan」を明示しており、完了条件もユーザー納得までの反復を含むため、子タスク完了ごとに completed へ移す通常の小 Plan とは役割が異なる。
+日付/担当: 2026-04-26 / Codex
+
+判断: 完了条件は「ユーザー納得」を最上位 gate とし、local verify / browser / review / PR / CI / merge を下位 gate として扱う。
+理由: 今回の主作業は細かい UI とコンテンツの品質調整であり、機械的な test pass だけでは完了を判定できない。
+日付/担当: 2026-04-26 / Codex
+
+判断: コンテンツ調整は UI 調整と同じ親 ExecPlan に含める。
+理由: 個人ブランディング、技術ブログ、日々の記録の入口として、UI と文章の方向性は分離して判断しにくい。公開前に Home / About / Notes / note detail の言葉と情報設計を一体で整える必要がある。
+日付/担当: 2026-04-26 / Codex
+
+判断: Notion は執筆元の候補として扱い、公開 runtime の正本は `web/content/notes/*.md` のまま維持する。
+理由: `AGENTS.md` の禁止境界が「公開コンテンツの正本は `web/content/notes/*.md`。Notion は執筆元であり、公開 runtime から直接読まない」と定めているため。
+日付/担当: 2026-04-26 / Codex
+
+## 契約
+
+依存: `web/src/app/page.tsx`, `web/src/app/about/page.tsx`, `web/src/app/notes/page.tsx`, `web/src/app/notes/[slug]/page.tsx`, `web/src/components/site/*`, `web/src/styles/globals.css`, `web/content/notes/*.md`, `web/src/lib/notes.ts`, `DESIGN.md`, `docs/skills/review/SKILL.md`, `docs/exec-plans/completed/*`
+依存理由: サイト刷新の UI、ルーティング、公開コンテンツ、Markdown content pipeline、レビュー観点、過去の作業記録を一貫して管理するため。
+契約: この親 ExecPlan は PR merge が確認されるまで `docs/exec-plans/active/202604261459_site_refresh_parent/exec-plan.md` に残す。
+契約: 子 ExecPlan を作る場合も、この親 ExecPlan の進捗、発見、未完了を更新する。
+契約: 完了条件はユーザーが in-app browser で納得した状態を明示すること。ユーザーが納得していない UI / content は完了扱いにしない。
+契約: Home / About / Notes / note detail は user-visible route として扱い、変更後は browser 確認を行う。
+契約: `/notes`、`/notes/[slug]`、`/blog` redirect、metadata、Markdown renderer、frontmatter schema、slug 生成規則を変更する場合は user-visible 影響としてこの親 ExecPlan に記録する。
+契約: `dangerouslySetInnerHTML` は原則使わない。使う場合は sanitize 済み content と明示し、security-sensitive として扱う。
+契約: Notion token や外部 API key を `NEXT_PUBLIC_*`、client component、log、HTML に出さない。
+契約: 公開 runtime から Notion を直接読まない。Notion は執筆元または手動 / build 前同期の候補として扱う。
+契約: root `package.json` / `yarn.lock` を復活させない。依存管理は `web/` の `pnpm`。
+契約: `.next/`, `node_modules/`, `.pnpm-store/`, `tsconfig.tsbuildinfo`, `web/next-env.d.ts` など生成物を編集・追跡しない。
+契約: PR 作成・更新は `pr-writer` skill から実施し、直接 `gh pr create` / `gh pr edit` / GitHub connector で作成・更新しない。
+
+## 実行計画
+
+1. 現在の UI 反復を継続する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        Home / About / Notes / note detail / demo route を in-app browser で確認し、ユーザーの指摘に応じて余白、文字階層、emoji、線、導線、一覧密度を調整する。
+    期待結果:
+        ミニマルで内省的、温かく入りやすい雰囲気になり、ユーザーが「この方向でよい」と判断できる。
+
+2. コンテンツを精査する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        Home の紹介文、About の自己紹介、Notes 一覧の見出しやラベル、初期 note markdown の文章を見直す。抽象的すぎる文言、重複する名前や説明、外向けすぎる見せ方を減らす。
+    期待結果:
+        個人の入口、エッセイ寄りの技術ブログ、日々の記録というコンセプトが、過度に自己宣伝的でなく伝わる。
+
+3. 情報設計を最終化する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        Home / About / Notes / note detail の役割分担、導線、見出し、metadata を確認する。不要な導線やラベルは削り、必要な導線だけ残す。
+    期待結果:
+        情報の重複が少なく、ユーザーが Notes と About に自然に辿れる。
+
+4. content management 方針を整理する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        既存 CMS 依存の残りを確認し、`web/content/notes/*.md` を公開正本にした運用を維持する。Notion は執筆元として使う場合の手動同期または build 前同期の候補を整理し、runtime secret / client exposure を避ける。
+    期待結果:
+        公開 runtime は単純で安全な markdown source に寄り、Notion 導入の判断余地も残る。
+
+5. design contract を更新する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        最終 UI の spacing、type scale、色、emoji 方針、Notes presentation、避ける表現を `DESIGN.md` に反映する。
+    期待結果:
+        実装と `DESIGN.md` が矛盾せず、今後の調整基準として使える。
+
+6. 検証と design review fix loop を行う。
+
+    作業場所:
+        <repo-root>
+    実行:
+        `git diff --check`
+        `mise run verify`
+        browser preview
+        project-local `review` skill の design review / fix loop
+    期待結果:
+        lint/build が通り、mobile / desktop の overflow、tap target、a11y landmark、情報重複、visual hierarchy の主要 finding が解消される。
+
+7. ユーザー承認 gate を通す。
+
+    作業場所:
+        <repo-root>
+    実行:
+        in-app browser の最終状態をユーザーに確認してもらい、納得しているかをこの ExecPlan に記録する。
+    期待結果:
+        「納得した」「この方向で PR に進める」などの明示承認が記録される。承認がなければ design / content loop に戻る。
+
+8. commit history を整える。
+
+    作業場所:
+        <repo-root>
+    実行:
+        `git status --short --untracked-files=all`
+        `git diff --staged`
+        commit skill
+    期待結果:
+        論理単位の commit が揃い、生成物や無関係差分が残らない。
+
+9. PR を作成または更新する。
+
+    作業場所:
+        <repo-root>
+    実行:
+        `pr-writer` skill で CREATE / UPDATE 判定、差分分析、title / body 生成、PR 作成または更新を行う。
+    期待結果:
+        PR が存在し、本文にコンセプト、主要変更、検証、残リスク、関連 issue なしが記載される。
+
+10. CI fix と merge まで進める。
+
+    作業場所:
+        <repo-root>
+    実行:
+        PR CI / Vercel check を確認し、差分起因の failure を修正する。secret / 外部 service / 権限不足なら blocker として記録する。CI green とユーザー承認後に merge する。
+    期待結果:
+        PR が merge され、merge commit または GitHub 上の merge 状態が確認できる。
+
+11. merge 後に親 ExecPlan を completed へ移す。
+
+    作業場所:
+        <repo-root>
+    実行:
+        この ExecPlan に PR URL、CI 結果、merge 結果を記録する。
+        `mv docs/exec-plans/active/202604261459_site_refresh_parent docs/exec-plans/completed/202604261459_site_refresh_parent`
+    期待結果:
+        PR merge まで維持された親 ExecPlan が completed に移り、active には未完了 plan だけが残る。
+
+## 受け入れ条件
+
+入力: `http://localhost:3000/`
+確認: Home が個人の入口として機能し、名前、紹介文、Notes preview、emoji、余白、footer が過度に外向けでなく内省的に見える。
+確認: ユーザーが in-app browser で最終 UI に納得したことをこの ExecPlan に記録する。
+
+入力: `http://localhost:3000/about`
+確認: About が実績の押し出しではなく、技術的関心や経験、人となりが伝わる自己紹介になっている。
+確認: 情報の重複、意味の薄いラベル、不要な導線が整理されている。
+
+入力: `http://localhost:3000/notes`
+確認: Notes 一覧が日付とタイトル中心で読みやすく、必要なら絵文字や種別表示が雰囲気に合っている。
+確認: Articles と Notes を分けず、Notes として統合されている。
+
+入力: `http://localhost:3000/notes/{slug}`
+確認: note detail の本文、metadata、Markdown rendering が静かな読書体験を壊さない。
+確認: frontmatter schema、slug 生成、Markdown renderer の変更がある場合は明示的に記録され、verify / browser で確認されている。
+
+入力: `DESIGN.md`
+確認: 最終 UI の type scale、余白、色、emoji / analog texture 方針、避ける表現が反映されている。
+
+入力: content management 方針
+確認: 既存 CMS 依存の扱いと Notion ベース管理の候補が整理されている。
+確認: 公開 runtime から Notion を直接読まず、secret を client に露出しない契約が維持されている。
+
+入力: validation commands
+確認: `git diff --check` が成功する。
+確認: `mise run verify` が成功するか、環境要因の blocker と未検証範囲が記録されている。
+確認: browser preview で desktop / mobile の横 overflow、主要 tap target、視覚的重なりがない。
+確認: project-local review / design review fix loop の最終結果が APPROVE または具体的 blocker になる。
+
+入力: PR / CI / merge
+確認: `pr-writer` skill を通して PR が作成または更新されている。
+確認: PR CI / Vercel check が green になるか、secret / 外部 service / 権限不足の blocker が記録されている。
+確認: ユーザー承認後に PR が merge され、この親 ExecPlan が completed へ移される。
+
+失敗条件: ユーザーが UI / content に納得していない、Home / About / Notes の役割が曖昧、情報重複が目立つ、外向けすぎる見せ方に戻る、公開 runtime が Notion secret に依存する、生成物差分が残る、PR merge 前にこの親 ExecPlan を completed へ移す。
+
+## 復旧
+
+1. デザイン調整が迷走した場合は、直近の納得済み commit に戻れる粒度で commit を分け、必要なら子 ExecPlan で対象を絞る。
+2. コンテンツ調整で判断が割れる場合は、Home / About / Notes / note detail のどの route の問題かを分けて、この親 ExecPlan の `発見` と `判断` に追記する。
+3. Markdown/frontmatter/content loader を触って破綻した場合は、schema と renderer の変更を明示し、`mise run verify` と note detail browser 確認を再実行する。
+4. Notion 方針が secret / runtime 依存に近づいた場合は、公開正本を `web/content/notes/*.md` に戻し、Notion は執筆元または同期前 source に限定する。
+5. PR / CI が環境、secret、外部 service、権限で止まった場合は、失敗 command と blocker をこの ExecPlan に残し、差分起因の failure だけを修正する。
+
+## 未完了
+
+親 ExecPlan は PR merge まで未完了。現時点の残作業は、ユーザーが納得するまでのデザイン微調整、Home / About / Notes / note detail のコンテンツ精査、`DESIGN.md` 最終同期、CMS / Notion 方針整理、最終 verify / browser / review、PR 作成または更新、CI green、merge 確認。
+
+変更記録: 2026-04-26 14:59+09:00 PR merge まで維持する親 ExecPlan として作成した。
