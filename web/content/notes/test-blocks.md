@@ -4,7 +4,7 @@ slug: test-blocks
 date: 2026-04-26
 type: log
 description: Markdown の各ブロックスタイルを確認するためのテストノート
-published: true
+published: false
 ---
 
 ここはテスト用の導入段落です。本文の見え方とブロック間の余白を確認します。複数行で書いた段落が改行で繋がって整形されるかを見る目的です。
