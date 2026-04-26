@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import { HedgehogEmoji } from "../components/site/HedgehogEmoji";
 import { NoteList } from "../components/site/NoteList";
 import styles from "../components/site/site.module.css";
 import { SiteShell } from "../components/site/SiteShell";
@@ -15,16 +14,7 @@ export default async function HomePage() {
         <h1 id="home-title">
           <span className={styles.nameHeading}>
             <span>Koh Yonamine</span>
-            <span aria-hidden="true" className={styles.hedgehogMark}>
-              <Image
-                alt=""
-                className={styles.hedgehogImage}
-                fill
-                priority
-                sizes="44px"
-                src="/icon.jpeg"
-              />
-            </span>
+            <HedgehogEmoji className={styles.hedgehogEmoji} />
           </span>
         </h1>
         <p className={styles.lead}>

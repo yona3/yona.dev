@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 
+import { HedgehogEmoji } from "../../../components/site/HedgehogEmoji";
 import styles from "./page.module.css";
 
 const notes = [
@@ -52,16 +52,7 @@ export default function SiteRefreshDemoPage() {
           <h1 id="demo-title">
             <span className={styles.nameHeading}>
               <span>Koh Yonamine</span>
-              <span aria-hidden="true" className={styles.hedgehogMark}>
-                <Image
-                  alt=""
-                  className={styles.hedgehogImage}
-                  fill
-                  priority
-                  sizes="44px"
-                  src="/icon.jpeg"
-                />
-              </span>
+              <HedgehogEmoji className={styles.hedgehogEmoji} />
             </span>
           </h1>
           <p className={styles.lead}>
