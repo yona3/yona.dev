@@ -44,6 +44,15 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
   security-sensitive として最終報告で明示する。
 - Notion sync は repo 内 Markdown を生成する境界に閉じる。公開 page は repo 内 content を読む。
 
+### Content management 方針
+
+- 公開 runtime は `web/content/notes/*.md` のみを読む。microCMS / 外部 CMS への runtime 依存は無い (`web/src/lib/microcms.ts`、microcms 関連 env、microcms-js-sdk は撤去済)。
+- `/blog` と `/blog/[articleId]` は `/notes` への redirect だけを残し、旧記事 URL の互換を保つ。撤去や redirect map の更新は user-visible 影響として扱い、別 ExecPlan で判断する。
+- Notion を執筆元として使う場合は、次のいずれかに限定する。runtime から Notion API を直接読む構成は採用しない。
+    - 手動同期: 執筆者が Notion 上で書いた内容を `web/content/notes/*.md` へ手で move する。
+    - build 前同期: build 前に Notion API を読む sync script を実行し、生成された Markdown を repo に commit する。Notion token は CI / local の server-only env として扱い、`NEXT_PUBLIC_*` や client component、log、HTML に出さない。
+- いずれの方式でも、上記 Notes content safety の frontmatter schema と loader 側の `# {title}` 除去を維持する。
+
 ### Routing / ISR / metadata
 
 - `/`, `/about`, `/notes`, `/notes/[slug]` は user-visible route として扱う。
