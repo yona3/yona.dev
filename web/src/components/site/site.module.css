@@ -3,7 +3,7 @@
   overflow-x: clip;
   background: var(--color-background);
   color: var(--color-primary);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif, var(--font-emoji);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo", var(--font-emoji), sans-serif;
 }
 
 .visuallyHidden {
@@ -53,7 +53,7 @@
   padding: 6px 12px;
   border-radius: 999px;
   background: var(--color-surface-warm);
-  color: var(--color-muted);
+  color: var(--color-secondary);
   font-size: 0.78rem;
   line-height: 1.4;
 }
@@ -134,7 +134,7 @@
   border: 1px solid var(--color-border-soft);
   border-radius: 999px;
   background: var(--color-surface);
-  font-family: var(--font-rounded), "Hiragino Maru Gothic ProN", "Yu Gothic UI", system-ui, sans-serif, var(--font-emoji);
+  font-family: var(--font-rounded), "Hiragino Maru Gothic ProN", "Yu Gothic UI", system-ui, var(--font-emoji), sans-serif;
   animation: bubbleIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
