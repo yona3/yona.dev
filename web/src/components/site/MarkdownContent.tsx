@@ -129,8 +129,8 @@ export const MarkdownContent = ({ content }: Props) => {
         if (block.kind === "list") {
           return (
             <ul key={key}>
-              {block.items.map((item) => (
-                <li key={item}>{item}</li>
+              {block.items.map((item, itemIndex) => (
+                <li key={`${index}-${itemIndex}`}>{item}</li>
               ))}
             </ul>
           );

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import Script from "next/script";
 
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Koh Yonamine",
     description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
     images: ["https://yona.dev/icon.jpeg"],
-    site: "@yonakinTV",
+    site: "@yonah6g",
   },
   icons: {
     icon: [
@@ -63,6 +63,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#fcf8f0",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -71,6 +75,9 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${notoSansJP.variable} ${notoSerifJP.variable}`}>
       <body>
+        <a href="#main" className="skip-link">
+          メインコンテンツへスキップ
+        </a>
         {children}
         {GA_ID && (
           <>
