@@ -24,6 +24,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - 同じ規約を複数 file に長文で重複させない。必要なら参照先だけを書く。
 - lint で機械検出できる規約は、説明を最小限にし、詳細は設定 file を正本にする。
 - ExecPlan を使う task は、ユーザーが明示的に除外しない限り stage / commit、PR 作成、CI fix までを既定の実行範囲に含める。
+- ExecPlan 対象 task は、`mise run verify` による deterministic verification と project-local `review` skill の成立済み review verdict を分けて扱う。
 - PR 作成・更新は `pr-writer` skill を入口にする。`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼ばない。
 
 ## ガードレール
@@ -71,6 +72,15 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - project-local skill の正本は `docs/skills/`。
 - Codex 向けの `.codex/skills/*` と Claude Code 向けの `.claude/skills/*` は `docs/skills/*` への symlink にする。
 - runtime ごとの違いは copy を分けず、対象 skill 本体の条件分岐として書く。
+
+### Local self review loop
+
+- `mise run verify` は唯一の hard guard として維持し、review はその代替にしない。
+- ExecPlan 対象 task では、停止条件に該当しない限り `docs/skills/review/SKILL.md` の成立済み review verdict を完了条件に含める。
+- review gate の evidence は新しい固定 artifact ではなく、relevant ExecPlan の `発見` または `受け入れ条件` に残す。
+- 記録する summary は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を含める。
+- hidden pipeline は追加しない。local hook や pre-commit hook が必要になった場合は、別 ExecPlan で visible task として設計し、`mise run verify` との責務分離を再確認する。
+- Codex Desktop と Claude Code は同じ `docs/skills/` 正本を使う。Claude Code 経由の review 実行は `docs/skills/review/SKILL.md` の `Claude Code 経由の実行` に従い、self review へ縮退しない。
 
 ## Coding conventions（コード規約）
 

@@ -32,8 +32,9 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 - Claude Code 経由でこの skill を実行している場合は、後述の `Claude Code 経由の実行` を優先し、reviewer 実行を `codex exec` 経由に固定する。
 - reviewer は編集しない。coordinator だけが採用 finding を検証し、必要なら修正する。
 - review artifact を固定ファイルとして repo に増やさない。結果は会話内に返す。
-- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer id、verdict、未解決 finding、未検証範囲の要約を残す。
-- private workspace data を外部 service へ送る reviewer は、design review に限り user の standing approval 済みとして扱う。`claude_design_review:off` が指定された時だけ Claude reviewer を無効化する。
+- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command の要約を残す。
+- review は `mise run verify` の代替ではない。deterministic verification の結果と review verdict を分けて報告する。
+- private workspace data を外部 service へ送る reviewer は、design review に限り user の standing approval 済みとして扱う。`claude_design_review:off` が指定された時だけ Claude reviewer を無効化する。その他の fallback は user の明示承認がある時だけ使う。
 - `claude-design-reviewer` は通常の `design-reviewer` を置き換える fallback ではなく、デザイン観点の追加 reviewer として扱う。
 
 ## Claude Code 経由の実行
@@ -171,6 +172,8 @@ finding にしてはいけないもの:
 - reviewer id と担当観点
 - primary scope と除外 scope
 - user request と relevant ExecPlan の acceptance
+- PR 作成・更新前の task では relevant ExecPlan の `pr-writer receipt` 記録手順
+- PR 作成・更新済みの task では relevant ExecPlan の `pr-writer receipt`
 - 編集禁止
 - 日本語出力
 - finding は `P1/P2/P3 file:line issue reason smallest fix` 形式
@@ -201,7 +204,9 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 4. design-reviewer の指摘は、user_request、DESIGN.md、対象 route、または画面確認に根拠があるかを確認し、好みだけの提案は除外する。
 5. claude-design-reviewer の指摘は、外部 reviewer 由来であることを source reviewer として残し、採用前に同じ基準で再検証する。
 6. 採用前に file:line と現行契約で再確認する。
-7. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
+7. PR 作成・更新前の review gate では、relevant ExecPlan の実行計画に `pr-writer receipt` を記録する手順があるか確認する。
+8. PR 作成・更新済みの completion gate では、`pr-writer receipt` がない、または mode / base/head / 既存 PR 判定 / issue / template / UI preview / title-body / command / `gh pr view` 検証のどれかが欠けていれば finding として扱う。
+9. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
 
 指摘を出す時は、可能なら inline directive を使います。
 
@@ -241,7 +246,8 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
     BLOCKED: reason
 
-サマリーには reviewer 数、対象 scope、検証 command、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
+サマリーには reviewer ids、対象 scope、verdict、検証 command、未解決 finding、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
+ExecPlan gate として実行した場合、coordinator は同じ summary を relevant ExecPlan の `発見` または `受け入れ条件` に追記してから完了扱いにします。
 
 ## 完了条件
 
@@ -250,3 +256,6 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 - 採用 finding は file:line と契約で検証済み。
 - fix loop 後に同じ reviewer set で再確認している。
 - `git diff --check` と必要な `mise` task の結果を報告している。
+- ExecPlan gate の場合は、review summary が relevant ExecPlan に記録されている。
+- PR 作成・更新前の ExecPlan gate の場合は、`pr-writer receipt` を記録する手順が relevant ExecPlan に書かれている。
+- PR 作成・更新済みの completion gate の場合は、`pr-writer receipt` が relevant ExecPlan に記録されている。

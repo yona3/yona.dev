@@ -10,7 +10,7 @@
 
 - [x] 2026-04-26 14:59+09:00 親 ExecPlan の目的、完了条件、既存の子タスクを整理した。
 - [x] 2026-04-26 14:59+09:00 `codex/site-refresh-notes` の現在の commit 履歴と completed ExecPlan を確認した。
-- [ ] 2026-04-26 17:48+09:00 デザイン微調整 loop を、ユーザーが納得するまで継続する。 (codex 3 reviewer の REQUEST_CHANGES 7 件は反映 / 維持で確定済。Claude Code subagent 補助 review の新規 P3 × 3 も commit ec0e477 で反映済。残: in-app browser 確認、ユーザー納得の明示記録。)
+- [x] 2026-04-26 17:48+09:00 デザイン微調整 loop を、ユーザーが納得するまで継続する。 (codex 3 reviewer の REQUEST_CHANGES 7 件は反映 / 維持で確定済。Claude Code subagent 補助 review の新規 P3 × 3 も commit ec0e477 で反映済。2026-04-27 00:27+09:00 のユーザー `merge` 指示を最終承認として記録。)
 - [x] 2026-04-26 17:48+09:00 Home / About / Notes / note detail のコンテンツを精査し、公開する文章として整える。 (Notes 3 本書き直し / Home 文言調整 / About 段落重複整理 / note detail description 削除を反映済。)
 - [x] 2026-04-26 17:08+09:00 `DESIGN.md` を最終 UI と整合させる。 (Layout 章を Home の通称 yona / About 専用ページとして固定するよう更新。`DESIGN.md` commit 5205066。)
 - [x] 2026-04-26 17:55+09:00 CMS 依存の扱いと Notion ベース管理の方針を、公開 runtime の契約と矛盾しない形に整理する。 (現状確認: src / lockfile / env から microCMS 参照は撤去済、`/blog` は redirect のみ。`docs/conventions.md` に Content management 方針として、microCMS 撤去状態 / `/blog` redirect 長期方針 / Notion 同期候補 (手動 / build 前) を明文化。)
@@ -18,6 +18,7 @@
 - [x] 2026-04-26 17:32+09:00 論理単位の commit を揃え、`pr-writer` で PR を作成または更新する。 (4 commit: 3a75af4 feat(site) / c66f674 docs(notes) / 5205066 docs(design) / 4afc271 docs(exec-plan)。PR #24 OPEN: https://github.com/yona3/yona.dev/pull/24 。)
 - [x] 2026-04-26 23:03+09:00 `review` skill に Claude Code CLI を使う `claude-design-reviewer` の恒久的な起動条件を追加する。
 - [x] 2026-04-26 23:46+09:00 review fix loop で stale finding を確認し、Claude 指摘の page title CSS 詳細度と親 ExecPlan の記録同期を修正した。`git diff --check` / `mise run verify` は成功し、in-app browser で `/about` と `/notes` の見出し階層を確認した。
+- [x] 2026-04-27 00:27+09:00 PR merge に向けて `origin/main` を取り込み、`docs/skills/review/SKILL.md` の conflict を Claude design reviewer 契約と pr-writer receipt 契約の両方を残す形で解消した。`git diff --check --cached` / `mise run verify` は成功。
 - [ ] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。
 - [ ] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。
 
@@ -277,7 +278,6 @@
 
 親 ExecPlan は PR merge まで未完了。現時点の残作業は次の通り。
 
-- in-app browser での Home / About / Notes / note detail の最終視覚確認と、ユーザー納得の明示記録。
 - PR #24 https://github.com/yona3/yona.dev/pull/24 の CI / Vercel check 監視と、差分起因の failure があれば修正。
 - ユーザー承認後の merge と、この親 ExecPlan の `docs/exec-plans/completed/` 移動。
 
@@ -292,3 +292,5 @@
 - 2026-04-26 23:08+09:00 ユーザー指示に合わせ、design review では `claude-design-reviewer` をデフォルト起動し、追加許可を不要とする standing approval を契約化した。通常 design-reviewer は置き換えず、無効化は `claude_design_review:off` で行う。
 
 変更記録: 2026-04-26 23:52+09:00 review fix loop の current diff に対する `git diff --check` / `mise run verify` 成功、in-app browser での `/about` と `/notes` 確認、ui reviewer / claude-design-reviewer APPROVE を記録した。contract reviewer の残指摘は検証記録不足のみで、この変更で反映した。
+
+変更記録: 2026-04-27 00:27+09:00 ユーザーの `merge` 指示を最終承認として記録し、PR merge に向けて `origin/main` を取り込んだ。`docs/skills/review/SKILL.md` の conflict は Claude design reviewer 契約と pr-writer receipt 契約を統合して解消し、`git diff --check --cached` / `mise run verify` 成功を記録した。
