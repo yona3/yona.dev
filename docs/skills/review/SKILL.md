@@ -15,6 +15,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | base | 任意 | branch review の base。既定は `main` |
 | scope | 任意 | 対象 path / route / module / ExecPlan |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
+| design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`on` はデザイン観点を明示追加、`off` は明示除外 |
 
 ## 配置契約
 
@@ -60,6 +61,24 @@ untracked files は次で確認します。
 
 `.pnpm-store/`, `.next/`, `node_modules/`, `tsconfig.tsbuildinfo` は生成物として review 対象外です。
 
+## design review 起動判定
+
+`design-reviewer` は条件付きで起動します。通常の docs / skills / backend / metadata 変更では追加しません。
+
+起動する条件:
+
+- user_request が `design`, `デザイン`, `UX`, `UI`, `情報設計`, `IA`, `ビジュアル`, `visual`, `体験`, `導線`, `レイアウト`, `見た目`, `雰囲気`, `トーン` のいずれかを明示している。
+- `design_review` が `on`。
+- 差分が `DESIGN.md`、route-level UI copy、layout、CSS、component composition、navigation、Home / Notes / About の情報構造、または user journey を変更し、かつ user-visible な判断が含まれる。
+
+起動しない条件:
+
+- `design_review` が `off`。
+- lint、format、dependency、metadata、routing redirect、Markdown renderer、skill/docs の機械的変更だけで、利用者体験や情報構造を評価する根拠がない。
+- reviewer が対象画面、user_request、DESIGN.md、または受け入れ条件を参照できず、好み以上の根拠を持てない。
+
+`design-reviewer` と `ui-reviewer` は役割を分けます。`ui-reviewer` は accessibility、responsive、hover / keyboard、visual regression を主に見る。`design-reviewer` はコンセプト、体験、情報設計、視覚言語の整合を主に見る。
+
 ## reviewer set
 
 最小 set は 2 reviewer です。差分に応じて追加します。
@@ -71,8 +90,48 @@ untracked files は次で確認します。
 | `security-reviewer` | secret, auth, server/client, Notes Markdown renderer, frontmatter, Notion sync, `dangerouslySetInnerHTML`, `.gitignore` | secret exposure, server/client boundary, Markdown renderer, XSS, generated artifact |
 | `ce-reviewer` | docs, skills, agent instruction | SSoT, context clash, lost-in-middle, artifact trail, 日本語文体 |
 | `ui-reviewer` | UI / CSS / component | responsive, accessibility, visual regression, hover/keyboard behavior |
+| `design-reviewer` | `design review 起動判定` に該当 | Design Thinking, UX Design, Information Architecture, Visual Design |
 
 docs / skills だけの変更では、既定で `contract-reviewer` と `ce-reviewer` を使います。security 境界に触れる場合は `security-reviewer` を追加します。
+
+design docs / skill の変更で design-reviewer の条件や観点自体を変更する場合は、`contract-reviewer` と `ce-reviewer` に加えて `design-reviewer` を追加してよい。ただし実画面の評価ではなく、review 観点の妥当性を対象にする。
+
+## design-reviewer 観点
+
+`design-reviewer` は次の 4 観点で user-visible な問題だけを探します。
+
+1. Design Thinking / デザイン思考
+    - 想定利用者、訪問文脈、初回/再訪の目的に対して、画面や導線が問題を解いているか。
+    - user_request、DESIGN.md、ExecPlan の目的と実装がずれていないか。
+    - 作り手の都合や説明過多が、利用者の理解や探索を邪魔していないか。
+
+2. UX Design / ユーザー体験設計
+    - 最初に何を読めばよいか、次に何をすればよいかが自然に分かるか。
+    - hover、focus、link、navigation、empty / loading 相当の状態が、期待に反しないか。
+    - モバイルとデスクトップで読む流れ、タップ対象、スクロール量、戻り方が破綻していないか。
+
+3. Information Architecture / 情報設計
+    - Home、About、Notes、記事詳細などの役割が重複しすぎていないか。
+    - 見出し、補助ラベル、metadata、navigation、一覧項目の分類が一貫しているか。
+    - 情報の優先順位、グルーピング、日付/種別/タイトルの関係が理解しやすいか。
+
+4. Visual Design / ビジュアルデザイン
+    - typography、余白、罫線、色、icon / mark、motion が DESIGN.md の方向性に合っているか。
+    - 視覚的な強弱が過剰または不足していないか。
+    - 装飾、画像、絵文字、カード、影、角丸、色数がコンセプトと競合していないか。
+
+finding にしてよいもの:
+
+- user_request、DESIGN.md、route 目的、アクセシビリティ、認知負荷、情報探索、または明確な visual regression に根拠がある。
+- 対象 file / line と、最小修正の方向を示せる。
+- 実装者が対応すると user-visible な改善につながる。
+
+finding にしてはいけないもの:
+
+- reviewer の好みだけの色、文体、レイアウト提案。
+- scope 外の全面リデザイン提案。
+- 実装 diff に関係しない既存の抽象的な改善案。
+- 画面確認なしに断定する visual finding。画面確認できない場合は `未検証範囲` に残す。
 
 ## reviewer prompt 契約
 
@@ -86,6 +145,13 @@ docs / skills だけの変更では、既定で `contract-reviewer` と `ce-revi
 - finding は `P1/P2/P3 file:line issue reason smallest fix` 形式
 - 確証がない改善提案や好みは finding にしない
 
+`design-reviewer` には追加で次を渡します。
+
+- Design Thinking / UX Design / Information Architecture / Visual Design の 4 観点
+- user_request、DESIGN.md、relevant ExecPlan、対象 route / screenshot / browser verification の有無
+- finding にしてよいもの / してはいけないものの基準
+- visual finding は、画面確認または CSS / markup から再現可能な根拠がある場合だけ出すこと
+
 reviewer には `git diff` の再発見を任せません。coordinator が scope を確定し、必要な差分または対象 path を渡します。reviewer は必要な現在ファイルを読むことだけ許可されます。
 
 ## 集約と検証
@@ -93,8 +159,9 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 1. reviewer 結果を source reviewer 付きで集約する。
 2. 同一原因はまとめる。
 3. diff scope 外、task scope 外、既存問題だけの指摘、ExecPlan で明示的に見送った論点は除外する。
-4. 採用前に file:line と現行契約で再確認する。
-5. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
+4. design-reviewer の指摘は、user_request、DESIGN.md、対象 route、または画面確認に根拠があるかを確認し、好みだけの提案は除外する。
+5. 採用前に file:line と現行契約で再確認する。
+6. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
 
 指摘を出す時は、可能なら inline directive を使います。
 
