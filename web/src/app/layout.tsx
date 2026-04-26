@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
+import { M_PLUS_Rounded_1c, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import Script from "next/script";
 
 import { GA_ID } from "../utils/gtag";
@@ -22,6 +22,13 @@ const notoSerifJP = Noto_Serif_JP({
   weight: ["400", "500", "600"],
   display: "swap",
   variable: "--font-serif",
+});
+
+const mPlusRounded = M_PLUS_Rounded_1c({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-rounded",
 });
 
 export const metadata: Metadata = {
@@ -73,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} ${notoSerifJP.variable}`}>
+    <html lang="ja" className={`${notoSansJP.variable} ${notoSerifJP.variable} ${mPlusRounded.variable}`}>
       <body>
         <a href="#main" className="skip-link">
           メインコンテンツへスキップ

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { GitHubIcon, XIcon, ZennIcon } from "../components/icons/SocialIcons";
-import { HedgehogEmoji } from "../components/site/HedgehogEmoji";
+import { HomeIntro } from "../components/site/HomeIntro";
 import { NoteList } from "../components/site/NoteList";
 import styles from "../components/site/site.module.css";
 import { SiteShell } from "../components/site/SiteShell";
@@ -33,17 +33,15 @@ export default async function HomePage() {
   return (
     <SiteShell currentPage="home">
       <section className={styles.hero} aria-labelledby="home-title">
-        <h1 id="home-title">
-          <span className={styles.nameHeading}>
-            <HedgehogEmoji className={styles.hedgehogEmoji} />
-            <span>こんにちは、yona です。</span>
-          </span>
-        </h1>
+        <HomeIntro />
         <p className={styles.lead}>
-          沖縄でソフトウェアエンジニアをしています。普段は web プロダクトの開発に関わっています。
+          沖縄でソフトウェアエンジニアをしています。普段は web
+          プロダクトの開発に関わっています。
         </p>
         <p className={styles.lead}>
-          最近は AI Agent と一緒に開発することと、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は Notes に書いています。
+          最近は AI Agent
+          と一緒に開発することと、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
+          Notes に書いています。
         </p>
         <ul className={styles.socialLinks} aria-label="外部プロフィール">
           {socialLinks.map(({ href, label, icon: Icon }) => (
