@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 import styles from "./page.module.css";
 
@@ -48,7 +49,21 @@ export default function SiteRefreshDemoPage() {
         </header>
 
         <section className={styles.hero} aria-labelledby="demo-title">
-          <h1 id="demo-title">Koh Yonamine</h1>
+          <h1 id="demo-title">
+            <span className={styles.nameHeading}>
+              <span>Koh Yonamine</span>
+              <span aria-hidden="true" className={styles.hedgehogMark}>
+                <Image
+                  alt=""
+                  className={styles.hedgehogImage}
+                  fill
+                  priority
+                  sizes="44px"
+                  src="/icon.jpeg"
+                />
+              </span>
+            </span>
+          </h1>
           <p className={styles.lead}>
             ソフトウェアを作る人です。AI Agent と開発すること、個人のための小さな道具、
             生活の中で考えたことを、まとまる前の温度のまま書いています。

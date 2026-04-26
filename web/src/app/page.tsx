@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { NoteList } from "../components/site/NoteList";
 import styles from "../components/site/site.module.css";
 import { SiteShell } from "../components/site/SiteShell";
@@ -10,7 +12,21 @@ export default async function HomePage() {
   return (
     <SiteShell currentPage="home">
       <section className={styles.hero} aria-labelledby="home-title">
-        <h1 id="home-title">Koh Yonamine</h1>
+        <h1 id="home-title">
+          <span className={styles.nameHeading}>
+            <span>Koh Yonamine</span>
+            <span aria-hidden="true" className={styles.hedgehogMark}>
+              <Image
+                alt=""
+                className={styles.hedgehogImage}
+                fill
+                priority
+                sizes="44px"
+                src="/icon.jpeg"
+              />
+            </span>
+          </span>
+        </h1>
         <p className={styles.lead}>
           ソフトウェアを作る人です。AI Agent と開発すること、個人のための小さな道具、
           生活の中で考えたことを、まとまる前の温度のまま書いています。

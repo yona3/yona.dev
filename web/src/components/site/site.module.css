@@ -92,6 +92,32 @@
   text-wrap: balance;
 }
 
+.nameHeading {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.hedgehogMark {
+  display: block;
+  position: relative;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.hedgehogImage {
+  filter: saturate(0.8) contrast(0.95);
+  object-fit: cover;
+  transform: scale(1.45) translate(8%, -5%);
+  transform-origin: center;
+}
+
 .lead {
   max-width: 540px;
   margin: 22px 0 0;
@@ -104,8 +130,7 @@
 }
 
 .section {
-  padding: 28px 0 46px;
-  border-top: 1px solid var(--color-border-soft);
+  padding: 34px 0 46px;
 }
 
 .sectionHeader {
@@ -336,8 +361,7 @@
 .footer {
   display: flex;
   justify-content: flex-end;
-  padding-top: 34px;
-  border-top: 1px solid var(--color-border-soft);
+  padding-top: 42px;
   color: var(--color-muted);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.75rem;
@@ -369,6 +393,11 @@
 
   .hero {
     padding: 54px 0 48px;
+  }
+
+  .hedgehogMark {
+    width: 34px;
+    height: 34px;
   }
 
   .sectionHeader,
