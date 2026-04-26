@@ -542,8 +542,15 @@
 
 .markdown p,
 .markdown ul,
-.markdown pre {
+.markdown pre,
+.markdown blockquote {
   margin: 0;
+}
+
+.markdown blockquote {
+  padding: 0;
+  color: var(--color-faint);
+  font-size: 0.88rem;
 }
 
 .markdown p,
