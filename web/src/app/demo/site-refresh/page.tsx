@@ -51,8 +51,8 @@ export default function SiteRefreshDemoPage() {
         <section className={styles.hero} aria-labelledby="demo-title">
           <h1 id="demo-title">
             <span className={styles.nameHeading}>
-              <span>Koh Yonamine</span>
               <HedgehogEmoji className={styles.hedgehogEmoji} />
+              <span>Koh Yonamine</span>
             </span>
           </h1>
           <p className={styles.lead}>
