@@ -91,10 +91,12 @@ commit 粒度は、Pro Git、Google Engineering Practices、Conventional Commits
 - Conventional Commits の type が複数にまたがる場合は、可能な限り複数 commit に分ける。
 
 PR 作成・更新は `pr-writer` skill を正本にします。ExecPlan の実行計画には PR 作成を既定で含め、`pr-writer` skill を使って title / body / 既存 PR 判定 / UI preview / issue 記載を委譲します。関連 issue が無い場合も blocker にせず、`issueなし` を明示入力として `pr-writer` に渡して PR 作成を継続します。
+ExecPlan の承認1は、ユーザーが明示的に除外しない限り、`pr-writer` Phase 6 の PR 作成・更新実行承認も兼ねます。
 
 ## PR 作成 gate
 
 PR 作成・更新の入口は必ず `pr-writer` skill です。`gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を、`pr-writer` の Phase 6 実行手段としてではなく直接呼んではいけません。
+ExecPlan task では承認1で Phase 6 実行承認が済んでいるため、CREATE / 大幅 UPDATE の直前に別の確認を挟みません。PR template や UI preview 不達など、停止条件に該当する場合だけ止めます。
 
 PR 作成・更新前 checklist:
 
@@ -124,7 +126,7 @@ PR 作成・更新後に `pr-writer` を通していないことが判明した�
 1. **scope 判定**: ExecPlan が必要か `AGENTS.md` で判定する。必要なら次へ進む。
 2. **ヒアリング**: 5 軸を埋める。Must Ask は実装前に必ず確認する。
 3. **ExecPlan 作成**: `docs/exec-plans/active/{YYYYMMDDHHmm_slug}/exec-plan.md` を作る。`PLANS.md` の skeleton を使い、冒頭 YAML front matter、準拠文、末尾 `変更記録:` を含める。front matter には `status`, `created_at`, `updated_at`, `owner`, `review.scope_command`, `review.untracked_paths` を入れる。
-4. **承認1**: 大きな実装前に user の `go` / 承認を得る。承認後は stage / commit、PR 作成、CI fix までを含む scope 内を自律実行する。
+4. **承認1**: 大きな実装前に user の `go` / 承認を得る。承認後は stage / commit、PR 作成、CI fix までを含む scope 内を自律実行し、`pr-writer` Phase 6 の PR 作成・更新実行承認も得たものとして扱う。
 5. **実装**: `実行計画` に沿って小さく編集する。判断変更は `判断` と `変更記録:` に残す。
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
 7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。成立した場合は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を relevant ExecPlan に残す。

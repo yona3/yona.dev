@@ -55,6 +55,8 @@ agent が自律判断します。
 ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過後の戻しやすい
 小粒度 commit、PR 作成、CI fix です。ユーザーが明示的に除外しない限り、承認1後の
 自律実行 scope に review fix loop と stage / commit / PR / CI fix を含めます。
+ExecPlan の承認1は、ユーザーが明示的に除外しない限り、`pr-writer` Phase 6 の
+PR 作成・更新実行承認も兼ねます。
 
 推奨 workflow は次の通りです。
 
@@ -89,6 +91,7 @@ ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過�
 - ExecPlan gate として review を実行した場合は、reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を `発見` または `受け入れ条件` に残します。
 - PR 作成・更新を行った場合は、`pr-writer` の mode、base/head、既存 PR 判定、issue 判定、template 判定、UI preview 判定、title/body 生成、実行 command、`gh pr view` 検証を `発見` または `受け入れ条件` に残します。
 - PR 作成・更新は `pr-writer` skill を入口にし、`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼びません。
+- ExecPlan task では、承認1が `pr-writer` Phase 6 の PR 作成・更新実行承認を兼ねるため、CREATE / 大幅 UPDATE の直前に別の確認を挟みません。PR template や UI preview 不達など、停止条件に該当する場合だけ止めます。
 - commit される ExecPlan には個人の絶対 path を残さず、`作業場所:` は `<repo-root>` や repo-relative path で書きます。
 - ユーザーから見える効果は厚めに、偶発的な実装詳細は薄めに書きます。
 - `根拠:` は成功根拠に絞り、長い transcript や巨大 diff を貼りません。

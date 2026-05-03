@@ -26,6 +26,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - ExecPlan を使う task は、ユーザーが明示的に除外しない限り stage / commit、PR 作成、CI fix までを既定の実行範囲に含める。
 - ExecPlan 対象 task は、`mise run verify` による deterministic verification と project-local `review` skill の成立済み review verdict を分けて扱う。
 - PR 作成・更新は `pr-writer` skill を入口にする。`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼ばない。
+- ExecPlan の承認1は、明示的な除外がない限り `pr-writer` Phase 6 の PR 作成・更新実行承認も兼ねる。
 - ExecPlan 作成時の意図確認と人間 / agent 責務境界は `PLANS.md` を正本にする。詳細な手順や質問の履歴は各 ExecPlan に残す。
 
 ## ガードレール
