@@ -12,7 +12,7 @@
 - [x] 2026-05-03 11:52+09:00 project-local review gate を `contract-reviewer` / `ce-reviewer` で実行し、採用 finding を修正して APPROVE を得た。
 - [x] 2026-05-03 11:52+09:00 完了条件を記録した。
 - [x] 2026-05-03 11:53+09:00 この ExecPlan を `docs/exec-plans/completed/202605031135_harness_standard_rebuild` へ移した。
-- [ ] 2026-05-03 11:35+09:00 承認済みファイルを stage / commit し、PR 作成または blocker 記録まで進める。
+- [x] 2026-05-03 12:00+09:00 承認済みファイルを commit / push し、PR #25 を作成して receipt を記録した。
 
 ## 発見
 
@@ -56,6 +56,18 @@
     `ce-reviewer`: verdict APPROVE、findings なし、blocker なし、confidence high。
     review fix loop では `docs/skills/exec-plan/SKILL.md` の使う場面 / 使わない場面の見出し構造と、`docs/skills/review/SKILL.md` の output example を修正した。
     reviewer 実行は `codex exec --sandbox read-only --ephemeral -o <output-file>`。Codex plugin auth warning は出たが reviewer 出力は取得できた。
+
+観測: `pr-writer` Phase 1-7 に従って PR #25 を作成し、`gh pr view` で反映を確認した。
+根拠:
+    mode: CREATE。
+    base/head: `main` / `codex/harness-standard-rebuild`。
+    既存 PR 判定: `gh pr list --head codex/harness-standard-rebuild --json number,title,state --limit 1` は作成前に `[]`。
+    issue 判定: open issue は `[]` のため `issueなし`。
+    template 判定: `.github` directory なしのため `templateなし / 標準フォーマット`。
+    UI preview 判定: docs / skills / ExecPlan のみで UI 可視変化なし、preview不要。
+    Phase 5 title/body: `docs(harness): 標準仕様へ再構築`。Summary / Verification / Notes で標準仕様への再構築、`mise run verify`、review APPROVE、issueなし、templateなし、preview不要を記載。
+    Phase 6 command: `gh pr create --base main --head codex/harness-standard-rebuild --title "docs(harness): 標準仕様へ再構築" --body <standard format>`。
+    Phase 7 verification: `gh pr view 25 --json number,title,url,state,baseRefName,headRefName,body` が `https://github.com/yona3/yona.dev/pull/25`, state `OPEN`, base `main`, head `codex/harness-standard-rebuild` を返した。
 
 ## 判断
 
@@ -161,6 +173,7 @@ review.untracked_paths: `docs/exec-plans/completed/202605031135_harness_standard
 確認: hidden runtime namespace、別 pipeline、別 task artifact が追加されていない。実測: 追加なし。
 確認: `git diff --check` と `mise run verify` の結果が記録されている。実測: `git diff --check` と `mise run verify` は成功。
 確認: project-local review gate の verdict または runtime blocker が記録されている。実測: `contract-reviewer` / `ce-reviewer` ともに APPROVE。
+確認: `pr-writer receipt` が記録されている。実測: PR #25 の CREATE receipt を `発見` に記録した。
 失敗条件: ExecPlan 共通ルールと skill 運用が矛盾する。
 失敗条件: `PLANS.md` にタスク固有手順や pipeline 実装詳細を混ぜる。
 失敗条件: completed ExecPlan の無関係な一括変換が発生する。
@@ -175,10 +188,12 @@ review.untracked_paths: `docs/exec-plans/completed/202605031135_harness_standard
 
 ## 未完了
 
-stage / commit / PR 作成が未完了。completed move 後に `commit` skill と `pr-writer` skill で継続する。
+None.
 
 変更記録: 2026-05-03 11:35+09:00 承認1後に標準仕様再構築の ExecPlan を作成した。
 変更記録: 2026-05-03 11:35+09:00 標準仕様の docs patch を反映し、この ExecPlan に review scope を追記した。
 変更記録: 2026-05-03 11:40+09:00 review finding を受け、設計木の質問省略理由と review gate の委譲契約を追記した。
 変更記録: 2026-05-03 11:52+09:00 deterministic verification と multi-agent review gate の最終 APPROVE を記録した。
 変更記録: 2026-05-03 11:53+09:00 ExecPlan を completed へ移し、path-sensitive な review scope を更新した。
+変更記録: 2026-05-03 12:00+09:00 `pr-writer` receipt と PR #25 の `gh pr view` 検証結果を記録した。
+変更記録: 2026-05-03 12:00+09:00 stage / commit / PR 作成の完了状態を反映し、未完了を None にした。
