@@ -19,15 +19,15 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 
 - Hot: すべての session で必要な制約だけを `AGENTS.md` に置く。
 - Warm: repo 固有の詳細規約はこの file に置く。
-- Cold: タスク固有の手順、発見、判断、evidence は ExecPlan に置く。
+- Cold: タスク固有の手順、完了条件、発見、判断、evidence は ExecPlan の `作業` と `記録` に置く。
 - README は人間が読む背景情報であり、agent の SSoT にしない。
 - 同じ規約を複数 file に長文で重複させない。必要なら参照先だけを書く。
 - lint で機械検出できる規約は、説明を最小限にし、詳細は設定 file を正本にする。
 - ExecPlan を使う task は、ユーザーが明示的に除外しない限り stage / commit、PR 作成、CI fix までを既定の実行範囲に含める。
-- ExecPlan 対象 task は、`mise run verify` による deterministic verification と project-local `review` skill の成立済み review verdict を分けて扱う。
+- ExecPlan 対象 task は、`mise run verify` による deterministic verification と project-local `review` skill の成立済み review verdict を分けて扱い、`完了条件` と `記録` に還流する。
 - PR 作成・更新は `pr-writer` skill を入口にする。`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼ばない。
 - ExecPlan の承認1は、明示的な除外がない限り `pr-writer` Phase 6 の PR 作成・更新実行承認も兼ねる。
-- ExecPlan 作成時の意図確認と人間 / agent 責務境界は `PLANS.md` を正本にする。詳細な手順や質問の履歴は各 ExecPlan に残す。
+- ExecPlan 作成時の意図確認、section 順序、front matter、人間 / agent 責務境界は `PLANS.md` を正本にする。詳細な手順や質問の履歴は各 ExecPlan の `記録` に残す。
 
 ## ガードレール
 
@@ -78,10 +78,10 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 ### Local self review loop
 
 - `mise run verify` は唯一の hard guard として維持し、review はその代替にしない。
-- ExecPlan 対象 task では、停止条件に該当しない限り `docs/skills/review/SKILL.md` の成立済み review verdict を完了条件に含める。
-- review gate の evidence は新しい固定 artifact ではなく、relevant ExecPlan の `発見` または `受け入れ条件` に残す。
+- ExecPlan 対象 task では、停止条件に該当しない限り `docs/skills/review/SKILL.md` の成立済み review verdict を `完了条件` に含める。
+- review gate の evidence は新しい固定 artifact ではなく、relevant ExecPlan の `記録` に残す。
 - 記録する summary は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を含める。
-- ExecPlan gate の review scope は、relevant ExecPlan の front matter にある `review.scope_command` と `review.untracked_paths` で再現できるようにする。未追跡 file がない場合は `[]` と書く。本文の同名 field は historical artifact 向け fallback としてだけ扱う。
+- ExecPlan gate の review scope は、relevant ExecPlan の `exec-plan/v3` front matter にある `review.scope_command` と `review.untracked_paths` で再現できるようにする。未追跡 file がない場合は `[]` と書く。
 - hidden pipeline は追加しない。local hook や pre-commit hook が必要になった場合は、別 ExecPlan で visible task として設計し、`mise run verify` との責務分離を再確認する。
 - Codex Desktop と Claude Code は同じ `docs/skills/` 正本を使う。Claude Code 経由の review 実行は `docs/skills/review/SKILL.md` の `Claude Code 経由の実行` に従い、self review へ縮退しない。
 
@@ -112,7 +112,7 @@ Refactor を小さく回す進め方を指します。
 - 実装前に、期待する振る舞いを test list または acceptance として明示する。
 - バグ修正では、先に失敗している振る舞いと期待する成功状態を書く。
 - 実装は観測可能な振る舞いを 1 つずつ変え、検証結果を最終報告または ExecPlan に残す。
-- test list / acceptance は、ExecPlan がある場合は ExecPlan に、ない小変更ではユーザー要求または着手前メモに置く。
+- test list / acceptance は、ExecPlan がある場合は `完了条件` に、ない小変更ではユーザー要求または着手前メモに置く。
 - Green 相当とは、明示した test list / acceptance を観測可能に満たした状態を指す。
 - Green 相当の状態を確認してから refactor する。挙動変更と refactor を混ぜない。
 

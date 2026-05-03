@@ -19,8 +19,8 @@
 - [x] 2026-04-26 23:03+09:00 `review` skill に Claude Code CLI を使う `claude-design-reviewer` の恒久的な起動条件を追加する。
 - [x] 2026-04-26 23:46+09:00 review fix loop で stale finding を確認し、Claude 指摘の page title CSS 詳細度と親 ExecPlan の記録同期を修正した。`git diff --check` / `mise run verify` は成功し、in-app browser で `/about` と `/notes` の見出し階層を確認した。
 - [x] 2026-04-27 00:27+09:00 PR merge に向けて `origin/main` を取り込み、`docs/skills/review/SKILL.md` の conflict を Claude design reviewer 契約と pr-writer receipt 契約の両方を残す形で解消した。`git diff --check --cached` / `mise run verify` は成功。
-- [ ] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。
-- [ ] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。
+- [x] 2026-04-26 17:35+09:00 PR CI を green にし、ユーザー承認後に merge する。 (PR #24 は 2026-04-27 00:29+09:00 に merge 済み。)
+- [x] 2026-04-26 14:59+09:00 merge 確認後、この親 ExecPlan を completed へ移す。 (2026-05-03 12:51+09:00 に merge 済みを確認し、completed 移動対象にした。)
 
 ## 発見
 
@@ -59,6 +59,10 @@
 観測: ユーザーは design review で Claude Code を使えるようにする恒久運用案を選択し、その後「デザイン面はデフォルトで Claude、許可不要」と明示した。
 根拠:
     2026-04-26 23:03+09:00 user reply `2`。2026-04-26 23:08+09:00 user request `デザイン面はデフォルトで claude でレビューさせるようにしたい。許可とかは不要。`。`claude --help` で `claude -p` / `--print` と `--output-format` を確認済み。
+
+観測: PR #24 は merge 済みであり、この親 ExecPlan は active に残す必要がなくなっている。
+根拠:
+    `gh pr view 24 --json number,title,state,mergedAt,url,mergeCommit,headRefName,baseRefName` が state `MERGED`, mergedAt `2026-04-26T15:29:25Z`, mergeCommit `278652f49082912cdfb82c8487a7c1e810b9a16f` を返した。
 
 ## 判断
 
@@ -276,10 +280,7 @@
 
 ## 未完了
 
-親 ExecPlan は PR merge まで未完了。現時点の残作業は次の通り。
-
-- PR #24 https://github.com/yona3/yona.dev/pull/24 の CI / Vercel check 監視と、差分起因の failure があれば修正。
-- ユーザー承認後の merge と、この親 ExecPlan の `docs/exec-plans/completed/` 移動。
+None.
 
 変更記録:
 - 2026-04-26 14:59+09:00 PR merge まで維持する親 ExecPlan として作成した。
@@ -294,3 +295,5 @@
 変更記録: 2026-04-26 23:52+09:00 review fix loop の current diff に対する `git diff --check` / `mise run verify` 成功、in-app browser での `/about` と `/notes` 確認、ui reviewer / claude-design-reviewer APPROVE を記録した。contract reviewer の残指摘は検証記録不足のみで、この変更で反映した。
 
 変更記録: 2026-04-27 00:27+09:00 ユーザーの `merge` 指示を最終承認として記録し、PR merge に向けて `origin/main` を取り込んだ。`docs/skills/review/SKILL.md` の conflict は Claude design reviewer 契約と pr-writer receipt 契約を統合して解消し、`git diff --check --cached` / `mise run verify` 成功を記録した。
+
+変更記録: 2026-05-03 12:51+09:00 PR #24 merge 済みを確認し、親 ExecPlan を completed へ移すため未完了を解消した。
