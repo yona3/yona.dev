@@ -1,7 +1,7 @@
 ---
 status: completed
 created_at: 2026-05-03 12:04+09:00
-updated_at: 2026-05-03 12:09+09:00
+updated_at: 2026-05-03 12:11+09:00
 owner: Codex
 review.scope_command: git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/completed/202605031204_exec_plan_front_matter_format/exec-plan.md docs/exec-plans/completed/202605031135_harness_standard_rebuild/exec-plan.md
 review.untracked_paths: []
@@ -23,7 +23,7 @@ ExecPlan の format を標準の front matter 付き形式へ寄せる。変更�
 - [x] 2026-05-03 12:08+09:00 project-local review gate を `contract-reviewer` / `ce-reviewer` で再実行し、APPROVE を得た。
 - [x] 2026-05-03 12:08+09:00 この ExecPlan を `docs/exec-plans/completed/202605031204_exec_plan_front_matter_format` へ移した。
 - [x] 2026-05-03 12:09+09:00 completed move 後に `git diff --check`、front matter parse、`mise run verify` を再実行した。
-- [ ] 2026-05-03 12:08+09:00 commit、PR update まで完了する。
+- [x] 2026-05-03 12:11+09:00 `commit` skill で commit / push し、`pr-writer` UPDATE mode で PR #25 を更新した。
 
 ## 発見
 
@@ -58,6 +58,18 @@ ExecPlan の format を標準の front matter 付き形式へ寄せる。変更�
     `contract-reviewer` session `019debcd-8306-7062-8c7c-9f82c7e7be06`: verdict APPROVE、findings なし、blocker なし、confidence high。
     `ce-reviewer` session `019debcd-8cca-7cb1-8f7a-d3bf3ae697af`: verdict APPROVE、findings なし、blocker なし、confidence high。
     前回 REQUEST_CHANGES の個人絶対パスと completed artifact の stale `updated_at` / 変更記録は修正済みと確認された。
+
+観測: `pr-writer` UPDATE mode で PR #25 を更新し、`gh pr view` で反映を確認した。
+根拠:
+    mode: UPDATE。
+    base/head: `main` / `codex/harness-standard-rebuild`。
+    既存 PR 判定: `gh pr list --head codex/harness-standard-rebuild --json number,title,state,url --limit 5` は PR #25 OPEN を返した。
+    issue 判定: open issue は `[]` のため `issueなし`。
+    template 判定: `.github` directory なしのため `templateなし / 標準フォーマット`。
+    UI preview 判定: docs / skills / ExecPlan のみで UI 可視変化なし、preview不要。
+    Phase 5 title/body: title は既存の `docs(harness): 標準仕様へ再構築` を維持。body は Summary / Verification / Notes に front matter SSoT への修正、YAML parse、最新 review APPROVE を反映。
+    Phase 6 command: `gh pr edit 25 --body-file /private/tmp/pr25-body.md`。
+    Phase 7 verification: `gh pr view 25 --json number,title,url,state,baseRefName,headRefName,body` が `https://github.com/yona3/yona.dev/pull/25`, state `OPEN`, base `main`, head `codex/harness-standard-rebuild` と更新済み body を返した。
 
 ## 判断
 
@@ -149,9 +161,10 @@ ExecPlan の format を標準の front matter 付き形式へ寄せる。変更�
 
 ## 未完了
 
-commit、PR update が未完了。
+None.
 
 変更記録: 2026-05-03 12:04+09:00 format drift 分析と修正方針を記録し、承認1取得済みとして ExecPlan を作成した。
 変更記録: 2026-05-03 12:08+09:00 deterministic verification と multi-agent review gate の APPROVE を記録した。
 変更記録: 2026-05-03 12:08+09:00 ExecPlan を completed へ移し、path-sensitive な review scope を更新した。
 変更記録: 2026-05-03 12:09+09:00 completed move 後の deterministic verification 成功を記録した。
+変更記録: 2026-05-03 12:11+09:00 commit / push / PR update の完了と `pr-writer` receipt を記録した。
