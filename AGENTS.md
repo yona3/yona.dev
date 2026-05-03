@@ -44,7 +44,7 @@ root の `mise` タスクを正本にします。
 
 完了した ExecPlan は `docs/exec-plans/completed/` へ移します。
 ExecPlan 対象 task は、停止条件に該当しない限り project-local `review` skill の成立済み
-review verdict を完了条件に含め、summary を relevant ExecPlan に残します。
+review verdict を `完了` に含め、summary を relevant ExecPlan に残します。
 
 ## 確認基準
 
@@ -52,7 +52,7 @@ review verdict を完了条件に含め、summary を relevant ExecPlan に残�
 対象 file / module / route を具体化できない。
 
 必要なら確認: 5 ファイル以上に跨る、UI/UX tradeoff がある、既存 pattern と違う、
-完了条件が主観的。
+Done / Verify が主観的。
 
 確認不要: 明確な小変更、read-only 調査、再現条件が明確な bug fix、lint/type/format の機械修正。
 
@@ -78,7 +78,7 @@ review verdict を完了条件に含め、summary を relevant ExecPlan に残�
 意味のあるコード変更後は `mise run verify` を実行します。環境変数不足などで失敗した場合は、
 失敗コマンド、原因、未検証範囲を報告します。stage / commit は依頼された時だけ行います。
 ただし ExecPlan skill で計画実行する task では、ユーザーが明示的に除外しない限り、
-stage / commit / PR 作成 / CI fix までを既定の自律実行範囲に含めます。
+stage / commit / PR 作成 / CI fix までを repo policy 上の自律実行範囲に含めます。
 ExecPlan task の review は `mise run verify` の代替ではありません。`mise run verify` を deterministic
 hard guard として実行し、別に `review` skill の verdict を記録します。
 PR 作成・更新は `pr-writer` skill を入口にします。`gh pr create` / `gh pr edit`、GitHub connector、
