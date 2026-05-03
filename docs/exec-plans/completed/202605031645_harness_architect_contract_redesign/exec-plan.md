@@ -1,6 +1,6 @@
 ---
 schema: exec-plan/harness-v1
-status: active
+status: completed
 task:
   key: "202605031645_harness_architect_contract_redesign"
 source:
@@ -13,22 +13,21 @@ verify:
   command: "mise run verify"
 review:
   required: true
-  scope_command: "git diff -- PLANS.md AGENTS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/active/202605031645_harness_architect_contract_redesign/exec-plan.md"
-  untracked_paths:
-    - "docs/exec-plans/active/202605031645_harness_architect_contract_redesign/exec-plan.md"
+  scope_command: "git diff -- PLANS.md AGENTS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/completed/202605031645_harness_architect_contract_redesign/exec-plan.md"
+  untracked_paths: []
 approval:
   state: approved
-handoff: human_review
+handoff: done_after_verify
 next:
   actor: agent
-  action: update_contracts
+  action: done
 ---
 
 # harness-architect 標準に基づく規約再設計
 
 ## 実行契約
 
-status は `active`。ユーザーの「標準仕様を更新しました。規約の再設計」と、続く参照元切り替えの指示を承認済みの設計入力として扱う。以降は `harness-architect` と `references/standard-plans.md` を基準に、yona.dev の ExecPlan 規約を再設計する。
+status は `completed`。ユーザーの「標準仕様を更新しました。規約の再設計」と、続く参照元切り替えの指示を承認済みの設計入力として扱い、`harness-architect` と `references/standard-plans.md` を基準に yona.dev の ExecPlan 規約を再設計した。
 
 front matter の `verify.command` が deterministic verification の SSoT。front matter の `review.scope_command` と `review.untracked_paths` が review scope の SSoT。PR 作成・更新は `pr-writer` skill 経由で行う。
 
@@ -46,10 +45,10 @@ What: `PLANS.md` を `harness-architect/references/standard-plans.md` の10 sect
 | --- | --- | --- | --- |
 | `PLANS.md` が `harness-architect` 標準の10 section、状態、初期確認、Done / Verify / Evidence / Status 表を定義している | `rg -n "実行契約|Done \\| Verify \\| Evidence \\| Status|schema: exec-plan/harness-v1" PLANS.md` | 該当行を確認済み | `completed` |
 | `AGENTS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md`、`docs/skills/review/SKILL.md` が新 section 名と schema を参照している | front matter の `review.scope_command` と旧 schema / 旧 section 名の残存検索 | 旧形式の残存検索は `AGENTS.md` の通常見出し `作業境界` だけ | `completed` |
-| この active ExecPlan 自体が `exec-plan/harness-v1` と10 section形式へ移行されている | `sed -n '1,220p' docs/exec-plans/active/202605031645_harness_architect_contract_redesign/exec-plan.md` | この file | `completed` |
+| この ExecPlan 自体が `exec-plan/harness-v1` と10 section形式へ移行されている | `sed -n '1,220p' docs/exec-plans/completed/202605031645_harness_architect_contract_redesign/exec-plan.md` | この file | `completed` |
 | deterministic verification が通る | front matter の `verify.command` | `mise run verify` 成功。lint と Next build が exit 0 | `completed` |
 | independent review gate が通る | project-local `review` skill 相当で `contract-reviewer` と `ce-reviewer` を起動 | `contract-reviewer=APPROVE`、`ce-reviewer=APPROVE`、findings なし | `completed` |
-| PR #25 が `pr-writer` UPDATE mode で更新され、CI が green または blocker が具体化されている | `gh pr view 25 --json ...` | 未実行 | `active` |
+| PR #25 が `pr-writer` UPDATE mode で更新され、CI が green または blocker が具体化されている | `gh pr view 25 --json title,body,url,headRefOid,statusCheckRollup` | PR body 反映済み。Vercel と Vercel Preview Comments は SUCCESS | `completed` |
 
 ## 初期確認
 
@@ -75,7 +74,7 @@ What: `PLANS.md` を `harness-architect/references/standard-plans.md` の10 sect
 - `docs/conventions.md`: Cold 層の配置、review gate、test list / acceptance、schema 名。
 - `docs/skills/exec-plan/SKILL.md`: `exec-plan/harness-v1` と新 section 名に合わせた作成・実行手順。
 - `docs/skills/review/SKILL.md`: `完了` section と `exec-plan/harness-v1` front matter を primary scope として扱う契約。
-- この ExecPlan: active artifact として新形式へ移行し、検証と receipt を残す。
+- この ExecPlan: task artifact として新形式へ移行し、検証と receipt を残す。
 
 ### 対象外
 
@@ -109,7 +108,7 @@ What: `PLANS.md` を `harness-architect/references/standard-plans.md` の10 sect
 - [x] 2026-05-03 16:50+09:00 `AGENTS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md`、`docs/skills/review/SKILL.md` の旧 section / schema 参照を更新した。
 - [x] 2026-05-03 16:50+09:00 `rg`、front matter parse、`git diff --check`、`mise run verify` を実行した。
 - [x] 2026-05-03 16:58+09:00 `contract-reviewer` と `ce-reviewer` の review fix loop を通した。
-- [ ] 2026-05-03 16:50+09:00 pre-delivery commit、push、PR #25 update、receipt 記録、completed move、receipt/move commit、PR checks 確認まで進める。
+- [x] 2026-05-03 17:05+09:00 pre-delivery commit、push、PR #25 update、receipt 記録、completed move、receipt/move commit、PR checks 確認まで進める。
 
 ### 委譲
 
@@ -139,6 +138,8 @@ handoff は不要。yona.dev ではこの `exec-plan` workflow の中で実装�
 - 2026-05-03 / Codex: 旧形式残存検索は `AGENTS.md` の通常見出し `作業境界` だけを返した。旧 schema、旧 status、旧 ExecPlan section 名の実運用参照は対象範囲に残っていない。
 - 2026-05-03 / Codex: `mise run verify` は成功した。lint と Next build は exit 0。mise cache write warning は出たが command は成功した。
 - 2026-05-03 / Codex: レビュー通過: contract-reviewer=APPROVE, ce-reviewer=APPROVE, security-reviewer=not_required, レビュー未成立なし, findings=0, blocker=none, 未検証範囲=なし。
+- 2026-05-03 / Codex: pr-writer receipt: mode=UPDATE, base=main, head=codex/harness-standard-rebuild, existing_pr=#25 open, issue=issueなし, template=なし, UI preview=不要, title=`docs(harness): 標準仕様へ再構築`, body=標準フォーマット, command=`gh pr edit 25 --title ... --body ...`, verification=`gh pr view 25 --json title,body,url,headRefOid,statusCheckRollup`, URL=https://github.com/yona3/yona.dev/pull/25, checks=Vercel SUCCESS / Vercel Preview Comments SUCCESS。
+- 2026-05-03 / Codex: completed move: `docs/exec-plans/active/202605031645_harness_architect_contract_redesign/exec-plan.md` から `docs/exec-plans/completed/202605031645_harness_architect_contract_redesign/exec-plan.md` へ移動した。
 
 ### 判断
 
@@ -157,6 +158,7 @@ handoff は不要。yona.dev ではこの `exec-plan` workflow の中で実装�
 - 2026-05-03 / Codex: 最新指示に基づき、この ExecPlan を `exec-plan/harness-v1` と10 section形式へ移行した。
 - 2026-05-03 / Codex: deterministic verification の成功を記録した。
 - 2026-05-03 / Codex: independent review gate 通過を記録した。
+- 2026-05-03 / Codex: PR #25 更新 receipt と completed move を記録した。
 
 ## PR
 
