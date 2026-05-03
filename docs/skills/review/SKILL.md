@@ -14,6 +14,8 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | mode | 任意 | `branch`, `staged`, `working-tree`, `fix-loop` |
 | base | 任意 | branch review の base。既定は `main` |
 | scope | 任意 | 対象 path / route / module / ExecPlan |
+| review_scope_command | 任意 | ExecPlan の `review.scope_command`。指定された場合は primary scope の再現 command として扱う |
+| untracked_paths | 任意 | ExecPlan の `review.untracked_paths`。未追跡 file / directory を review 対象に含める |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
 | design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`on` はデザイン観点を明示追加、`off` は明示除外 |
 | claude_design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`auto` は design review 起動時に Claude reviewer を既定追加、`on` は明示追加、`off` は明示除外 |
@@ -48,14 +50,15 @@ Claude Code からこの project-local review skill が呼ばれた場合、revi
 1. reviewer set は通常どおりこの skill の `reviewer set` で決める。
 2. 各 reviewer について、独立した `codex exec --sandbox read-only --ephemeral -o <output-file> <prompt>` を実行する。user scope review skill の wrapper が利用できる環境では、その wrapper を使ってもよい。
 3. prompt には reviewer id、担当観点、primary scope、除外 scope、user request、relevant ExecPlan の acceptance、編集禁止、日本語出力、finding 形式を含める。
-4. `codex review` の built-in surface、raw stdout 解析、Claude Code 自身の自己点検は fallback にしない。
-5. `codex` が無い、`codex exec` が失敗する、`-o` output が生成されない、または output 形式が壊れている場合は `BLOCKED: codex exec review unavailable` として停止する。
+4. prompt には標準期待出力として `verdict`, `findings`, `evidence`, `blocker`, `confidence` を含める。
+5. `codex review` の built-in surface、raw stdout 解析、Claude Code 自身の自己点検は fallback にしない。
+6. `codex` が無い、`codex exec` が失敗する、`-o` output が生成されない、または output 形式が壊れている場合は `BLOCKED: codex exec review unavailable` として停止する。
 
 ## scope 決定
 
 1. GitHub PR URL は対象外です。`pr-review` に委譲して停止します。
 2. user が `scope` / `base` / path を指定したらそれを優先する。
-3. relevant ExecPlan があり、scope command や対象 file が書かれていればそれを primary scope にする。
+3. relevant ExecPlan に `review.scope_command` / `review.untracked_paths` が書かれていれば、それを primary scope の再現方法にする。
 4. `branch diff` 指定なら `git diff {base}...HEAD` と `git log {base}..HEAD` を照合する。
 5. committed branch diff が空で working tree に変更がある場合は、その事実を明記し、user の task 文脈が working tree review を求めていれば working tree を対象にする。
 6. それ以外は staged diff を優先し、staged がなければ unstaged diff と untracked files を対象にする。
@@ -176,6 +179,7 @@ finding にしてはいけないもの:
 - PR 作成・更新済みの task では relevant ExecPlan の `pr-writer receipt`
 - 編集禁止
 - 日本語出力
+- 標準期待出力は `verdict`, `findings`, `evidence`, `blocker`, `confidence`
 - finding は `P1/P2/P3 file:line issue reason smallest fix` 形式
 - 確証がない改善提案や好みは finding にしない
 
@@ -190,7 +194,7 @@ finding にしてはいけないもの:
 
 - reviewer id は必ず `claude-design-reviewer`
 - `claude -p` で実行される read-only reviewer であり、編集、commit、PR 操作、shell command 実行をしないこと
-- output は `APPROVE` / `REQUEST_CHANGES` / `BLOCKED` の verdict と、採用候補 finding を `P1/P2/P3 file:line issue reason smallest fix` 形式で返すこと
+- output は `verdict`, `findings`, `evidence`, `blocker`, `confidence` を含めること。`verdict` は `APPROVE` / `REQUEST_CHANGES` / `BLOCKED` のいずれかとし、採用候補 finding は `P1/P2/P3 file:line issue reason smallest fix` 形式で返すこと
 - scoped prompt bundle に含まれていない画面やファイルについて断定しないこと
 - user の好みや全面リデザイン提案ではなく、user_request、DESIGN.md、対象 route、画面確認に根拠がある指摘だけ出すこと
 
@@ -230,13 +234,23 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
 ## 出力形式
 
-成立済み review の最終出力は日本語で、先頭に判定を書きます。
+成立済み review の最終出力は日本語で、先頭を `verdict` field にします。
+出力には `verdict`, `findings`, `evidence`, `blocker`, `confidence` を含めます。
 
-    APPROVE
+    verdict: APPROVE
+    findings: なし
+    evidence: 対象 scope、検証 command、根拠。
+    blocker: なし
+    confidence: high
 
 または:
 
-    REQUEST_CHANGES
+    verdict: REQUEST_CHANGES
+    findings:
+      - P2 path:line issue reason smallest fix
+    evidence: 対象 scope、検証 command、根拠。
+    blocker: 採用 finding が残っている。
+    confidence: medium
 
     ::code-comment{...}
     ...
@@ -244,7 +258,11 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
 または:
 
-    BLOCKED: reason
+    verdict: BLOCKED
+    findings: 未判定
+    evidence: 試行した command と失敗箇所。
+    blocker: reason
+    confidence: low
 
 サマリーには reviewer ids、対象 scope、verdict、検証 command、未解決 finding、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
 ExecPlan gate として実行した場合、coordinator は同じ summary を relevant ExecPlan の `発見` または `受け入れ条件` に追記してから完了扱いにします。

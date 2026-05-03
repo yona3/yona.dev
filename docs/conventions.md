@@ -26,6 +26,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - ExecPlan を使う task は、ユーザーが明示的に除外しない限り stage / commit、PR 作成、CI fix までを既定の実行範囲に含める。
 - ExecPlan 対象 task は、`mise run verify` による deterministic verification と project-local `review` skill の成立済み review verdict を分けて扱う。
 - PR 作成・更新は `pr-writer` skill を入口にする。`pr-writer` の Phase 6 以外で `gh pr create` / `gh pr edit`、GitHub connector、その他の PR 作成・更新 API を直接呼ばない。
+- ExecPlan 作成時の意図確認と人間 / agent 責務境界は `PLANS.md` を正本にする。詳細な手順や質問の履歴は各 ExecPlan に残す。
 
 ## ガードレール
 
@@ -79,6 +80,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - ExecPlan 対象 task では、停止条件に該当しない限り `docs/skills/review/SKILL.md` の成立済み review verdict を完了条件に含める。
 - review gate の evidence は新しい固定 artifact ではなく、relevant ExecPlan の `発見` または `受け入れ条件` に残す。
 - 記録する summary は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を含める。
+- ExecPlan gate の review scope は、relevant ExecPlan の `review.scope_command` と `review.untracked_paths` で再現できるようにする。未追跡 file がない場合も `なし` と書く。
 - hidden pipeline は追加しない。local hook や pre-commit hook が必要になった場合は、別 ExecPlan で visible task として設計し、`mise run verify` との責務分離を再確認する。
 - Codex Desktop と Claude Code は同じ `docs/skills/` 正本を使う。Claude Code 経由の review 実行は `docs/skills/review/SKILL.md` の `Claude Code 経由の実行` に従い、self review へ縮退しない。
 
@@ -123,6 +125,8 @@ Refactor を小さく回す進め方を指します。
 - 外部 service、時刻、乱数、network に依存するテストは、決定的に観測できる境界を作る。
 
 ## Question policy（確認基準）
+
+ExecPlan を作成する task では、`PLANS.md` の `grill-me` 型意図確認を正本にします。この section は、ExecPlan 不要の小変更や、`PLANS.md` で閉じた後に残る確認カテゴリだけを定義します。
 
 必ず確認:
 

@@ -29,12 +29,13 @@ description: yona.dev専用ExecPlan運用。意図ヒアリングからPLANS準�
 - `AGENTS.md` の ExecPlan 条件に該当する task。
 - ユーザーが「exec-plan」「spec to PR」「計画からPRまで」「CI fixまで」と依頼した時。
 - 複数 session、3 files 以上、2 concerns 以上、複数 acceptance、security / server-client / public route / Notes Markdown renderer / frontmatter / Notion sync / UI tradeoff に触れる時。
+- repo-wide contract / 恒久規約を触る時。
 
 ## 使わない場面
 
 - 1 file の typo、lint の機械修正、read-only 調査など、`AGENTS.md` が確認不要とする小変更。
 - PR URL からの review だけを行う時。この場合は `pr-review` を使う。project-local `review` は local diff / branch diff / staged diff / working tree diff 専用。
-- `README.md` や `docs/conventions.md` の恒久規約そのものを増やす目的。頻繁に変わる手順は skill に置く。
+- 頻繁に変わる手順を `docs/conventions.md` などの恒久規約へ置く目的。この場合は対象 skill 本体に置く。
 
 ## 最初に読むもの
 
@@ -46,17 +47,17 @@ description: yona.dev専用ExecPlan運用。意図ヒアリングからPLANS準�
 
 ## ヒアリング
 
-ExecPlan draft の前に、次の 5 軸を必ず埋めます。ユーザーが明示していない軸は、実装判断が変わるものだけ質問し、変わらないものは `Assumption:` として ExecPlan に残します。
+ExecPlan draft の前に、`PLANS.md` の `grill-me` 型意図確認に従い、次の 5 軸を必ず埋めます。ユーザーが明示していない軸は、まず repo 内の規約、既存コード、過去 ExecPlan、関連 docs で閉じます。実装判断が変わる未解決分岐だけを設計木として残し、依存順に 1 問ずつ質問します。質問を省いた場合は、どの探索結果または明示指示で分岐が閉じたかを ExecPlan の `発見` または `判断` に残します。
 
 | 軸 | 最低限集める内容 |
 | --- | --- |
 | 目的 | ユーザーから見える成果、避けたい失敗 |
 | 制約 | 触らない file / route / API、secret、互換性 |
 | 受け入れ条件 | command、UI、PR/CI、観測可能な成功状態 |
-| scope 境界 | 対象と対象外、review scope command |
+| scope 境界 | 対象と対象外、`review.scope_command`、`review.untracked_paths` |
 | tradeoff | 速度、完全性、互換性、UI、security の優先順位 |
 
-質問は最大 3 問ずつに分けます。回答が `特になし` の場合も、該当軸を「制約なし」ではなく「明示制約なし」として記録します。
+質問は 1 問ずつ行い、各質問にはこの repo の既存規約に照らした推奨回答を添えます。3 問以上必要になりそうな場合は、質問を増やす前に探索不足または task 分割不足を疑い、必要なら分割案を作ります。回答が `特になし` の場合も、該当軸を「制約なし」ではなく「明示制約なし」として記録します。
 
 ## 既定の実行範囲
 
