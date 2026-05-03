@@ -1,6 +1,6 @@
 ---
 schema: exec-plan/v3
-status: in_progress
+status: completed
 task:
   key: "202605031242_exec_plan_record_format_alignment"
 source:
@@ -13,14 +13,14 @@ verify:
   command: "mise run verify"
 review:
   required: true
-  scope_command: "git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/active/202605031242_exec_plan_record_format_alignment/exec-plan.md docs/exec-plans/active/202604261459_site_refresh_parent/exec-plan.md docs/exec-plans/completed/202604261459_site_refresh_parent/exec-plan.md"
+  scope_command: "git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/completed/202605031242_exec_plan_record_format_alignment/exec-plan.md docs/exec-plans/active/202604261459_site_refresh_parent/exec-plan.md docs/exec-plans/completed/202604261459_site_refresh_parent/exec-plan.md"
   untracked_paths:
-    - "docs/exec-plans/active/202605031242_exec_plan_record_format_alignment/exec-plan.md"
+    - "docs/exec-plans/completed/202605031242_exec_plan_record_format_alignment/exec-plan.md"
     - "docs/exec-plans/completed/202604261459_site_refresh_parent/exec-plan.md"
-handoff: human_review
+handoff: done_after_verify
 next:
   actor: agent
-  action: pre_delivery_commit
+  action: done
 ---
 
 # ExecPlan format を dotfiles 標準へ寄せる
@@ -29,9 +29,9 @@ next:
 
 目的: dotfiles の `PLANS.md` と `.config/harness/skills/exec-plan/SKILL.md` を標準参照として、yona.dev の ExecPlan format と project-local `exec-plan` / `review` skill を、理由がない限りそのまま取り入れる形へ更新する。
 
-現在地: ユーザーの `go` で承認1を得た。`PLANS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md`、`docs/skills/review/SKILL.md` を dotfiles `exec-plan/v3` 標準へ寄せ、PR #24 の merge 済み親 ExecPlan を completed へ移した。`git diff --check`、front matter parse、`mise run verify` は成功。review gate は `contract-reviewer` / `ce-reviewer` ともに APPROVE。
+現在地: ユーザーの `go` で承認1を得た。`PLANS.md`、`docs/conventions.md`、`docs/skills/exec-plan/SKILL.md`、`docs/skills/review/SKILL.md` を dotfiles `exec-plan/v3` 標準へ寄せ、PR #24 の merge 済み親 ExecPlan を completed へ移した。`git diff --check`、front matter parse、`mise run verify` は成功。review gate は `contract-reviewer` / `ce-reviewer` ともに APPROVE。PR #25 は `pr-writer` UPDATE mode で更新済み。
 
-次の作業: pre-delivery commit を作成し、`pr-writer` UPDATE mode で PR #25 を更新する。
+次の作業: なし。PR checks の最終結果だけを最終報告で伝える。
 
 この ExecPlan は `PLANS.md` に従って保守する。ただしこの draft は移行対象そのものの preview であり、dotfiles `exec-plan/v3` を取り込むための先行 draft として扱う。作業中は `完了条件`、`作業`、`記録` を更新し続ける。
 
@@ -73,8 +73,8 @@ next:
 - [x] repo 固有差分が `記録 > 判断` に理由付きで残っている。
 - [x] front matter の `verify.command` が `mise run verify` として成功している。
 - [x] `review.required: true` の review gate が成立し、`記録 > 発見` または `記録 > 判断` に `レビュー通過:` 固定行が残っている。
-- [ ] `pr-writer` UPDATE mode で PR #25 を更新し、receipt が `記録 > 発見` に残っている。
-- [ ] `作業` の未チェック項目がない。
+- [x] `pr-writer` UPDATE mode で PR #25 を更新し、receipt が `記録 > 発見` に残っている。
+- [x] `作業` の未チェック項目がない。
 
 ## 作業
 
@@ -99,7 +99,7 @@ next:
 - [x] 2026-05-03 12:54+09:00 `git diff --check`、front matter parse、front matter schema check、`mise run verify` を実行した。
 - [x] 2026-05-03 12:59+09:00 `contract-reviewer` と `ce-reviewer` の初回 finding を修正し、未追跡 file の `git diff --no-index --check` 相当検査を実行した。
 - [x] 2026-05-03 13:07+09:00 `contract-reviewer` と `ce-reviewer` を再実行し、review gate の APPROVE verdict を記録した。
-- [ ] YYYY-MM-DD HH:MM+09:00 pre-delivery commit、push、PR update、receipt 記録、completed move、receipt/move commit、PR checks 確認まで進める。
+- [x] 2026-05-03 13:09+09:00 pre-delivery commit、push、PR update、receipt 記録、completed move、receipt/move commit、PR checks 確認まで進める。
 
 ### 委譲
 
@@ -128,6 +128,9 @@ docs-only の変更に留める。問題があれば該当 hunk だけを revert
 - 2026-05-03 / Codex: `review.untracked_paths` の 2 file に対して `git diff --no-index --check /dev/null docs/exec-plans/active/202605031242_exec_plan_record_format_alignment/exec-plan.md` と `git diff --no-index --check /dev/null docs/exec-plans/completed/202604261459_site_refresh_parent/exec-plan.md` を実行した。どちらも stdout/stderr は空で、whitespace warning はなかった。exit code 1 は `/dev/null` との差分が存在するための `--no-index` 差分終了であり、whitespace error ではない。
 - 2026-05-03 / Codex: 再 review で `completed move` と `pr-writer receipt` の順序衝突が見つかったため、workflow を `pre-delivery commit -> PR update -> receipt -> completed move -> receipt/move commit` に統一した。
 - 2026-05-03 / Codex: レビュー通過: contract-reviewer=APPROVE (session `019dec03-6202-77b1-bcb1-467806d3e59d`), ce-reviewer=APPROVE (session `019dec03-6bc3-76f1-b37a-cac96153b23d`), security-reviewer=not_required, レビュー未成立なし, verify=pass (`mise run verify` 2026-05-03 13:04+09:00), 未解決 finding=0, 未検証範囲=なし。
+- 2026-05-03 / Codex: pr-writer receipt: mode=UPDATE, base=head=`main`/`codex/harness-standard-rebuild`, existing PR=#25 OPEN, issue=issueなし, template=templateなし / 標準フォーマット, UI preview=preview不要, title=`docs(harness): 標準仕様へ再構築`, body=Summary/Verification/Notes を再生成, command=`gh pr edit 25 --body-file /private/tmp/pr25-body.md`, verification=`gh pr view 25 --json number,title,url,state,baseRefName,headRefName,headRefOid,body` で PR #25 OPEN と head `8fde26d429223170a5583f63475cd219f7611a5c` を確認。
+- 2026-05-03 / Codex: completed move 後、front matter の path-sensitive な `review.scope_command` と `review.untracked_paths` を completed path へ更新した。`git diff --no-index --check /dev/null docs/exec-plans/completed/202605031242_exec_plan_record_format_alignment/exec-plan.md` は stdout/stderr 空で、whitespace warning はなかった。
+- 2026-05-03 / Codex: completed move 後の `git diff --check`、completed ExecPlan front matter parse、`mise run verify` は成功した。`mise run verify` は lint と build を実行し、8 routes の build を完了して exit 0。mise cache warning は出たが command は成功した。
 
 ### 判断
 
@@ -147,3 +150,5 @@ docs-only の変更に留める。問題があれば該当 hunk だけを revert
 - 2026-05-03 / Codex: 初回 review finding を受け、`docs/skills/review/SKILL.md` の reviewer prompt 契約を `relevant ExecPlan の完了条件` に統一し、未追跡 file の `no-index --check` 証跡を追加した。
 - 2026-05-03 / Codex: 再 review finding を受け、`PLANS.md`、`docs/skills/exec-plan/SKILL.md`、この ExecPlan の delivery 順序を同じ契約へ揃えた。
 - 2026-05-03 / Codex: review gate 通過を記録し、status を `in_progress`、next action を `pre_delivery_commit` に更新した。
+- 2026-05-03 / Codex: pre-delivery commit `8fde26d429223170a5583f63475cd219f7611a5c` を push し、PR #25 を `pr-writer` UPDATE mode で更新した。receipt 記録後、status を `completed`、handoff を `done_after_verify`、next action を `done` に更新した。
+- 2026-05-03 / Codex: active ExecPlan を `docs/exec-plans/completed/202605031242_exec_plan_record_format_alignment/exec-plan.md` へ移し、移動後の path-sensitive evidence と最終 verify を記録した。
