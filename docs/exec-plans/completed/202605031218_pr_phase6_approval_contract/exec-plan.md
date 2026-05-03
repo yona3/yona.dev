@@ -1,7 +1,7 @@
 ---
 status: completed
 created_at: 2026-05-03 12:18+09:00
-updated_at: 2026-05-03 12:23+09:00
+updated_at: 2026-05-03 12:26+09:00
 owner: Codex
 review.scope_command: git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/exec-plans/completed/202605031218_pr_phase6_approval_contract/exec-plan.md
 review.untracked_paths: []
@@ -22,7 +22,7 @@ ExecPlan の承認1から PR 作成・更新までを、この project では追
 - [x] 2026-05-03 12:22+09:00 project-local review gate を `contract-reviewer` / `ce-reviewer` で実行し、APPROVE を得た。
 - [x] 2026-05-03 12:22+09:00 この ExecPlan を `docs/exec-plans/completed/202605031218_pr_phase6_approval_contract` へ移した。
 - [x] 2026-05-03 12:23+09:00 completed move 後に `git diff --check`、front matter parse、`mise run verify` を再実行した。
-- [ ] 2026-05-03 12:22+09:00 commit、PR update まで完了する。
+- [x] 2026-05-03 12:26+09:00 commit、PR update まで完了した。
 
 ## 発見
 
@@ -49,6 +49,18 @@ ExecPlan の承認1から PR 作成・更新までを、この project では追
     `contract-reviewer` session `019debd9-6383-78a1-857d-114d806c595f`: verdict APPROVE、findings なし、blocker なし、confidence high。
     `ce-reviewer` session `019debd9-6890-7d93-90c0-02d68f4832e2`: verdict APPROVE、findings なし、blocker なし、confidence high。
     承認1の Phase 6 承認化は ExecPlan task と `pr-writer` Phase 6 に限定され、direct PR 操作や停止条件の bypass にはなっていないと確認された。
+
+観測: `pr-writer` UPDATE mode で PR #25 を更新し、`gh pr view` で反映を確認した。
+根拠:
+    mode: UPDATE。
+    base/head: `main` / `codex/harness-standard-rebuild`。
+    既存 PR 判定: PR #25 `docs(harness): 標準仕様へ再構築` が OPEN。
+    issue 判定: `gh issue list --state open --limit 20 --json number,title,url` は `[]`。issueなし。
+    PR template 判定: `.github` が存在しないため templateなし / 標準フォーマット。
+    UI preview 判定: docs / contract のみの変更で UI 可視変化なし。preview不要。
+    Phase 5 title/body summary: 既存 title を維持し、Summary に ExecPlan 承認1が `pr-writer` Phase 6 の PR 作成・更新実行承認を兼ねる変更を追加した。
+    Phase 6 command: `gh pr edit 25 --body-file /private/tmp/pr25-body.md`。
+    Phase 7 verification: `gh pr view 25 --json number,title,url,state,baseRefName,headRefName,body` で PR URL、OPEN 状態、base/head、更新済み body を確認した。
 
 ## 判断
 
@@ -140,9 +152,10 @@ ExecPlan の承認1から PR 作成・更新までを、この project では追
 
 ## 未完了
 
-commit、PR update が未完了。
+None.
 
 変更記録: 2026-05-03 12:18+09:00 承認1と PR Phase 6 実行承認の関係を明文化する ExecPlan を作成した。
 変更記録: 2026-05-03 12:22+09:00 deterministic verification と multi-agent review gate の APPROVE を記録した。
 変更記録: 2026-05-03 12:22+09:00 ExecPlan を completed へ移し、path-sensitive な review scope を更新した。
 変更記録: 2026-05-03 12:23+09:00 completed move 後の deterministic verification 成功を記録した。
+変更記録: 2026-05-03 12:26+09:00 `pr-writer` UPDATE mode の receipt と PR #25 反映確認を記録した。
