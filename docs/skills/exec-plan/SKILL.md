@@ -54,7 +54,7 @@ ExecPlan draft の前に、`PLANS.md` の `grill-me` 型意図確認に従い、
 | 目的 | ユーザーから見える成果、避けたい失敗 |
 | 制約 | 触らない file / route / API、secret、互換性 |
 | 受け入れ条件 | command、UI、PR/CI、観測可能な成功状態 |
-| scope 境界 | 対象と対象外、`review.scope_command`、`review.untracked_paths` |
+| scope 境界 | 対象と対象外、front matter の `review.scope_command`、`review.untracked_paths` |
 | tradeoff | 速度、完全性、互換性、UI、security の優先順位 |
 
 質問は 1 問ずつ行い、各質問にはこの repo の既存規約に照らした推奨回答を添えます。3 問以上必要になりそうな場合は、質問を増やす前に探索不足または task 分割不足を疑い、必要なら分割案を作ります。回答が `特になし` の場合も、該当軸を「制約なし」ではなく「明示制約なし」として記録します。
@@ -123,12 +123,12 @@ PR 作成・更新後に `pr-writer` を通していないことが判明した�
 
 1. **scope 判定**: ExecPlan が必要か `AGENTS.md` で判定する。必要なら次へ進む。
 2. **ヒアリング**: 5 軸を埋める。Must Ask は実装前に必ず確認する。
-3. **ExecPlan 作成**: `docs/exec-plans/active/{YYYYMMDDHHmm_slug}/exec-plan.md` を作る。`PLANS.md` の skeleton を使い、冒頭準拠文と末尾 `変更記録:` を含める。
+3. **ExecPlan 作成**: `docs/exec-plans/active/{YYYYMMDDHHmm_slug}/exec-plan.md` を作る。`PLANS.md` の skeleton を使い、冒頭 YAML front matter、準拠文、末尾 `変更記録:` を含める。front matter には `status`, `created_at`, `updated_at`, `owner`, `review.scope_command`, `review.untracked_paths` を入れる。
 4. **承認1**: 大きな実装前に user の `go` / 承認を得る。承認後は stage / commit、PR 作成、CI fix までを含む scope 内を自律実行する。
 5. **実装**: `実行計画` に沿って小さく編集する。判断変更は `判断` と `変更記録:` に残す。
 6. **検証**: 原則 `mise run verify`。環境変数不足で止まる場合は、失敗 command、原因、未検証範囲を ExecPlan と最終報告に残す。
 7. **multi-agent review fix loop**: project-local `review` skill を使い、2 つ以上の独立 reviewer を起動する。未解決 finding は scope 内で修正し、同じ reviewer set で最大 2 cycle 再確認する。成立しない場合は完了扱いにしない。成立した場合は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を relevant ExecPlan に残す。
-8. **完了準備**: 受け入れ条件を満たしたら、stage / commit 前に `未完了` を `None.` または具体的 blocker に更新し、同じ directory 名のまま `docs/exec-plans/active/{YYYYMMDDHHmm_slug}` を `docs/exec-plans/completed/{YYYYMMDDHHmm_slug}` へ移す。完了済み plan の移動を後続 commit に必ず含める。
+8. **完了準備**: 受け入れ条件を満たしたら、stage / commit 前に front matter の `status` / `updated_at` と `未完了` を更新し、同じ directory 名のまま `docs/exec-plans/active/{YYYYMMDDHHmm_slug}` を `docs/exec-plans/completed/{YYYYMMDDHHmm_slug}` へ移す。移動後は front matter の path-sensitive な `review.scope_command` / `review.untracked_paths` を確認し、完了済み plan の移動を後続 commit に必ず含める。
 9. **stage / commit**: user が明示的に除外していなければ、承認済みファイルを `git add <approved files>` で stage し、`commit` skill を使って論理単位ごとに commit する。
 10. **PR 作成**: user が明示的に除外していなければ、`pr-writer` skill の Phase 1-7 を通して PR を作成・更新する。関連 issue が無い場合は `issueなし` を明示して進める。
 11. **CI fix**: PR CI が失敗したらログを読み、差分起因の failure を修正する。環境・secret・外部障害は blocker として報告し、推測で隠さない。CI fix や blocker 記録で completed ExecPlan を更新した場合は、追加 commit と PR 更新まで行う。

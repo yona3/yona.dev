@@ -14,8 +14,8 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | mode | 任意 | `branch`, `staged`, `working-tree`, `fix-loop` |
 | base | 任意 | branch review の base。既定は `main` |
 | scope | 任意 | 対象 path / route / module / ExecPlan |
-| review_scope_command | 任意 | ExecPlan の `review.scope_command`。指定された場合は primary scope の再現 command として扱う |
-| untracked_paths | 任意 | ExecPlan の `review.untracked_paths`。未追跡 file / directory を review 対象に含める |
+| review_scope_command | 任意 | ExecPlan front matter の `review.scope_command`。指定された場合は primary scope の再現 command として扱う |
+| untracked_paths | 任意 | ExecPlan front matter の `review.untracked_paths`。未追跡 file / directory を review 対象に含める |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
 | design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`on` はデザイン観点を明示追加、`off` は明示除外 |
 | claude_design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`auto` は design review 起動時に Claude reviewer を既定追加、`on` は明示追加、`off` は明示除外 |
@@ -58,7 +58,7 @@ Claude Code からこの project-local review skill が呼ばれた場合、revi
 
 1. GitHub PR URL は対象外です。`pr-review` に委譲して停止します。
 2. user が `scope` / `base` / path を指定したらそれを優先する。
-3. relevant ExecPlan に `review.scope_command` / `review.untracked_paths` が書かれていれば、それを primary scope の再現方法にする。
+3. relevant ExecPlan の front matter に `review.scope_command` / `review.untracked_paths` が書かれていれば、それを primary scope の再現方法にする。本文 `契約` section の同名 field は historical artifact 向け fallback としてだけ読む。
 4. `branch diff` 指定なら `git diff {base}...HEAD` と `git log {base}..HEAD` を照合する。
 5. committed branch diff が空で working tree に変更がある場合は、その事実を明記し、user の task 文脈が working tree review を求めていれば working tree を対象にする。
 6. それ以外は staged diff を優先し、staged がなければ unstaged diff と untracked files を対象にする。

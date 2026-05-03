@@ -12,11 +12,22 @@ runner framework、別の task artifact 形式は定義しません。
 ExecPlan は、大きい・危険・横断的・再開が必要なタスクの living document です。
 事実、判断、進捗、検証結果が変わったら、その場で更新します。
 
-各 ExecPlan の冒頭には次の文を置きます。
+各 ExecPlan の冒頭には YAML front matter を置き、その直後に次の文を置きます。
+
+    ---
+    status: active
+    created_at: YYYY-MM-DD HH:MM+09:00
+    updated_at: YYYY-MM-DD HH:MM+09:00
+    owner: Codex
+    review.scope_command: git diff -- <paths>
+    review.untracked_paths:
+      - <path>
+    ---
 
     この ExecPlan は ../../../../PLANS.md の契約に準拠する。
 
-相対 path は、移動で意味が変わる場合だけ調整します。
+`review.untracked_paths` がない場合は `[]` を使います。相対 path は、移動で意味が
+変わる場合だけ調整します。
 
 ## 意図確認プロトコル
 
@@ -27,7 +38,7 @@ ExecPlan 作成前に、ユーザー意図を次の 5 軸で整理します。
 | 目的 | ユーザーから見える成果を明確にする | `目的` |
 | 制約 | 変えてはいけないものを明確にする | `契約`, `復旧` |
 | 受け入れ条件 | 成功の観測方法を決める | `受け入れ条件` |
-| scope 境界 | 対象 file / module / route と対象外を分ける | `実行計画`, `契約` |
+| scope 境界 | 対象 file / module / route と対象外を分ける | front matter, `実行計画`, `契約` |
 | tradeoff | 競合時に何を優先するか決める | `判断` |
 
 質問基準は `AGENTS.md` と `docs/conventions.md` に従います。実装詳細、局所的な
@@ -71,7 +82,8 @@ ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過�
 - nested triple-backtick fence は使いません。command / transcript / diff / 例は 4-space indent で書きます。
 - `実行計画` では file、function、module、type、command を一意に指せる名前で書きます。
 - `実行計画` には、停止条件に該当しない限り、実装、検証、review fix loop、stage / commit、PR 作成、CI fix までを含めます。
-- `契約` には review scope を再現するための `review.scope_command` と、未追跡 file を含める場合の `review.untracked_paths` を書きます。未追跡 file がない場合も `なし` と明記します。
+- front matter には review scope を再現するための `review.scope_command` と、未追跡 file を含める場合の `review.untracked_paths` を書きます。未追跡 file がない場合は `[]` と書きます。
+- `契約` section は依存、成立条件、守るべき制約を文章で書き、review scope の SSoT を重複定義しません。
 - 独立 reviewer や sidecar 調査へ委譲する場合は、役割、対象範囲、期待する出力、並列実行の有無、統合観点、失敗時の扱いを `実行計画` に書きます。
 - 委譲の標準期待出力は `verdict`, `findings`, `evidence`, `blocker`, `confidence` です。旧い固定 section 出力は標準として再導入しません。
 - ExecPlan gate として review を実行した場合は、reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を `発見` または `受け入れ条件` に残します。
@@ -110,7 +122,7 @@ ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過�
 | `進捗` | timestamp 付き checkbox で状態を残す | timestamp format | 日本時間で書く |
 | `発見` | 発見と根拠を残す | `観測:` / `根拠:` | transcript や file-scoped diff を貼る |
 | `判断` | 判断理由を残す | `判断:` / `理由:` / `日付/担当:` | tradeoff を書く |
-| `契約` | 依存、成立条件、review scope を明示する | `依存:` / `依存理由:` / `契約:` | file/module と review scope の契約を書く |
+| `契約` | 依存と成立条件を明示する | `依存:` / `依存理由:` / `契約:` | file/module と守るべき制約を書く |
 | `実行計画` | 実装から CI fix までの手順を具体化する | `作業場所:` / `実行:` / `期待結果:` | numbered list を使う |
 | `受け入れ条件` | 成功と失敗を観測可能にする | `入力:` / `確認:` / `失敗条件:` | 完了時は実測結果と review verdict に置き換える |
 | `復旧` | retry、冪等性、cleanup を示す | 見出し必須 | 5 要件を満たす |
@@ -126,6 +138,15 @@ ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過�
 
 各 ExecPlan は次の骨格を満たします。見出しも含めて copy できるよう、
 `##` を literal で示します。本文はタスクに合わせて具体化します。
+
+    ---
+    status: active
+    created_at: YYYY-MM-DD HH:MM+09:00
+    updated_at: YYYY-MM-DD HH:MM+09:00
+    owner: Codex
+    review.scope_command: git diff -- <paths>
+    review.untracked_paths: []
+    ---
 
     この ExecPlan は ../../../../PLANS.md の契約に準拠する。
 
@@ -154,8 +175,6 @@ ExecPlan 下書き、実装、検証、review fix loop、completion gate 通過�
     依存: 依存する file / module / service を書く。
     依存理由: なぜ依存するかを書く。
     契約: 最終的に守るべき契約を書く。
-    review.scope_command: review 対象を再現する command を書く。
-    review.untracked_paths: review 対象に含める未追跡 file / directory を書く。なければ `なし`。
 
     ## 実行計画
 

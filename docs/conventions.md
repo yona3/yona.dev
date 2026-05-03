@@ -80,7 +80,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - ExecPlan 対象 task では、停止条件に該当しない限り `docs/skills/review/SKILL.md` の成立済み review verdict を完了条件に含める。
 - review gate の evidence は新しい固定 artifact ではなく、relevant ExecPlan の `発見` または `受け入れ条件` に残す。
 - 記録する summary は reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command を含める。
-- ExecPlan gate の review scope は、relevant ExecPlan の `review.scope_command` と `review.untracked_paths` で再現できるようにする。未追跡 file がない場合も `なし` と書く。
+- ExecPlan gate の review scope は、relevant ExecPlan の front matter にある `review.scope_command` と `review.untracked_paths` で再現できるようにする。未追跡 file がない場合は `[]` と書く。本文の同名 field は historical artifact 向け fallback としてだけ扱う。
 - hidden pipeline は追加しない。local hook や pre-commit hook が必要になった場合は、別 ExecPlan で visible task として設計し、`mise run verify` との責務分離を再確認する。
 - Codex Desktop と Claude Code は同じ `docs/skills/` 正本を使う。Claude Code 経由の review 実行は `docs/skills/review/SKILL.md` の `Claude Code 経由の実行` に従い、self review へ縮退しない。
 

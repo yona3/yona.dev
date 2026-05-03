@@ -1,3 +1,12 @@
+---
+status: completed
+created_at: 2026-05-03 11:35+09:00
+updated_at: 2026-05-03 12:05+09:00
+owner: Codex
+review.scope_command: git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/completed/202605031135_harness_standard_rebuild/exec-plan.md
+review.untracked_paths: []
+---
+
 この ExecPlan は ../../../../PLANS.md の契約に準拠する。
 
 ## 目的
@@ -97,8 +106,6 @@
 契約: 既存 completed ExecPlan は履歴として扱い、今回の変更で一括 rewrite しない。
 契約: review scope には tracked diff だけでなく、必要な untracked files と completed move を含める。
 契約: review は `mise run verify` の代替ではなく、deterministic verification と分けて記録する。
-review.scope_command: `git diff -- PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md docs/skills/review/SKILL.md docs/exec-plans/completed/202605031135_harness_standard_rebuild/exec-plan.md`
-review.untracked_paths: `docs/exec-plans/completed/202605031135_harness_standard_rebuild/exec-plan.md`
 
 ## 実行計画
 
@@ -197,3 +204,4 @@ None.
 変更記録: 2026-05-03 11:53+09:00 ExecPlan を completed へ移し、path-sensitive な review scope を更新した。
 変更記録: 2026-05-03 12:00+09:00 `pr-writer` receipt と PR #25 の `gh pr view` 検証結果を記録した。
 変更記録: 2026-05-03 12:00+09:00 stage / commit / PR 作成の完了状態を反映し、未完了を None にした。
+変更記録: 2026-05-03 12:05+09:00 ExecPlan front matter を補足し、本文の review scope 重複を削除した。
