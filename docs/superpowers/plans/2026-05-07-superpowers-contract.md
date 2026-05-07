@@ -1,12 +1,14 @@
 # Superpowers 規約移行 実装計画
 
-> **agentic workers 向け:** REQUIRED SUB-SKILL: `superpowers:subagent-driven-development` 推奨、または `superpowers:executing-plans` を使い、この計画をタスクごとに実装する。手順は checkbox (`- [ ]`) で追跡する。
+> **agentic workers 向け:** 実行方法は Superpowers plugin の指示に従う。この計画は repo 固有の対象 file、保存先、検証結果だけを追跡する。
 
-**目的:** yona.dev の新規作業フローを ExecPlan 前提から Superpowers 前提に移行し、旧 ExecPlan を履歴として残す。
+**目的:** yona.dev の新規作業フローを ExecPlan 前提から Superpowers 前提に移行し、旧 ExecPlan を履歴として残す。Superpowers plugin の責務と repo 固有規約の責務を分け、重複する手順記述は repo 側から削る。
 
 **構成:** root `AGENTS.md` を短い入口、`docs/conventions.md` を詳細規約、`docs/superpowers/` を現在の設計 / 計画置き場にする。`PLANS.md` と `docs/exec-plans/` は旧ログの入口に縮退する。
 
 **技術構成:** Markdown docs、project-local skills、`mise run verify`、`pr-writer` 経由の GitHub PR。
+
+**責務境界:** Superpowers plugin は開発方法を定義する。yona.dev は artifact 保存先、hard guard、review、commit、PR gate、禁止境界だけを定義する。
 
 ---
 
@@ -43,7 +45,7 @@
 - [x] **手順 1: `AGENTS.md` を更新する**
 
 `ExecPlan` 節を `Superpowers` 節へ置き換える。`mise run verify`、`commit` skill、`pr-writer` gate は残す。`docs/superpowers/` は優先順位ではなく、該当 task の spec / plan がある場合の参照先にする。
-期待結果: 新規作業は `superpowers:using-superpowers` から始まり、旧 ExecPlan は履歴と明記される。
+期待結果: 新規作業は Superpowers plugin を主経路にし、旧 ExecPlan は履歴と明記される。
 
 - [x] **手順 2: `PLANS.md` を置き換える**
 
@@ -96,15 +98,35 @@ ExecPlan evidence 要件を Superpowers spec / plan または最終報告の evi
 `docs/skills/review/SKILL.md` を docs / skills scope で使う。
 期待結果: reviewer summary が `APPROVE`、または採用 finding をすべて修正済み。
 
-- [ ] **手順 5: commit する**
+- [x] **手順 5: commit する**
 
 `commit` skill を使う。規約移行 file だけを stage し、日本語の Conventional Commit message で commit する。
 期待結果: 1 つの論理的 docs commit ができる。
 
-- [ ] **手順 6: PR を作成する**
+- [x] **手順 6: PR を作成する**
 
 `issueなし` として `pr-writer` skill を使う。
 期待結果: GitHub に PR があり、body に summary、verification、review status、関連 issue なしが書かれる。
+
+### タスク 5: CE 観点で責務重複を削る
+
+**対象 file:**
+- 変更: `AGENTS.md`
+- 変更: `PLANS.md`
+- 変更: `docs/conventions.md`
+- 変更: `docs/skills/exec-plan/SKILL.md`
+- 変更: `docs/superpowers/specs/2026-05-07-superpowers-contract-design.md`
+- 変更: `docs/superpowers/plans/2026-05-07-superpowers-contract.md`
+
+- [x] **手順 1: Superpowers plugin の責務を明確にする**
+
+plugin は skill 選択、方針整理、計画、実装方式、完了前検証の方法を持つ。repo 側は保存先、hard guard、review、commit、PR gate、禁止境界だけを持つ。
+期待結果: `AGENTS.md` と設計 artifact で責務境界が読める。
+
+- [x] **手順 2: repo 側の重複手順を削る**
+
+`AGENTS.md`、`PLANS.md`、`docs/skills/exec-plan/SKILL.md` から Superpowers の個別 skill 名や内部手順の列挙を削る。
+期待結果: repo 側が Superpowers plugin の内部手順を再定義しない。
 
 ### 検証記録
 
@@ -112,3 +134,6 @@ ExecPlan evidence 要件を Superpowers spec / plan または最終報告の evi
 - `git diff --check`: exit 0。
 - `mise run verify`: exit 0。`pnpm lint` と `pnpm build` が成功。
 - project-local review: 初回 `contract-reviewer` / `ce-reviewer` の指摘を反映後、再 review で両方 `APPROVE`、finding なし。
+- `pr-writer` CREATE: PR #26 を作成。`gh pr view 26` で `OPEN`、`CLEAN`、draft ではないことを確認。
+- CE refactor check: `rg -n "superpowers:" AGENTS.md PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md`: exit 1、出力なし。
+- CE refactor review: `contract-reviewer` / `ce-reviewer` ともに `APPROVE`、finding なし。

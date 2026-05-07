@@ -1,6 +1,6 @@
 ---
 name: exec-plan
-description: 廃止済み ExecPlan flow の案内。新規計画は Superpowers を使い、旧 ExecPlan は履歴として読む。
+description: 廃止済み ExecPlan flow の案内。新規計画は Superpowers plugin に委譲し、旧 ExecPlan は履歴として読む。
 ---
 
 # yona.dev 旧 ExecPlan Skill
@@ -9,13 +9,13 @@ description: 廃止済み ExecPlan flow の案内。新規計画は Superpowers 
 
 ## 現在の主経路
 
-1. `superpowers:using-superpowers` で該当 skill を確認する。
-2. 方針整理が必要なら `superpowers:brainstorming` を使い、必要に応じて `docs/superpowers/specs/` に設計を残す。
-3. 複数手順の実装なら `superpowers:writing-plans` を使い、必要に応じて `docs/superpowers/plans/` に実装計画を残す。
-4. 実装は `superpowers:executing-plans` または `superpowers:subagent-driven-development` で進める。
-5. 完了主張、commit、PR 作成の前に `superpowers:verification-before-completion` を使い、`mise run verify` を再実行する。
-6. review が必要な変更では `docs/skills/review/SKILL.md` を使う。
-7. commit は `commit` skill、PR 作成・更新は `pr-writer` skill を使う。
+現在の開発方法は Superpowers plugin が定義する。この skill は Superpowers の個別 skill 名、起動条件、内部手順を再定義しない。
+
+repo 固有の境界だけ次に示す。
+- 設計や計画を永続化する場合は `docs/superpowers/specs/` と `docs/superpowers/plans/` に置く。
+- 完了主張、commit、PR 作成の前に `mise run verify` を再実行する。
+- review が必要な変更では `docs/skills/review/SKILL.md` を使う。
+- commit は `commit` skill、PR 作成・更新は `pr-writer` skill を使う。
 
 ## 旧履歴の扱い
 

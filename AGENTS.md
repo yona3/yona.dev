@@ -33,13 +33,11 @@ root の `mise` タスクを正本にします。
 
 ## Superpowers
 
-新規作業の開発フローは Superpowers plugin を主経路にします。
+新規作業の開発方法は Superpowers plugin を主経路にします。Superpowers plugin は skill 選択、方針整理、計画、実装方式、完了前検証の手順を持ちます。この repo ではそれらの内部手順を重複定義しません。
 
-- 作業開始時は `superpowers:using-superpowers` で該当 skill を確認します。
-- 方針整理が必要な時は `superpowers:brainstorming` を使い、必要なら `docs/superpowers/specs/` に設計を残します。
-- 複数手順の実装は `superpowers:writing-plans` を使い、必要なら `docs/superpowers/plans/` に計画を残します。
-- 実装はユーザーが選んだ方式に合わせて `superpowers:executing-plans` または `superpowers:subagent-driven-development` で進めます。
-- 完了主張、commit、PR 作成の前に `superpowers:verification-before-completion` を使い、`mise run verify` を再実行します。
+- 作業開始時は Superpowers plugin の入口 skill から、現在の task に必要な skill を選びます。
+- 設計や計画を永続化する必要がある場合の保存先は `docs/superpowers/specs/` と `docs/superpowers/plans/` です。
+- 完了主張、commit、PR 作成の前に、Superpowers plugin の完了前検証手順に従い、`mise run verify` を再実行します。
 - review が必要な変更では project-local `review` skill を使います。結果は固定の review 出力ファイルではなく、関連する Superpowers spec / plan または最終報告に残します。
 
 旧 ExecPlan は履歴です。`docs/exec-plans/completed/` と `docs/exec-plans/archived-active/` は過去判断の確認に限って参照し、新規作業の計画や完了判定の正本にしません。

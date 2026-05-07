@@ -1,18 +1,16 @@
 # リポジトリ規約
 
-この文書は、この repo 固有の運用規約です。Hot 層の正本は `AGENTS.md`、
-Superpowers の設計 / 計画は `docs/superpowers/`、人間向け説明は `README.md` です。
+この文書は、この repo 固有の運用規約です。Hot 層の正本は `AGENTS.md`、Superpowers の開発方法は plugin 側、Superpowers の repo-local 出力は `docs/superpowers/`、人間向け説明は `README.md` です。
 
 ## SSoT
 
 - agent 行動契約: `AGENTS.md`
-- Superpowers 設計: `docs/superpowers/specs/`
-- Superpowers 実装計画: `docs/superpowers/plans/`
+- Superpowers の開発方法: Superpowers plugin
+- Superpowers の repo-local 出力: `docs/superpowers/{specs,plans}/`
 - 旧 ExecPlan 履歴: `PLANS.md`, `docs/exec-plans/{completed,archived-active}/`
 - 詳細規約: `docs/conventions.md`
 - 人間向け overview: `README.md`
 - アプリコード: `web/`
-- task artifact: `docs/superpowers/{specs,plans}/`
 - hard guard: `mise run verify`
 
 hidden runtime、pipeline directory、別形式の task artifact は増やしません。
@@ -24,6 +22,7 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - Cold: タスク固有の手順、発見、判断、evidence は必要に応じて Superpowers spec / plan に置く。
 - README は人間が読む背景情報であり、agent の SSoT にしない。
 - 同じ規約を複数 file に長文で重複させない。必要なら参照先だけを書く。
+- Superpowers plugin の個別 skill 名、起動条件、内部手順は repo 側で重複定義しない。repo 側には保存先、hard guard、review、commit、PR gate だけを書く。
 - lint で機械検出できる規約は、説明を最小限にし、詳細は設定 file を正本にする。
 - Superpowers plan を使う task は、ユーザーが明示的に除外しない限り stage / commit、PR 作成、CI fix までを既定の実行範囲に含める。
 - commit は `commit` skill を入口にし、戻しやすい論理単位で作成する。`git commit` / `git commit --amend` を先に実行して message だけ後から合わせない。

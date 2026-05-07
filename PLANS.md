@@ -8,7 +8,7 @@ ExecPlan ベースの開発フローは廃止済みです。新規作業では�
 
 - 設計: `docs/superpowers/specs/`
 - 実装計画: `docs/superpowers/plans/`
-- 開発フロー: Superpowers plugin の `using-superpowers`、`brainstorming`、`writing-plans`、`executing-plans`、`subagent-driven-development`、`verification-before-completion`、review 系 skill
+- 開発方法: Superpowers plugin
 - 最終検証: `mise run verify`
 - PR 作成・更新: `pr-writer` skill
 
