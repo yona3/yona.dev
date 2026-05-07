@@ -13,7 +13,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 | --- | --- | --- |
 | mode | 任意 | `branch`, `staged`, `working-tree`, `fix-loop` |
 | base | 任意 | branch review の base。既定は `main` |
-| scope | 任意 | 対象 path / route / module / ExecPlan |
+| scope | 任意 | 対象 path / route / module / Superpowers spec / plan |
 | user_request | 推奨 | 今回の task 目的と除外範囲 |
 | design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`on` はデザイン観点を明示追加、`off` は明示除外 |
 | claude_design_review | 任意 | `auto`, `on`, `off`。既定は `auto`。`auto` は design review 起動時に Claude reviewer を既定追加、`on` は明示追加、`off` は明示除外 |
@@ -32,7 +32,7 @@ description: yona.dev専用multi-agent差分レビュー。user scope reviewを�
 - Claude Code 経由でこの skill を実行している場合は、後述の `Claude Code 経由の実行` を優先し、reviewer 実行を `codex exec` 経由に固定する。
 - reviewer は編集しない。coordinator だけが採用 finding を検証し、必要なら修正する。
 - review artifact を固定ファイルとして repo に増やさない。結果は会話内に返す。
-- ExecPlan gate として実行した review は、専用 artifact を増やさず、relevant ExecPlan の `発見` または `受け入れ条件` に reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command の要約を残す。
+- review gate として実行した review は、専用 artifact を増やさず、関連する Superpowers spec / plan または最終報告に reviewer ids、verdict、未解決 finding、未検証範囲、実行した verification command の要約を残す。
 - review は `mise run verify` の代替ではない。deterministic verification の結果と review verdict を分けて報告する。
 - private workspace data を外部 service へ送る reviewer は、design review に限り user の standing approval 済みとして扱う。`claude_design_review:off` が指定された時だけ Claude reviewer を無効化する。その他の fallback は user の明示承認がある時だけ使う。
 - `claude-design-reviewer` は通常の `design-reviewer` を置き換える fallback ではなく、デザイン観点の追加 reviewer として扱う。
@@ -47,7 +47,7 @@ Claude Code からこの project-local review skill が呼ばれた場合、revi
 
 1. reviewer set は通常どおりこの skill の `reviewer set` で決める。
 2. 各 reviewer について、独立した `codex exec --sandbox read-only --ephemeral -o <output-file> <prompt>` を実行する。user scope review skill の wrapper が利用できる環境では、その wrapper を使ってもよい。
-3. prompt には reviewer id、担当観点、primary scope、除外 scope、user request、relevant ExecPlan の acceptance、編集禁止、日本語出力、finding 形式を含める。
+3. prompt には reviewer id、担当観点、primary scope、除外 scope、user request、relevant Superpowers spec / plan の acceptance、編集禁止、日本語出力、finding 形式を含める。
 4. `codex review` の built-in surface、raw stdout 解析、Claude Code 自身の自己点検は fallback にしない。
 5. `codex` が無い、`codex exec` が失敗する、`-o` output が生成されない、または output 形式が壊れている場合は `BLOCKED: codex exec review unavailable` として停止する。
 
@@ -55,7 +55,7 @@ Claude Code からこの project-local review skill が呼ばれた場合、revi
 
 1. GitHub PR URL は対象外です。`pr-review` に委譲して停止します。
 2. user が `scope` / `base` / path を指定したらそれを優先する。
-3. relevant ExecPlan があり、scope command や対象 file が書かれていればそれを primary scope にする。
+3. relevant Superpowers spec / plan があり、対象 file や受け入れ条件が書かれていればそれを primary scope にする。
 4. `branch diff` 指定なら `git diff {base}...HEAD` と `git log {base}..HEAD` を照合する。
 5. committed branch diff が空で working tree に変更がある場合は、その事実を明記し、user の task 文脈が working tree review を求めていれば working tree を対象にする。
 6. それ以外は staged diff を優先し、staged がなければ unstaged diff と untracked files を対象にする。
@@ -104,11 +104,11 @@ untracked files は次で確認します。
 
 実行契約:
 
-1. coordinator が先に scope を決め、branch diff / staged diff / working tree diff の必要部分、対象 file snippets、`DESIGN.md`、relevant ExecPlan acceptance、browser verification summary を scoped prompt bundle にまとめる。
+1. coordinator が先に scope を決め、branch diff / staged diff / working tree diff の必要部分、対象 file snippets、`DESIGN.md`、relevant Superpowers spec / plan の acceptance、browser verification summary を scoped prompt bundle にまとめる。
 2. `claude -p --output-format json` で実行する。Claude には編集権限を渡さず、reviewer id、担当観点、除外 scope、finding 形式、好みだけの提案禁止を prompt に含める。
 3. Claude の output が parse でき、reviewer id と verdict / findings が確認できた場合だけ独立 reviewer として数える。
 4. Claude の finding も coordinator が file:line、user_request、`DESIGN.md`、対象 route、画面確認で再検証する。好みだけの提案、scope 外の全面リデザイン、画面確認なしの断定は採用しない。
-5. 実行した場合は、最終出力または relevant ExecPlan に `claude-design-reviewer` の使用有無、送った scope の要約、未検証範囲を残す。
+5. 実行した場合は、最終出力または関連する Superpowers spec / plan に `claude-design-reviewer` の使用有無、送った scope の要約、未検証範囲を残す。
 
 ## reviewer set
 
@@ -116,7 +116,7 @@ untracked files は次で確認します。
 
 | reviewer | 起動条件 | 観点 |
 | --- | --- | --- |
-| `contract-reviewer` | 常時 | `AGENTS.md`, `PLANS.md`, local skills, `mise.toml`, ExecPlan, task scope の矛盾 |
+| `contract-reviewer` | 常時 | `AGENTS.md`, `PLANS.md` (履歴案内としての矛盾確認のみ), local skills, `mise.toml`, Superpowers spec / plan, task scope の矛盾 |
 | `app-reviewer` | `web/` または app 挙動変更 | Next.js App Router, TypeScript, routing, ISR, metadata, tests |
 | `security-reviewer` | secret, auth, server/client, Notes Markdown renderer, frontmatter, Notion sync, `dangerouslySetInnerHTML`, `.gitignore` | secret exposure, server/client boundary, Markdown renderer, XSS, generated artifact |
 | `ce-reviewer` | docs, skills, agent instruction | SSoT, context clash, lost-in-middle, artifact trail, 日本語文体 |
@@ -134,7 +134,7 @@ design docs / skill の変更で design-reviewer の条件や観点自体を変�
 
 1. Design Thinking / デザイン思考
     - 想定利用者、訪問文脈、初回/再訪の目的に対して、画面や導線が問題を解いているか。
-    - user_request、DESIGN.md、ExecPlan の目的と実装がずれていないか。
+    - user_request、DESIGN.md、Superpowers spec / plan の目的と実装がずれていないか。
     - 作り手の都合や説明過多が、利用者の理解や探索を邪魔していないか。
 
 2. UX Design / ユーザー体験設計
@@ -171,9 +171,9 @@ finding にしてはいけないもの:
 
 - reviewer id と担当観点
 - primary scope と除外 scope
-- user request と relevant ExecPlan の acceptance
-- PR 作成・更新前の task では relevant ExecPlan の `pr-writer receipt` 記録手順
-- PR 作成・更新済みの task では relevant ExecPlan の `pr-writer receipt`
+- user request と relevant Superpowers spec / plan の acceptance
+- PR 作成・更新前の task では `pr-writer` 経路を通す手順
+- PR 作成・更新済みの task では `pr-writer` の実行結果
 - 編集禁止
 - 日本語出力
 - finding は `P1/P2/P3 file:line issue reason smallest fix` 形式
@@ -182,7 +182,7 @@ finding にしてはいけないもの:
 `design-reviewer` には追加で次を渡します。
 
 - Design Thinking / UX Design / Information Architecture / Visual Design の 4 観点
-- user_request、DESIGN.md、relevant ExecPlan、対象 route / screenshot / browser verification の有無
+- user_request、DESIGN.md、relevant Superpowers spec / plan、対象 route / screenshot / browser verification の有無
 - finding にしてよいもの / してはいけないものの基準
 - visual finding は、画面確認または CSS / markup から再現可能な根拠がある場合だけ出すこと
 
@@ -200,12 +200,12 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
 1. reviewer 結果を source reviewer 付きで集約する。
 2. 同一原因はまとめる。
-3. diff scope 外、task scope 外、既存問題だけの指摘、ExecPlan で明示的に見送った論点は除外する。
+3. diff scope 外、task scope 外、既存問題だけの指摘、Superpowers spec / plan で明示的に見送った論点は除外する。
 4. design-reviewer の指摘は、user_request、DESIGN.md、対象 route、または画面確認に根拠があるかを確認し、好みだけの提案は除外する。
 5. claude-design-reviewer の指摘は、外部 reviewer 由来であることを source reviewer として残し、採用前に同じ基準で再検証する。
 6. 採用前に file:line と現行契約で再確認する。
-7. PR 作成・更新前の review gate では、relevant ExecPlan の実行計画に `pr-writer receipt` を記録する手順があるか確認する。
-8. PR 作成・更新済みの completion gate では、`pr-writer receipt` がない、または mode / base/head / 既存 PR 判定 / issue / template / UI preview / title-body / command / `gh pr view` 検証のどれかが欠けていれば finding として扱う。
+7. PR 作成・更新前の review gate では、`pr-writer` を入口にする手順があるか確認する。
+8. PR 作成・更新済みの completion gate では、`pr-writer` 経由で作成・更新した根拠がない、または mode / base/head / 既存 PR 判定 / issue / template / UI preview / title-body / command / `gh pr view` 検証のどれかが欠けていれば finding として扱う。
 9. 採用 finding が 1 件以上あれば `REQUEST_CHANGES`。0 件なら `APPROVE`。
 
 指摘を出す時は、可能なら inline directive を使います。
@@ -216,7 +216,7 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
 
 ## fix loop
 
-`review fix loop` または ExecPlan skill から呼ばれた場合:
+`review fix loop` または Superpowers plan から呼ばれた場合:
 
 1. 採用 finding だけを修正する。
 2. `git diff --check` を実行する。
@@ -247,7 +247,7 @@ reviewer には `git diff` の再発見を任せません。coordinator が scop
     BLOCKED: reason
 
 サマリーには reviewer ids、対象 scope、verdict、検証 command、未解決 finding、未検証範囲を含めます。未解決 finding がない時は `findings なし` を明示します。
-ExecPlan gate として実行した場合、coordinator は同じ summary を relevant ExecPlan の `発見` または `受け入れ条件` に追記してから完了扱いにします。
+review gate として実行した場合、coordinator は同じ summary を関連する Superpowers spec / plan または最終報告に残してから完了扱いにします。
 
 ## 完了条件
 
@@ -256,6 +256,6 @@ ExecPlan gate として実行した場合、coordinator は同じ summary を re
 - 採用 finding は file:line と契約で検証済み。
 - fix loop 後に同じ reviewer set で再確認している。
 - `git diff --check` と必要な `mise` task の結果を報告している。
-- ExecPlan gate の場合は、review summary が relevant ExecPlan に記録されている。
-- PR 作成・更新前の ExecPlan gate の場合は、`pr-writer receipt` を記録する手順が relevant ExecPlan に書かれている。
-- PR 作成・更新済みの completion gate の場合は、`pr-writer receipt` が relevant ExecPlan に記録されている。
+- review gate の場合は、review summary が関連する Superpowers spec / plan または最終報告に記録されている。
+- PR 作成・更新前の review gate の場合は、`pr-writer` を入口にする手順が確認されている。
+- PR 作成・更新済みの completion gate の場合は、`pr-writer` 経由で作成・更新した根拠が確認されている。
