@@ -60,13 +60,15 @@ SSoT、CE 層、task artifact、review evidence、TDD acceptance、タスク分�
 ### タスク 3: Project-local skills を現在フローへ合わせる
 
 **対象 file:**
-- 変更: `docs/skills/exec-plan/SKILL.md`
+- 削除: `docs/skills/exec-plan/SKILL.md`
+- 削除: `.codex/skills/exec-plan`
+- 削除: `.claude/skills/exec-plan`
 - 変更: `docs/skills/review/SKILL.md`
 
-- [x] **手順 1: `exec-plan` skill body を廃止案内にする**
+- [x] **手順 1: `exec-plan` skill を削除する**
 
-skill body を、Superpowers、`review`、`commit`、`pr-writer` へ誘導する履歴案内に変える。
-期待結果: 旧 skill 呼び出しが旧 ExecPlan flow を再開しない。
+旧 skill body と runtime entrypoint symlink を削除する。
+期待結果: 旧 skill 呼び出しが旧 ExecPlan flow を再開せず、旧 ExecPlan は `docs/exec-plans/` の履歴としてだけ読める。
 
 - [x] **手順 2: `review` skill の evidence 表現を更新する**
 
@@ -114,7 +116,6 @@ ExecPlan evidence 要件を Superpowers spec / plan または最終報告の evi
 - 変更: `AGENTS.md`
 - 変更: `PLANS.md`
 - 変更: `docs/conventions.md`
-- 変更: `docs/skills/exec-plan/SKILL.md`
 - 変更: `docs/superpowers/specs/2026-05-07-superpowers-contract-design.md`
 - 変更: `docs/superpowers/plans/2026-05-07-superpowers-contract.md`
 
@@ -125,15 +126,36 @@ plugin は skill 選択、方針整理、計画、実装方式、完了前検証
 
 - [x] **手順 2: repo 側の重複手順を削る**
 
-`AGENTS.md`、`PLANS.md`、`docs/skills/exec-plan/SKILL.md` から Superpowers の個別 skill 名や内部手順の列挙を削る。
+`AGENTS.md`、`PLANS.md`、`docs/conventions.md`、`docs/superpowers/` から Superpowers の個別 skill 名や内部手順の列挙を削る。
 期待結果: repo 側が Superpowers plugin の内部手順を再定義しない。
+
+### タスク 6: 旧 `exec-plan` skill を完全に削除する
+
+**対象 file:**
+- 削除: `docs/skills/exec-plan/SKILL.md`
+- 削除: `.codex/skills/exec-plan`
+- 削除: `.claude/skills/exec-plan`
+- 変更: `docs/superpowers/specs/2026-05-07-superpowers-contract-design.md`
+- 変更: `docs/superpowers/plans/2026-05-07-superpowers-contract.md`
+
+- [x] **手順 1: 旧 entrypoint を削除する**
+
+旧 `exec-plan` skill 本体と runtime symlink を削除する。
+期待結果: skill 一覧に project-local `exec-plan` が残らない。
+
+- [x] **手順 2: 設計と計画の前提を更新する**
+
+`exec-plan` skill を廃止案内として残す記述を、削除済みの方針へ変える。
+期待結果: 現在の Superpowers 移行 artifact と実ファイル構成が一致する。
 
 ### 検証記録
 
-- `rg -n "ExecPlan|exec-plan|PLANS.md|docs/exec-plans" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/exec-plans/README.md docs/superpowers`: 参照は履歴、互換性、review context、またはこの計画の検証項目に限定。
+- `rg -n "ExecPlan|exec-plan|PLANS.md|docs/exec-plans" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/exec-plans/README.md docs/superpowers`: 参照は履歴、削除済みの記録、review context、またはこの計画の検証項目に限定。
 - `git diff --check`: exit 0。
-- `mise run verify`: exit 0。`pnpm lint` と `pnpm build` が成功。
+- `mise run verify`: exit 0。`pnpm lint` と `pnpm build` が成功。旧 `exec-plan` skill 削除後にも再実行済み。
 - project-local review: 初回 `contract-reviewer` / `ce-reviewer` の指摘を反映後、再 review で両方 `APPROVE`、finding なし。
 - `pr-writer` CREATE: PR #26 を作成。`gh pr view 26` で `OPEN`、`CLEAN`、draft ではないことを確認。
-- CE refactor check: `rg -n "superpowers:" AGENTS.md PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md`: exit 1、出力なし。
+- CE refactor check: `rg -n "[s]uperpowers:" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/superpowers`: exit 1、出力なし。
 - CE refactor review: `contract-reviewer` / `ce-reviewer` ともに `APPROVE`、finding なし。
+- 旧 `exec-plan` skill deletion: `test ! -e docs/skills/exec-plan/SKILL.md && test ! -e .codex/skills/exec-plan && test ! -e .claude/skills/exec-plan`: exit 0。
+- 旧 `exec-plan` skill deletion review: `contract-reviewer` / `ce-reviewer` ともに `APPROVE`、finding なし。未検証範囲は reviewer 側での `mise run verify` 再実行なしのみ。

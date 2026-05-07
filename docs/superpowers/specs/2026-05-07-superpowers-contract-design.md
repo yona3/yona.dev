@@ -13,7 +13,7 @@ yona.dev の新規作業フローを ExecPlan 前提から Superpowers 前提に
 1. `AGENTS.md` は短い行動契約として残し、`Superpowers` 節では plugin と repo の責務境界だけを示す。
 2. `PLANS.md` は履歴案内にし、新規 ExecPlan の schema を定義しない。
 3. `docs/conventions.md` は詳細規約として、task artifact を `docs/superpowers/{specs,plans}/` に切り替える。
-4. `docs/skills/exec-plan/SKILL.md` は廃止済み案内にし、旧 skill 名から Superpowers plugin へ戻せるようにする。ただし Superpowers の個別 skill 名や内部手順は再定義しない。
+4. 旧 `exec-plan` skill は削除し、`.codex/skills/exec-plan` と `.claude/skills/exec-plan` の入口も残さない。旧 ExecPlan は `docs/exec-plans/` の履歴としてだけ残す。
 5. `docs/skills/review/SKILL.md` は ExecPlan evidence 前提をやめ、Superpowers spec / plan または最終報告へ review summary を残す契約にする。
 6. `docs/exec-plans/active/` に残っていた旧親 ExecPlan は `docs/exec-plans/archived-active/` へ移し、`completed/` と同じく履歴として保存する。
 7. commit は `commit` skill を入口にし、PR 作成・更新は `pr-writer` skill を入口にする。
@@ -33,8 +33,9 @@ yona.dev の新規作業フローを ExecPlan 前提から Superpowers 前提に
 
 ## 受け入れ条件
 
-- `rg -n "ExecPlan|exec-plan|PLANS.md|docs/exec-plans" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/exec-plans/README.md docs/superpowers` の結果が、旧履歴としての参照と廃止案内に限定される。
-- `rg -n "superpowers:" AGENTS.md PLANS.md docs/conventions.md docs/skills/exec-plan/SKILL.md` の結果が空で、Superpowers plugin の内部手順を repo 側で再定義していない。
+- `rg -n "ExecPlan|exec-plan|PLANS.md|docs/exec-plans" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/exec-plans/README.md docs/superpowers` の結果が、旧履歴としての参照と削除済みの記録に限定される。
+- `rg -n "[s]uperpowers:" AGENTS.md PLANS.md docs/conventions.md docs/skills docs/superpowers` の結果が空で、Superpowers plugin の内部手順を repo 側で再定義していない。
+- `docs/skills/exec-plan/SKILL.md`、`.codex/skills/exec-plan`、`.claude/skills/exec-plan` が存在しない。
 - `docs/superpowers/specs/` と `docs/superpowers/plans/` が存在し、今回の設計と計画が残る。
 - `docs/exec-plans/active/` に作業中の旧 ExecPlan が残らず、移行時点の active は `docs/exec-plans/archived-active/` に残る。
 - `git diff --check` と `mise run verify` が成功する。
