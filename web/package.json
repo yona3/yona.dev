@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint '**/*.@(js|ts|tsx)'",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "format": "prettier --write . && pnpm lint --fix"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "@eslint/js": "^9.39.4",
     "@next/bundle-analyzer": "^16.2.4",
     "@next/eslint-plugin-next": "^16.2.4",
+    "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
