@@ -1,36 +1,49 @@
-# 技術選定やり直し Implementation Plan
+# 技術選定やり直し実装計画
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **エージェント向け:** 必須サブスキル: `superpowers:subagent-driven-development` または `superpowers:executing-plans` を使い、タスクごとに実装する。進捗はチェックボックスで追跡する。
 
-**Goal:** 将来自作 CMS に差し替えられるよう、現在の Markdown 正本サイトを `ContentSource`、`ArticleBlock`、`CSS Modules + CSS custom properties` に整理する。
+**目的:** 将来自作 CMS に差し替えられるよう、現在の Markdown 正本サイトを `ContentSource`、`ArticleBlock`、`CSS Modules + CSS custom properties` に整理する。
 
-**Architecture:** 第一段階では `Next.js` と `Vercel` を維持し、入力元だけを `ContentSource` に閉じる。Markdown は `MarkdownSource` が `Article` / `ArticleBlock[]` に変換し、route と renderer は入力元を知らない。styling は `Tailwind CSS` を撤去し、CSS custom properties と責務別 CSS Modules に統一する。
+**構成:** 第一段階では `Next.js` と `Vercel` を維持し、入力元だけを `ContentSource` に閉じる。Markdown は `MarkdownSource` が `Article` / `ArticleBlock[]` に変換し、ルートと描画層は入力元を知らない。スタイリングは `Tailwind CSS` を撤去し、CSS custom properties と責務別 CSS Modules に統一する。
 
-**Tech Stack:** Next.js 16 App Router, React 19, TypeScript, CSS Modules, CSS custom properties, pnpm, mise, Markdown frontmatter.
+**技術スタック:** Next.js 16 App Router, React 19, TypeScript, CSS Modules, CSS custom properties, pnpm, mise, Markdown frontmatter.
 
 ---
 
-## File Structure
+## 実行結果
 
-**Create**
+- Task 1: `d5d6552 chore(web): Tailwind 依存を撤去`
+- Task 2: `4fd0770 refactor(style): CSS Modules を責務別に分割`
+- Task 3: `98bbc5a refactor(content): ContentSource 境界を追加`
+- Task 4: `ee23ddc refactor(content): ArticleBlock renderer へ移行`
+- Task 5: `1e41376 docs(tech): 技術スタック方針を記録`
+- 追加整理: `d9ee017 chore(web): 古い CSS 設定 ignore を削除`
+- 最終検証: `mise run verify` は exit 0。`pnpm lint` と `pnpm build` が通過。`mise` のホーム配下 cache / tracking 書き込み警告は検証本体に影響なし。
+- project-local review 初回: `contract-reviewer` と `docs-ce-reviewer` が計画の commit 手順 / 証跡記録を指摘、`app-security-reviewer` が `linkCard.url` の protocol allowlist 不足を指摘、`ui-reviewer` は APPROVE。
+- 対応方針: commit 手順は `commit` skill 経由へ修正し、計画へ実行済み commit と検証結果を記録する。`ArticleContent` は `linkCard.url` を `http:` / `https:` のみ許可し、不正 protocol は build 時に失敗させる。
+- project-local review 最終: `contract-reviewer`、`app-security-reviewer`、`ui-reviewer`、`docs-ce-reviewer` はすべて APPROVE。未検証範囲は browser での視覚差分確認。
+
+## ファイル構成
+
+**作成**
 
 - `web/src/lib/content/types.ts`: `Article`, `ArticleBlock`, `ArticleAsset`, `ContentSource` の型と kind label を定義する。
 - `web/src/lib/content/blocks.ts`: Markdown 本文を `ArticleBlock[]` に変換する。
 - `web/src/lib/content/markdown-source.ts`: repo 内 Markdown を読み、`ContentSource` として公開する。
 - `web/src/lib/content/index.ts`: route / component 向けの公開入口を集約する。
 - `web/src/components/site/ArticleContent.tsx`: `ArticleBlock[]` を描画する。
-- `web/src/components/site/article.module.css`: 記事本文と article block の styling。
-- `web/src/components/site/layout.module.css`: shell、header、footer、skip link 以外の共通 layout。
+- `web/src/components/site/article.module.css`: 記事本文と article block のスタイリング。
+- `web/src/components/site/layout.module.css`: shell、header、footer、skip link 以外の共通レイアウト。
 - `web/src/components/site/navigation.module.css`: brand、nav、social links。
 - `web/src/components/site/home.module.css`: home hero、intro、speech、hedgehog。
 - `web/src/components/site/notes.module.css`: notes list と note detail metadata。
 - `web/src/components/site/motion.module.css`: animation と `prefers-reduced-motion`。
 - `docs/tech-stack.md`: 採用技術、非採用技術、再評価条件、自作 CMS 仮 schema を記録する。
 
-**Modify**
+**変更**
 
 - `web/src/styles/globals.css`: `@import "tailwindcss"` と `@theme` を削除し、global token を集約する。
-- `web/postcss.config.js`: Tailwind PostCSS plugin を外す。PostCSS 設定が空になる場合は file を削除する。
+- `web/postcss.config.js`: Tailwind PostCSS plugin を外す。PostCSS 設定が空になる場合はファイルを削除する。
 - `web/package.json`: `tailwindcss`, `@tailwindcss/postcss`, 未使用になった `postcss`, `autoprefixer` を削除する。
 - `web/pnpm-lock.yaml`: 依存削除に合わせて更新する。
 - `web/src/lib/notes.ts`: 互換 wrapper に縮小するか、`web/src/lib/content/index.ts` へ移行後に削除する。
@@ -42,38 +55,38 @@
 - `DESIGN.md`: token と CSS Modules 統一方針を現実の実装に合わせる。
 - `docs/superpowers/specs/2026-05-08-technology-selection-design.md`: 実装中に判明した選定差分があれば反映する。
 
-**Remove**
+**削除**
 
 - `web/src/components/site/site.module.css`: 分割後に参照が 0 になったことを確認して削除する。
 - `web/src/components/site/MarkdownContent.tsx`: `ArticleContent.tsx` 移行後に削除する。
 
 ## Task 1: Tailwind を撤去し CSS custom properties を正本にする
 
-**Files:**
+**対象ファイル:**
 
-- Modify: `web/src/styles/globals.css`
-- Modify or delete: `web/postcss.config.js`
-- Modify: `web/package.json`
-- Modify: `web/pnpm-lock.yaml`
-- Verify: `web/src/**/*.tsx`, `web/src/**/*.css`
+- 変更: `web/src/styles/globals.css`
+- 変更または削除: `web/postcss.config.js`
+- 変更: `web/package.json`
+- 変更: `web/pnpm-lock.yaml`
+- 確認: `web/src/**/*.tsx`, `web/src/**/*.css`
 
-- [ ] **Step 1: Tailwind utility が使われていないことを確認する**
+- [x] **Step 1: Tailwind utility が使われていないことを確認する**
 
-Run:
+実行:
 
 ```bash
 rg -n "className=\"[^\"]*[a-z]+-[a-z0-9\\[\\]:/.-]" web/src
 rg -n "@apply|@layer|@tailwind|@import \"tailwindcss\"|@theme" web
 ```
 
-Expected:
+期待結果:
 
-- 1 つめの command は、`styles.*` ではない utility class が存在しないことを確認する目的で読む。
-- 2 つめの command は、`web/src/styles/globals.css` の `@import "tailwindcss"` と `@theme`、および `web/postcss.config.js` の Tailwind plugin だけを示す。
+- 1 つめのコマンドは、`styles.*` ではない utility class が存在しないことを確認する目的で読む。
+- 2 つめのコマンドは、`web/src/styles/globals.css` の `@import "tailwindcss"` と `@theme`、および `web/postcss.config.js` の Tailwind plugin だけを示す。
 
-- [ ] **Step 2: `globals.css` から Tailwind entrypoint を削除する**
+- [x] **Step 2: `globals.css` から Tailwind entrypoint を削除する**
 
-Replace the top of `web/src/styles/globals.css` with:
+`web/src/styles/globals.css` の先頭を次に置き換える:
 
 ```css
 :root {
@@ -102,94 +115,96 @@ Replace the top of `web/src/styles/globals.css` with:
 }
 ```
 
-Expected:
+期待結果:
 
 - `@import "tailwindcss";` が消える。
 - `@theme` が消える。
 - 既存の CSS 変数は保ち、spacing / radius token が追加される。
 
-- [ ] **Step 3: PostCSS の Tailwind plugin を外す**
+- [x] **Step 3: PostCSS の Tailwind plugin を外す**
 
-If no PostCSS plugin remains necessary, delete `web/postcss.config.js`.
+必要な PostCSS plugin が残らない場合は `web/postcss.config.js` を削除する。
 
-Run:
+実行:
 
 ```bash
 git rm web/postcss.config.js
 ```
 
-Expected:
+期待結果:
 
 - `web/postcss.config.js` が削除対象になる。
 - `web/eslint.config.mjs` の ignore に `postcss.config.js` が残っても害はないため、この task では触らない。
 
-- [ ] **Step 4: Tailwind 関連依存を削除する**
+- [x] **Step 4: Tailwind 関連依存を削除する**
 
-Run:
+実行:
 
 ```bash
 cd web
 pnpm remove tailwindcss @tailwindcss/postcss postcss autoprefixer
 ```
 
-Expected:
+期待結果:
 
 - `web/package.json` から `tailwindcss`, `@tailwindcss/postcss`, `postcss`, `autoprefixer` が消える。
 - `web/pnpm-lock.yaml` が更新される。
 
-- [ ] **Step 5: 検証する**
+- [x] **Step 5: 検証する**
 
-Run from repo root:
+リポジトリ root で実行:
 
 ```bash
 mise run lint
 mise run build
 ```
 
-Expected:
+期待結果:
 
 - `lint` が exit 0。
 - `build` が exit 0。
 - CSS import error が出ない。
 
-- [ ] **Step 6: commit する**
+- [x] **Step 6: commit する**
 
-Run:
+`commit` skill を使い、対象差分だけを戻しやすい論理単位で記録する。
 
-```bash
-git add web/src/styles/globals.css web/postcss.config.js web/package.json web/pnpm-lock.yaml
-git commit -m "chore(style): Tailwind 依存を撤去"
+候補 message:
+
+```text
+chore(style): Tailwind 依存を撤去
 ```
 
-Expected:
+期待結果:
 
 - 依存削除と global token の commit が 1 つできる。
+- 実行結果: `d5d6552 chore(web): Tailwind 依存を撤去`
 
 ## Task 2: `site.module.css` を責務別 CSS Modules に分割する
 
-**Files:**
+**対象ファイル:**
 
-- Create: `web/src/components/site/layout.module.css`
-- Create: `web/src/components/site/navigation.module.css`
-- Create: `web/src/components/site/home.module.css`
-- Create: `web/src/components/site/notes.module.css`
-- Create: `web/src/components/site/article.module.css`
-- Create: `web/src/components/site/motion.module.css`
-- Modify: `web/src/components/site/SiteShell.tsx`
-- Modify: `web/src/components/site/HomeIntro.tsx`
-- Modify: `web/src/components/site/HelloBubble.tsx`
-- Modify: `web/src/components/site/HedgehogRunner.tsx`
-- Modify: `web/src/components/site/NoteList.tsx`
-- Modify: `web/src/components/site/MarkdownContent.tsx`
-- Modify: `web/src/app/page.tsx`
-- Modify: `web/src/app/about/page.tsx`
-- Modify: `web/src/app/notes/page.tsx`
-- Modify: `web/src/app/notes/[slug]/page.tsx`
-- Remove after imports are gone: `web/src/components/site/site.module.css`
+- 作成: `web/src/components/site/layout.module.css`
+- 作成: `web/src/components/site/navigation.module.css`
+- 作成: `web/src/components/site/home.module.css`
+- 作成: `web/src/components/site/notes.module.css`
+- 作成: `web/src/components/site/article.module.css`
+- 作成: `web/src/components/site/motion.module.css`
+- 変更: `web/src/components/site/SiteShell.tsx`
+- 変更: `web/src/components/site/HomeIntro.tsx`
+- 変更: `web/src/components/site/HelloBubble.tsx`
+- 変更: `web/src/components/site/HedgehogRunner.tsx`
+- 変更: `web/src/components/site/NoteList.tsx`
+- 変更: `web/src/components/site/MarkdownContent.tsx`
+- 変更: `web/src/app/page.tsx`
+- 変更: `web/src/app/about/page.tsx`
+- 変更: `web/src/app/notes/page.tsx`
+- 変更: `web/src/app/notes/[slug]/page.tsx`
+- import が消えた後に削除: `web/src/components/site/site.module.css`
 
-- [ ] **Step 1: CSS class の移動先を固定する**
+- [x] **Step 1: CSS class の移動先を固定する**
 
-Move selectors from `site.module.css` using this mapping:
+`site.module.css` の selector を次の対応で移す:
 
 ```text
 layout.module.css:
@@ -214,21 +229,21 @@ motion.module.css:
   related prefers-reduced-motion blocks
 ```
 
-Expected:
+期待結果:
 
-- No selector is duplicated between module files except animation names referenced through imports.
-- Visual values are copied verbatim in this task. Token cleanup belongs to Task 3.
+- animation 名の参照を除き、module 間で selector を重複させない。
+- このタスクでは見た目の値をそのまま移す。token cleanup は Task 3 で扱う。
 
-- [ ] **Step 2: `SiteShell.tsx` import を分ける**
+- [x] **Step 2: `SiteShell.tsx` import を分ける**
 
-Change imports and class references:
+import と class 参照を次のように分ける:
 
 ```tsx
 import layoutStyles from "./layout.module.css";
 import navigationStyles from "./navigation.module.css";
 ```
 
-Use:
+使用例:
 
 ```tsx
 <div className={layoutStyles.page}>
@@ -240,14 +255,14 @@ Use:
       <nav className={navigationStyles.nav} aria-label="主要ナビゲーション">
 ```
 
-Expected:
+期待結果:
 
-- `SiteShell.tsx` no longer imports `site.module.css`.
-- Coffee icon uses `layoutStyles.coffeeEmoji`.
+- `SiteShell.tsx` は `site.module.css` を import しない。
+- Coffee icon は `layoutStyles.coffeeEmoji` を使う。
 
-- [ ] **Step 3: Home 関連 component の import を分ける**
+- [x] **Step 3: Home 関連 component の import を分ける**
 
-Use these imports:
+次の import を使う:
 
 ```tsx
 // web/src/components/site/HomeIntro.tsx
@@ -260,14 +275,14 @@ import homeStyles from "./home.module.css";
 import homeStyles from "./home.module.css";
 ```
 
-Expected:
+期待結果:
 
-- `HomeIntro`, `HelloBubble`, `HedgehogRunner` no longer import `site.module.css`.
-- class references use `homeStyles`.
+- `HomeIntro`, `HelloBubble`, `HedgehogRunner` は `site.module.css` を import しない。
+- class 参照は `homeStyles` を使う。
 
-- [ ] **Step 4: page route の import を分ける**
+- [x] **Step 4: page route の import を分ける**
 
-Use these imports:
+次の import を使う:
 
 ```tsx
 // web/src/app/page.tsx
@@ -286,39 +301,39 @@ import articleStyles from "../../../components/site/article.module.css";
 import notesStyles from "../../../components/site/notes.module.css";
 ```
 
-Expected:
+期待結果:
 
-- route files import only the CSS modules they render.
-- `socialLinks` uses `navigationStyles.socialLinks`.
-- hero / lead / section classes use `homeStyles`.
-- note detail article uses `notesStyles.noteArticle` and article content wrapper uses `articleStyles`.
+- route file は描画に使う CSS module だけを import する。
+- `socialLinks` は `navigationStyles.socialLinks` を使う。
+- hero / lead / section classes は `homeStyles` を使う。
+- note detail article は `notesStyles.noteArticle` を使い、article content wrapper は `articleStyles` を使う。
 
-- [ ] **Step 5: `site.module.css` 参照が消えたことを確認して削除する**
+- [x] **Step 5: `site.module.css` 参照が消えたことを確認して削除する**
 
-Run:
+実行:
 
 ```bash
 rg -n "site\\.module\\.css|styles\\." web/src/components/site web/src/app
 ```
 
-Expected:
+期待結果:
 
-- `site.module.css` import is absent.
-- Remaining `styles.` references are only from renamed local import names if any. Prefer `layoutStyles`, `homeStyles`, `notesStyles`, `articleStyles`, `navigationStyles`.
+- `site.module.css` import が存在しない。
+- 残る `styles.` 参照は、名前を変えた local import がある場合だけに限る。`layoutStyles`, `homeStyles`, `notesStyles`, `articleStyles`, `navigationStyles` を優先する。
 
-Then run:
+その後に実行:
 
 ```bash
 git rm web/src/components/site/site.module.css
 ```
 
-Expected:
+期待結果:
 
-- old module is removed.
+- 旧 module が削除される。
 
-- [ ] **Step 6: 検証する**
+- [x] **Step 6: 検証する**
 
-Run:
+実行:
 
 ```bash
 git diff --check
@@ -326,39 +341,41 @@ mise run lint
 mise run build
 ```
 
-Expected:
+期待結果:
 
-- whitespace check exit 0。
-- lint exit 0。
-- build exit 0。
+- whitespace check は exit 0。
+- lint は exit 0。
+- build は exit 0。
 - CSS module missing class error が出ない。
 
-- [ ] **Step 7: commit する**
+- [x] **Step 7: commit する**
 
-Run:
+`commit` skill を使い、対象差分だけを戻しやすい論理単位で記録する。
 
-```bash
-git add web/src/components/site web/src/app web/src/styles/globals.css
-git commit -m "refactor(style): CSS Modules を責務別に分割"
+候補 message:
+
+```text
+refactor(style): CSS Modules を責務別に分割
 ```
 
-Expected:
+期待結果:
 
 - 見た目を変えない CSS 分割 commit が 1 つできる。
+- 実行結果: `4fd0770 refactor(style): CSS Modules を責務別に分割`
 
 ## Task 3: `ContentSource` と `Article` 型を導入する
 
-**Files:**
+**対象ファイル:**
 
-- Create: `web/src/lib/content/types.ts`
-- Create: `web/src/lib/content/blocks.ts`
-- Create: `web/src/lib/content/markdown-source.ts`
-- Create: `web/src/lib/content/index.ts`
-- Modify: `web/src/lib/notes.ts`
+- 作成: `web/src/lib/content/types.ts`
+- 作成: `web/src/lib/content/blocks.ts`
+- 作成: `web/src/lib/content/markdown-source.ts`
+- 作成: `web/src/lib/content/index.ts`
+- 変更: `web/src/lib/notes.ts`
 
-- [ ] **Step 1: content 型を追加する**
+- [x] **Step 1: content 型を追加する**
 
-Create `web/src/lib/content/types.ts`:
+`web/src/lib/content/types.ts` を作成する:
 
 ```ts
 export type ArticleKind = "article" | "note" | "log";
@@ -409,14 +426,14 @@ export type ContentSource = {
 };
 ```
 
-Expected:
+期待結果:
 
-- Boolean property is `isPublished` to satisfy local naming policy.
-- `ArticleKind` keeps current `article | note | log` values.
+- 真偽値プロパティはローカル命名規約に合わせて `isPublished` にする。
+- `ArticleKind` は現行の `article | note | log` 値を維持する。
 
-- [ ] **Step 2: Markdown block parser を追加する**
+- [x] **Step 2: Markdown block parser を追加する**
 
-Create `web/src/lib/content/blocks.ts`:
+`web/src/lib/content/blocks.ts` を作成する:
 
 ```ts
 import type { ArticleAsset, ArticleBlock } from "./types";
@@ -569,15 +586,15 @@ export const parseArticleBlocks = (content: string): ArticleBlock[] => {
 };
 ```
 
-Expected:
+期待結果:
 
-- Existing Markdown features keep working.
-- `:::callout` is supported as the first custom block.
-- Unknown custom syntax beginning with `::` fails fast.
+- 既存 Markdown 機能が動き続ける。
+- `:::callout` を最初の custom block として扱える。
+- `::` で始まる未知の custom syntax は即時に失敗する。
 
-- [ ] **Step 3: Markdown source を追加する**
+- [x] **Step 3: Markdown source を追加する**
 
-Create `web/src/lib/content/markdown-source.ts`:
+`web/src/lib/content/markdown-source.ts` を作成する:
 
 ```ts
 import { promises as fs } from "node:fs";
@@ -714,14 +731,14 @@ export const markdownSource: ContentSource = {
 };
 ```
 
-Expected:
+期待結果:
 
-- Existing Markdown files still load.
-- Content source hides filesystem details from route files.
+- 既存 Markdown file が読み込める。
+- Content source が filesystem の詳細を route file から隠す。
 
-- [ ] **Step 4: content public API を追加する**
+- [x] **Step 4: content public API を追加する**
 
-Create `web/src/lib/content/index.ts`:
+`web/src/lib/content/index.ts` を作成する:
 
 ```ts
 import { markdownSource } from "./markdown-source";
@@ -739,14 +756,14 @@ export const getArticleBySlug = contentSource.getArticleBySlug;
 export const getArticleSlugs = contentSource.getArticleSlugs;
 ```
 
-Expected:
+期待結果:
 
-- Route files can import from one content entrypoint.
-- `contentSource` is the only place that chooses Markdown as current input.
+- route file が 1 つの content 入口から import できる。
+- `contentSource` だけが、現在の入力元として Markdown を選ぶ。
 
-- [ ] **Step 5: `notes.ts` を互換 wrapper にする**
+- [x] **Step 5: `notes.ts` を互換 wrapper にする**
 
-Replace `web/src/lib/notes.ts` with:
+`web/src/lib/notes.ts` を次に置き換える:
 
 ```ts
 export {
@@ -759,14 +776,14 @@ export {
 export type { Article as Note, ArticleKind as NoteType } from "./content";
 ```
 
-Expected:
+期待結果:
 
-- Existing imports keep compiling during transition.
-- Later tasks can migrate imports and then delete `notes.ts`.
+- 移行中も既存 import が compile できる。
+- 後続 task で import を移行し、その後 `notes.ts` を削除できる。
 
-- [ ] **Step 6: 検証して commit する**
+- [x] **Step 6: 検証して commit する**
 
-Run:
+実行:
 
 ```bash
 git diff --check
@@ -774,34 +791,37 @@ mise run lint
 mise run build
 ```
 
-Expected:
+期待結果:
 
-- whitespace check exit 0。
-- lint exit 0。
-- build exit 0。
+- whitespace check は exit 0。
+- lint は exit 0。
+- build は exit 0。
 
-Commit:
+`commit` skill を使い、対象差分だけを戻しやすい論理単位で記録する。
 
-```bash
-git add web/src/lib/content web/src/lib/notes.ts
-git commit -m "refactor(content): ContentSource 境界を追加"
+候補 message:
+
+```text
+refactor(content): ContentSource 境界を追加
 ```
+
+実行結果: `98bbc5a refactor(content): ContentSource 境界を追加`
 
 ## Task 4: `ArticleContent` renderer へ移行する
 
-**Files:**
+**対象ファイル:**
 
-- Create: `web/src/components/site/ArticleContent.tsx`
-- Modify: `web/src/components/site/NoteList.tsx`
-- Modify: `web/src/app/page.tsx`
-- Modify: `web/src/app/notes/page.tsx`
-- Modify: `web/src/app/notes/[slug]/page.tsx`
-- Remove: `web/src/components/site/MarkdownContent.tsx`
-- Modify or remove: `web/src/lib/notes.ts`
+- 作成: `web/src/components/site/ArticleContent.tsx`
+- 変更: `web/src/components/site/NoteList.tsx`
+- 変更: `web/src/app/page.tsx`
+- 変更: `web/src/app/notes/page.tsx`
+- 変更: `web/src/app/notes/[slug]/page.tsx`
+- 削除: `web/src/components/site/MarkdownContent.tsx`
+- 変更または削除: `web/src/lib/notes.ts`
 
-- [ ] **Step 1: Article renderer を追加する**
+- [x] **Step 1: Article renderer を追加する**
 
-Create `web/src/components/site/ArticleContent.tsx`:
+`web/src/components/site/ArticleContent.tsx` を作成する:
 
 ```tsx
 import type { ArticleBlock } from "../../lib/content";
@@ -887,14 +907,14 @@ export const ArticleContent = ({ blocks }: Props) => {
 };
 ```
 
-Expected:
+期待結果:
 
-- Renderer accepts only `ArticleBlock[]`.
-- No `dangerouslySetInnerHTML` is introduced.
+- renderer は `ArticleBlock[]` だけを受け取る。
+- `dangerouslySetInnerHTML` を導入しない。
 
-- [ ] **Step 2: Note list を Article 型へ切り替える**
+- [x] **Step 2: Note list を Article 型へ切り替える**
 
-Change `web/src/components/site/NoteList.tsx` to import:
+`web/src/components/site/NoteList.tsx` の import を次に変更する:
 
 ```tsx
 import Link from "next/link";
@@ -911,21 +931,21 @@ type Props = {
 };
 ```
 
-Use:
+使用例:
 
 ```tsx
 <time dateTime={note.publishedAt}>{formatArticleDate(note.publishedAt)}</time>
 <span className={styles.noteType}>{articleKindLabels[note.kind]}</span>
 ```
 
-Expected:
+期待結果:
 
-- Public component name `NoteList` can remain for UI vocabulary.
-- Domain import no longer depends on `lib/notes`.
+- UI 上の語彙として component 名 `NoteList` は維持してよい。
+- domain import は `lib/notes` に依存しない。
 
-- [ ] **Step 3: route files を content API へ移行する**
+- [x] **Step 3: route files を content API へ移行する**
 
-Use these imports:
+次の import を使う:
 
 ```tsx
 // web/src/app/page.tsx
@@ -944,7 +964,7 @@ import {
 } from "../../../lib/content";
 ```
 
-Replace function calls:
+関数呼び出しを置き換える:
 
 ```tsx
 const notes = await getAllArticles();
@@ -952,55 +972,55 @@ const article = await getArticleBySlug(slug);
 const slugs = await getArticleSlugs();
 ```
 
-Expected:
+期待結果:
 
-- Route output remains `/notes` and `/notes/[slug]`.
-- Naming inside detail route can become `article` to match domain model.
+- route 出力は `/notes` と `/notes/[slug]` のまま。
+- detail route 内の変数名は domain model に合わせて `article` にしてよい。
 
-- [ ] **Step 4: detail page renderer を切り替える**
+- [x] **Step 4: detail page renderer を切り替える**
 
-In `web/src/app/notes/[slug]/page.tsx`, replace:
+`web/src/app/notes/[slug]/page.tsx` で次を置き換える:
 
 ```tsx
 <MarkdownContent content={note.content} />
 ```
 
-with:
+置き換え後:
 
 ```tsx
 <ArticleContent blocks={article.blocks} />
 ```
 
-Expected:
+期待結果:
 
-- Markdown string no longer crosses into React component props.
-- Article renderer owns block rendering.
+- Markdown 文字列を React component props に渡さない。
+- Article renderer が block rendering を担当する。
 
-- [ ] **Step 5: 旧 Markdown renderer と notes wrapper を削除する**
+- [x] **Step 5: 旧 Markdown renderer と notes wrapper を削除する**
 
-Run:
+実行:
 
 ```bash
 rg -n "MarkdownContent|lib/notes|getAllNotes|getNoteBySlug|getNoteSlugs|noteTypeLabels|formatNoteDate" web/src
 ```
 
-Expected:
+期待結果:
 
-- No references remain after route migration.
+- route 移行後に参照が残らない。
 
-Then run:
+その後に実行:
 
 ```bash
 git rm web/src/components/site/MarkdownContent.tsx web/src/lib/notes.ts
 ```
 
-Expected:
+期待結果:
 
-- old Markdown renderer and compatibility wrapper are removed.
+- 旧 Markdown renderer と互換 wrapper が削除される。
 
-- [ ] **Step 6: 検証して commit する**
+- [x] **Step 6: 検証して commit する**
 
-Run:
+実行:
 
 ```bash
 git diff --check
@@ -1008,47 +1028,50 @@ mise run lint
 mise run build
 ```
 
-Expected:
+期待結果:
 
-- lint exit 0。
-- build exit 0。
-- `/notes` static generation succeeds。
+- lint は exit 0。
+- build は exit 0。
+- `/notes` の静的生成が成功する。
 
-Commit:
+`commit` skill を使い、対象差分だけを戻しやすい論理単位で記録する。
 
-```bash
-git add web/src/lib web/src/components/site web/src/app
-git commit -m "refactor(content): ArticleBlock renderer へ移行"
+候補 message:
+
+```text
+refactor(content): ArticleBlock renderer へ移行
 ```
+
+実行結果: `ee23ddc refactor(content): ArticleBlock renderer へ移行`
 
 ## Task 5: design token と自作 CMS 仮 schema を docs に固定する
 
-**Files:**
+**対象ファイル:**
 
-- Modify: `DESIGN.md`
-- Create: `docs/tech-stack.md`
-- Modify: `docs/superpowers/specs/2026-05-08-technology-selection-design.md`
+- 変更: `DESIGN.md`
+- 作成: `docs/tech-stack.md`
+- 変更: `docs/superpowers/specs/2026-05-08-technology-selection-design.md`
 
-- [ ] **Step 1: `DESIGN.md` の技術表現を合わせる**
+- [x] **Step 1: `DESIGN.md` の技術表現を合わせる**
 
-Add a short implementation note near the current design token section:
+現在の design token section 付近に短い実装 note を追加する:
 
 ```markdown
 ## Implementation Notes
 
-- Styling は `CSS Modules + CSS custom properties` を正本にする。
+- スタイリングは `CSS Modules + CSS custom properties` を正本にする。
 - `globals.css` の `:root` を runtime token とし、`DESIGN.md` は意図と値の参照元にする。
 - `Tailwind CSS` は第一段階の採用対象にしない。
 - 記事本文の block styling は `article.module.css` に閉じる。
 ```
 
-Expected:
+期待結果:
 
-- Design intent and implementation direction no longer conflict.
+- design 意図と実装方針が矛盾しない。
 
-- [ ] **Step 2: 技術選定メモを追加する**
+- [x] **Step 2: 技術選定メモを追加する**
 
-Create `docs/tech-stack.md`:
+`docs/tech-stack.md` を作成する:
 
 ```markdown
 # 技術スタック
@@ -1082,26 +1105,26 @@ Create `docs/tech-stack.md`:
 `blocks` は `paragraph`, `heading`, `list`, `quote`, `code`, `image`, `callout`, `linkCard`, `gallery` に限定する。
 ```
 
-Expected:
+期待結果:
 
 - 技術選定の結論が README ではなく docs に固定される。
 - README は必要なら後続で参照リンクだけ追加する。
 
-- [ ] **Step 3: spec に実装中の差分を反映する**
+- [x] **Step 3: spec に実装中の差分を反映する**
 
-If implementation deviates from the original spec, update `docs/superpowers/specs/2026-05-08-technology-selection-design.md` with the actual decision. Example text if `postcss.config.js` is deleted:
+実装が当初 spec からずれた場合は、実際の判断を `docs/superpowers/specs/2026-05-08-technology-selection-design.md` に反映する。`postcss.config.js` を削除した場合の例:
 
 ```markdown
 実装では Tailwind CSS と PostCSS plugin を撤去し、`web/postcss.config.js` も削除する。CSS Modules と global CSS は Next.js の標準 CSS support だけで扱う。
 ```
 
-Expected:
+期待結果:
 
-- spec and implementation plan remain aligned.
+- spec と implementation plan が揃う。
 
-- [ ] **Step 4: 検証して commit する**
+- [x] **Step 4: 検証して commit する**
 
-Run:
+実行:
 
 ```bash
 git diff --check
@@ -1109,98 +1132,102 @@ mise run lint
 mise run build
 ```
 
-Expected:
+期待結果:
 
-- docs-only update plus any final code state still passes verify commands.
+- docs 更新後も最終 code state が検証 command を通る。
 
-Commit:
+`commit` skill を使い、対象差分だけを戻しやすい論理単位で記録する。
 
-```bash
-git add DESIGN.md docs/tech-stack.md docs/superpowers/specs/2026-05-08-technology-selection-design.md
-git commit -m "docs(tech): 技術スタック方針を記録"
+候補 message:
+
+```text
+docs(tech): 技術スタック方針を記録
 ```
+
+実行結果: `1e41376 docs(tech): 技術スタック方針を記録`
 
 ## Task 6: 最終検証、review、PR 準備
 
-**Files:**
+**対象ファイル:**
 
-- All files changed by Tasks 1-5
+- Task 1-5 で変更した全ファイル
 
-- [ ] **Step 1: scope を確認する**
+- [x] **Step 1: scope を確認する**
 
-Run:
+実行:
 
 ```bash
 git status --short --branch --untracked-files=all
 git diff --stat origin/main...HEAD
 ```
 
-Expected:
+期待結果:
 
-- Branch is `codex/technology-selection-design` or a task branch created from it.
-- Diff contains only docs, content layer, article renderer, CSS module split, and dependency cleanup.
+- branch は `codex/technology-selection-design` またはそこから作った task branch。
+- diff は docs、content layer、article renderer、CSS module 分割、依存 cleanup に限られる。
 
-- [ ] **Step 2: Tailwind 参照が残っていないことを確認する**
+- [x] **Step 2: Tailwind 参照が残っていないことを確認する**
 
-Run:
+実行:
 
 ```bash
 rg -n "tailwind|@tailwindcss|@import \"tailwindcss\"|@theme|@apply" web docs README.md DESIGN.md
 ```
 
-Expected:
+期待結果:
 
-- No runtime Tailwind setup remains.
-- If `docs/tech-stack.md` mentions `Tailwind CSS`, it is in the non-adoption section only.
+- runtime Tailwind 設定が残らない。
+- `docs/tech-stack.md` の `Tailwind CSS` 記述は非採用 section だけに限る。
 
-- [ ] **Step 3: content API 参照を確認する**
+- [x] **Step 3: content API 参照を確認する**
 
-Run:
+実行:
 
 ```bash
 rg -n "getAllNotes|getNoteBySlug|getNoteSlugs|MarkdownContent|site\\.module\\.css|dangerouslySetInnerHTML" web/src
 ```
 
-Expected:
+期待結果:
 
-- No output for old note API, old Markdown renderer, old CSS module, or `dangerouslySetInnerHTML`.
+- 旧 note API、旧 Markdown renderer、旧 CSS module、`dangerouslySetInnerHTML` は出力されない。
 
-- [ ] **Step 4: hard guard を実行する**
+- [x] **Step 4: hard guard を実行する**
 
-Run:
+実行:
 
 ```bash
 mise run verify
 ```
 
-Expected:
+期待結果:
 
-- `pnpm lint` passes.
-- `pnpm build` passes.
+- `pnpm lint` が通る。
+- `pnpm build` が通る。
 
-- [ ] **Step 5: project-local review を実行する**
+- [x] **Step 5: project-local review を実行する**
 
-Use `docs/skills/review/SKILL.md` with scope:
+`docs/skills/review/SKILL.md` を使い、次の scope で実行する:
 
 ```text
-Scope: 技術選定実装。CSS Modules 統一、Tailwind 撤去、ContentSource、ArticleBlock renderer、docs 更新。
-Review focus: server/client boundary, Markdown rendering safety, route regression, build/lint regression, accessibility.
+範囲: 技術選定実装。CSS Modules 統一、Tailwind 撤去、ContentSource、ArticleBlock renderer、docs 更新。
+レビュー観点: server/client boundary, Markdown rendering safety, route regression, build/lint regression, accessibility.
 ```
 
-Expected:
+期待結果:
 
-- Review verdict is `APPROVE`, or all accepted findings are fixed and re-reviewed.
+- Review verdict が `APPROVE`、または採用した finding をすべて修正して re-review が通る。
+- 実行結果: `contract-reviewer`、`app-security-reviewer`、`ui-reviewer`、`docs-ce-reviewer` はすべて APPROVE。
 
 - [ ] **Step 6: PR 作成へ進む**
 
-Use `pr-writer` skill. Do not call `gh pr create` directly.
+`pr-writer` skill を使う。`gh pr create` を直接呼ばない。
 
-Expected:
+期待結果:
 
-- PR body includes summary, verification commands, review verdict, and related issue status.
+- PR 本文に要約、検証 command、review verdict、関連 issue 状態を含める。
 
-## Self-Review
+## 自己レビュー
 
-- Spec coverage: `CSS Modules` 統一は Task 1-2、`ContentSource` は Task 3、`ArticleBlock` は Task 3-4、自作 CMS 仮 schema と再評価条件は Task 5、最終検証は Task 6 で扱う。
-- Placeholder scan: 未記入の作業、後回し前提の作業、詳細を読者へ委ねる作業は残していない。
-- Type consistency: `ArticleKind`, `Article`, `ArticleBlock`, `ContentSource`, `articleKindLabels`, `formatArticleDate`, `getAllArticles`, `getArticleBySlug`, `getArticleSlugs` を全 task で統一する。
+- spec 対応範囲: `CSS Modules` 統一は Task 1-2、`ContentSource` は Task 3、`ArticleBlock` は Task 3-4、自作 CMS 仮 schema と再評価条件は Task 5、最終検証は Task 6 で扱う。
+- 未記入確認: 未記入の作業、後回し前提の作業、詳細を読者へ委ねる作業は残していない。
+- 型の一貫性: `ArticleKind`, `Article`, `ArticleBlock`, `ContentSource`, `articleKindLabels`, `formatArticleDate`, `getAllArticles`, `getArticleBySlug`, `getArticleSlugs` を全 task で統一する。
