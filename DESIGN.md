@@ -19,19 +19,19 @@ colors:
   on-accent: "#FFF8EA"
 typography:
   display:
-    fontFamily: "Noto Serif JP, Source Serif 4, Yu Mincho, serif"
+    fontFamily: "Noto Sans JP, system-ui, sans-serif"
     fontSize: "2rem"
     fontWeight: "400"
     lineHeight: "1.2"
     letterSpacing: "0"
   heading:
-    fontFamily: "Noto Serif JP, Source Serif 4, Yu Mincho, serif"
+    fontFamily: "Noto Sans JP, system-ui, sans-serif"
     fontSize: "1.2rem"
     fontWeight: "400"
     lineHeight: "1.4"
     letterSpacing: "0"
   body:
-    fontFamily: "Noto Serif JP, Source Serif 4, Yu Mincho, serif"
+    fontFamily: "Noto Sans JP, system-ui, sans-serif"
     fontSize: "0.98rem"
     fontWeight: "400"
     lineHeight: "2"
@@ -194,7 +194,7 @@ Do:
 
 - 文章、日付、余白で人間の気配を出す。
 - 白に近い暖色の紙色を使う。
-- serif を中心にして、読み物としての統一感を出す。
+- sans-serif を中心にして、読み物としての統一感を出す。
 - 投稿を日付順に淡々と積み重ねる。
 - 遊び心は隠し味として扱う。
 
@@ -205,3 +205,13 @@ Don't:
 - 方向性の違うモチーフを同時に並べない。
 - 既存の個人サイトや手書き猫をそのまま真似しない。
 - 写真や重いテクスチャに雰囲気づくりを依存しない。
+
+## Implementation Notes
+
+実装上の styling 正本は `CSS Modules + CSS custom properties` とする。色、余白、角丸、monospace font などの runtime token は `web/src/styles/globals.css` の `:root` に置き、component 側 CSS は必要な値を custom property 経由で参照する。
+
+`Tailwind CSS` は採用しない。現行実装では `@import "tailwindcss"`、`@theme`、`@tailwindcss/postcss`、`tailwindcss` 依存、`web/postcss.config.js` を撤去済みである。CSS Modules と global CSS は `Next.js` 標準 CSS support で扱い、追加の PostCSS 設定を前提にしない。
+
+CSS Modules は責務別に分ける。共通 shell は `layout.module.css`、navigation は `navigation.module.css`、Home は `home.module.css`、Notes 一覧と detail metadata は `notes.module.css`、animation は `motion.module.css` に置く。
+
+記事本文と article block の styling は `web/src/components/site/article.module.css` に閉じる。`ArticleContent` は `ArticleBlock[]` を描画し、paragraph、heading、list、quote、code、image、callout、linkCard、gallery の表示寸法、余白、caption、border をこの module で管理する。CMS 由来の block に差し替わっても、route や他 component へ記事本文固有の CSS を広げない。

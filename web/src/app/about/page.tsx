@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import styles from "../../components/site/site.module.css";
+import homeStyles from "../../components/site/home.module.css";
 import { SiteShell } from "../../components/site/SiteShell";
 
 export const metadata: Metadata = {
@@ -12,20 +12,20 @@ export default function AboutPage() {
   return (
     <SiteShell currentPage="about">
       <section
-        className={`${styles.hero} ${styles.heroAbout}`}
+        className={`${homeStyles.hero} ${homeStyles.heroAbout}`}
         aria-labelledby="about-title"
       >
-        <h1 id="about-title" className={styles.pageTitle}>
+        <h1 id="about-title" className={homeStyles.pageTitle}>
           このサイトについて
         </h1>
-        <p className={styles.lead}>
+        <p className={homeStyles.lead}>
           こんにちは、Koh Yonamine です。
           <br />
           沖縄でソフトウェアエンジニアをしています 🌺
         </p>
       </section>
 
-      <section className={styles.bodyText} aria-label="プロフィール">
+      <section className={homeStyles.bodyText} aria-label="プロフィール">
         <p>
           普段の業務では Web システムの開発に携わっています。
           最近は AI Agent と一緒に開発すること、その開発フロー自体を整えることに時間を使っています。

@@ -6,7 +6,7 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { HedgehogEmoji } from "./HedgehogEmoji";
 import { HedgehogRunner } from "./HedgehogRunner";
 import { HelloBubble } from "./HelloBubble";
-import styles from "./site.module.css";
+import homeStyles from "./home.module.css";
 
 const LAP_DURATION_MS = 4300;
 
@@ -35,17 +35,17 @@ export const HomeIntro = () => {
   };
 
   return (
-    <div className={styles.nameHeading}>
+    <div className={homeStyles.nameHeading}>
       <h1 id="home-title">
         <HelloBubble key={cycle} hidden={isRunning} />
       </h1>
       {isReduced ? (
         <span aria-hidden="true">
-          <HedgehogEmoji className={styles.hedgehogEmoji} />
+          <HedgehogEmoji className={homeStyles.hedgehogEmoji} />
         </span>
       ) : (
         <HedgehogRunner
-          className={styles.hedgehogEmoji}
+          className={homeStyles.hedgehogEmoji}
           isRunning={isRunning}
           onClick={handleHedgehogClick}
         />

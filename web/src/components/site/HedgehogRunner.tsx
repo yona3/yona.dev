@@ -1,7 +1,8 @@
 "use client";
 
 import { HedgehogEmoji } from "./HedgehogEmoji";
-import styles from "./site.module.css";
+import homeStyles from "./home.module.css";
+import motionStyles from "./motion.module.css";
 
 type Props = {
   className?: string;
@@ -13,11 +14,11 @@ export const HedgehogRunner = ({ className, isRunning, onClick: handleClick }: P
   return (
     <button
       aria-label="ハリネズミを走らせる"
-      className={`${styles.hedgehogButton} ${isRunning ? styles.hedgehogRunning : ""}`}
+      className={`${homeStyles.hedgehogButton} ${motionStyles.wobbleButton} ${isRunning ? motionStyles.hedgehogRunning : ""}`}
       onClick={handleClick}
       type="button"
     >
-      <span className={styles.hedgehogWobbleHost}>
+      <span className={`${homeStyles.hedgehogWobbleHost} ${motionStyles.wobbleTarget}`}>
         <HedgehogEmoji className={className} />
       </span>
     </button>

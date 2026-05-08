@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import styles from "./site.module.css";
+import layoutStyles from "./layout.module.css";
+import navigationStyles from "./navigation.module.css";
 
 type CurrentPage = "home" | "about" | "notes";
 
@@ -20,7 +21,7 @@ const CoffeeEmoji = () => {
   return (
     <svg
       aria-hidden="true"
-      className={styles.coffeeEmoji}
+      className={layoutStyles.coffeeEmoji}
       focusable="false"
       viewBox="0 0 64 64"
     >
@@ -64,13 +65,13 @@ const CoffeeEmoji = () => {
 
 export const SiteShell = ({ children, currentPage }: Props) => {
   return (
-    <div className={styles.page}>
-      <div className={styles.shell}>
-        <header className={styles.header}>
-          <Link className={styles.brand} href="/">
+    <div className={layoutStyles.page}>
+      <div className={layoutStyles.shell}>
+        <header className={layoutStyles.header}>
+          <Link className={navigationStyles.brand} href="/">
             yona.dev
           </Link>
-          <nav className={styles.nav} aria-label="主要ナビゲーション">
+          <nav className={navigationStyles.nav} aria-label="主要ナビゲーション">
             {navItems.map((item) => (
               <Link
                 aria-current={currentPage === item.page ? "page" : undefined}
@@ -83,11 +84,11 @@ export const SiteShell = ({ children, currentPage }: Props) => {
           </nav>
         </header>
         <main id="main">{children}</main>
-        <p className={styles.constructionNotice} role="note">
+        <p className={layoutStyles.constructionNotice} role="note">
           <span aria-hidden="true">🚧</span>
           <span>このサイトは現在工事中です</span>
         </p>
-        <div className={styles.footer} aria-hidden="true">
+        <div className={layoutStyles.footer} aria-hidden="true">
           <CoffeeEmoji />
         </div>
       </div>

@@ -1,0 +1,190 @@
+.hero {
+  padding: 56px 0 80px;
+}
+
+.heroAbout {
+  padding-bottom: 32px;
+}
+
+.hero h1:not(.pageTitle) {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: clamp(0.95rem, 1.55vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.pageTitle {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: clamp(1.85rem, 3vw, 2rem);
+  font-weight: 400;
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.nameHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 56px;
+}
+
+.nameSpeech {
+  position: relative;
+  display: inline-block;
+  padding: 13px 30px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 999px;
+  background: var(--color-surface);
+  font-family: var(--font-rounded), "Hiragino Maru Gothic ProN", "Yu Gothic UI", system-ui, var(--font-emoji), sans-serif;
+}
+
+.nameSpeech::before,
+.nameSpeech::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  transform: translateX(-50%);
+}
+
+.nameSpeech::before {
+  bottom: -10px;
+  border-width: 10px 6px 0 6px;
+  border-color: var(--color-border-soft) transparent transparent transparent;
+}
+
+.nameSpeech::after {
+  bottom: -9px;
+  border-width: 9px 5px 0 5px;
+  border-color: var(--color-surface) transparent transparent transparent;
+}
+
+.nameCaret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 3px;
+  background: var(--color-secondary);
+  vertical-align: -0.12em;
+}
+
+.hedgehogEmoji {
+  display: block;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  color: var(--color-border);
+  opacity: 0.92;
+}
+
+.hedgehogButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: 0;
+}
+
+.hedgehogButton:focus-visible {
+  border-radius: 6px;
+  outline: 1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.hedgehogWobbleHost {
+  display: inline-flex;
+  transform-origin: bottom center;
+}
+
+.lead {
+  margin: 22px 0 0;
+  color: var(--color-secondary);
+  font-size: 0.98rem;
+  line-height: 2.05;
+  line-break: strict;
+  overflow-wrap: break-word;
+}
+
+.lead + .lead {
+  margin-top: 14px;
+}
+
+.section {
+  padding: 34px 0 46px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.sectionLink {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.sectionLink:hover {
+  color: var(--color-link);
+  text-decoration: underline;
+}
+
+.bodyText p {
+  margin: 0;
+  color: var(--color-secondary);
+  font-size: 0.96rem;
+  line-height: 2;
+  line-break: strict;
+  overflow-wrap: break-word;
+}
+
+.textLink {
+  color: var(--color-link);
+  margin: 0 0.25em;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 5px;
+}
+
+.bodyText {
+  display: grid;
+  gap: 20px;
+  padding: 0 0 50px;
+}
+
+@media (max-width: 680px) {
+  .hero {
+    padding: 54px 0 48px;
+  }
+
+  .hedgehogEmoji {
+    width: 34px;
+    height: 34px;
+  }
+}

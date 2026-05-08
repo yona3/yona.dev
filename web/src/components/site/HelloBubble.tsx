@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 
 import { useReducedMotion } from "../../hooks/useReducedMotion";
-import styles from "./site.module.css";
+import homeStyles from "./home.module.css";
+import layoutStyles from "./layout.module.css";
+import motionStyles from "./motion.module.css";
 
 const TEXT = "Hello, I'm yona!";
 const TYPE_DELAY_MS = 70;
@@ -39,17 +41,19 @@ export const HelloBubble = ({ hidden = false }: Props) => {
   }, [isReduced]);
 
   const className = hidden
-    ? `${styles.nameSpeech} ${styles.nameSpeechHidden}`
-    : styles.nameSpeech;
+    ? `${homeStyles.nameSpeech} ${motionStyles.bubbleOut}`
+    : `${homeStyles.nameSpeech} ${motionStyles.bubbleIn}`;
   const displayedText = isReduced ? TEXT : shown;
   const shouldShowCaret = !isReduced && isTyping && !hidden;
 
   return (
     <>
-      <span className={styles.visuallyHidden}>{TEXT}</span>
+      <span className={layoutStyles.visuallyHidden}>{TEXT}</span>
       <span aria-hidden="true" className={className}>
         <span>{displayedText}</span>
-        {shouldShowCaret && <span className={styles.nameCaret} />}
+        {shouldShowCaret && (
+          <span className={`${homeStyles.nameCaret} ${motionStyles.caretBlink}`} />
+        )}
       </span>
     </>
   );

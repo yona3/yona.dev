@@ -1,11 +1,12 @@
 import Link from "next/link";
 
 import { GitHubIcon, XIcon, ZennIcon } from "../components/icons/SocialIcons";
+import homeStyles from "../components/site/home.module.css";
 import { HomeIntro } from "../components/site/HomeIntro";
+import navigationStyles from "../components/site/navigation.module.css";
 import { NoteList } from "../components/site/NoteList";
-import styles from "../components/site/site.module.css";
 import { SiteShell } from "../components/site/SiteShell";
-import { getAllNotes } from "../lib/notes";
+import { getAllArticles } from "../lib/content";
 
 const socialLinks = [
   {
@@ -26,25 +27,25 @@ const socialLinks = [
 ];
 
 export default async function HomePage() {
-  const notes = await getAllNotes();
+  const notes = await getAllArticles();
   const recentNotes = notes.slice(0, 5);
   const hasMoreNotes = notes.length > recentNotes.length;
 
   return (
     <SiteShell currentPage="home">
-      <section className={styles.hero} aria-labelledby="home-title">
+      <section className={homeStyles.hero} aria-labelledby="home-title">
         <HomeIntro />
-        <p className={styles.lead}>
+        <p className={homeStyles.lead}>
           沖縄でソフトウェアエンジニアをしています 🌺
           <br />
           普段の業務では Web システムの開発に携わっています。
         </p>
-        <p className={styles.lead}>
+        <p className={homeStyles.lead}>
           最近は AI Agent
           と一緒に開発すること、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
           Notes に書いています ✏️
         </p>
-        <ul className={styles.socialLinks} aria-label="外部プロフィール">
+        <ul className={navigationStyles.socialLinks} aria-label="外部プロフィール">
           {socialLinks.map(({ href, label, icon: Icon }) => (
             <li key={href}>
               <a
@@ -53,18 +54,18 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <Icon className={styles.socialIcon} />
+                <Icon className={navigationStyles.socialIcon} />
               </a>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className={styles.section} aria-labelledby="recent-notes-title">
-        <div className={styles.sectionHeader}>
+      <section className={homeStyles.section} aria-labelledby="recent-notes-title">
+        <div className={homeStyles.sectionHeader}>
           <h2 id="recent-notes-title">Notes</h2>
           {hasMoreNotes && (
-            <Link className={styles.sectionLink} href="/notes">
+            <Link className={homeStyles.sectionLink} href="/notes">
               すべて見る
             </Link>
           )}

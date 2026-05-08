@@ -1,50 +1,33 @@
-import styles from "./site.module.css";
+import type { ArticleAsset, ArticleBlock } from "./types";
 
-type HeadingBlock = {
-  kind: "heading";
-  level: 1 | 2 | 3;
-  text: string;
-};
-
-type ParagraphBlock = {
-  kind: "paragraph";
-  text: string;
-};
-
-type ListBlock = {
-  kind: "list";
-  items: string[];
-};
-
-type CodeBlock = {
-  kind: "code";
-  code: string;
-};
-
-type BlockquoteBlock = {
-  kind: "blockquote";
-  text: string;
-};
-
-type MarkdownBlock =
-  | HeadingBlock
-  | ParagraphBlock
-  | ListBlock
-  | CodeBlock
-  | BlockquoteBlock;
-
-type Props = {
-  content: string;
-};
-
-const flushParagraph = (blocks: MarkdownBlock[], paragraph: string[]) => {
+const flushParagraph = (blocks: ArticleBlock[], paragraph: string[]) => {
   if (paragraph.length === 0) return;
   blocks.push({ kind: "paragraph", text: paragraph.join(" ") });
   paragraph.length = 0;
 };
 
-const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
-  const blocks: MarkdownBlock[] = [];
+const parseImageLine = (line: string): ArticleBlock | null => {
+  const match = line.match(
+    /^!\[(?<alt>[^\]]*)\]\((?<src>[^)\s]+)(?:\s+"(?<caption>[^"]+)")?\)$/,
+  );
+
+  if (!match?.groups) return null;
+
+  const asset: ArticleAsset = {
+    id: match.groups.src,
+    src: match.groups.src,
+    alt: match.groups.alt,
+  };
+
+  return {
+    kind: "image",
+    asset,
+    caption: match.groups.caption,
+  };
+};
+
+export const parseArticleBlocks = (content: string): ArticleBlock[] => {
+  const blocks: ArticleBlock[] = [];
   const paragraph: string[] = [];
   const lines = content.split("\n");
   let index = 0;
@@ -59,8 +42,29 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
       continue;
     }
 
+    if (trimmed.startsWith(":::callout")) {
+      flushParagraph(blocks, paragraph);
+      const tone = trimmed.includes("warning") ? "warning" : "note";
+      const calloutLines: string[] = [];
+      index += 1;
+
+      while (index < lines.length && lines[index]?.trim() !== ":::") {
+        calloutLines.push((lines[index] ?? "").trim());
+        index += 1;
+      }
+
+      if (lines[index]?.trim() !== ":::") {
+        throw new Error("Unclosed callout block");
+      }
+
+      blocks.push({ kind: "callout", tone, text: calloutLines.join(" ") });
+      index += 1;
+      continue;
+    }
+
     if (trimmed.startsWith("```")) {
       flushParagraph(blocks, paragraph);
+      const language = trimmed.slice(3).trim() || undefined;
       const codeLines: string[] = [];
       index += 1;
 
@@ -69,7 +73,11 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
         index += 1;
       }
 
-      blocks.push({ kind: "code", code: codeLines.join("\n") });
+      if (!lines[index]?.trim().startsWith("```")) {
+        throw new Error("Unclosed code block");
+      }
+
+      blocks.push({ kind: "code", code: codeLines.join("\n"), language });
       index += 1;
       continue;
     }
@@ -91,6 +99,14 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
     if (trimmed.startsWith("# ")) {
       flushParagraph(blocks, paragraph);
       blocks.push({ kind: "heading", level: 1, text: trimmed.slice(2) });
+      index += 1;
+      continue;
+    }
+
+    const imageBlock = parseImageLine(trimmed);
+    if (imageBlock) {
+      flushParagraph(blocks, paragraph);
+      blocks.push(imageBlock);
       index += 1;
       continue;
     }
@@ -117,8 +133,12 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
         index += 1;
       }
 
-      blocks.push({ kind: "blockquote", text: quoteLines.join(" ") });
+      blocks.push({ kind: "quote", text: quoteLines.join(" ") });
       continue;
+    }
+
+    if (trimmed.startsWith("::")) {
+      throw new Error(`Unsupported custom block syntax: ${trimmed}`);
     }
 
     paragraph.push(trimmed);
@@ -127,45 +147,4 @@ const parseMarkdownBlocks = (content: string): MarkdownBlock[] => {
 
   flushParagraph(blocks, paragraph);
   return blocks;
-};
-
-export const MarkdownContent = ({ content }: Props) => {
-  const blocks = parseMarkdownBlocks(content);
-
-  return (
-    <div className={styles.markdown}>
-      {blocks.map((block, index) => {
-        const key = `${block.kind}-${index}`;
-
-        if (block.kind === "heading") {
-          const Tag = `h${block.level}` as "h1" | "h2" | "h3";
-          return <Tag key={key}>{block.text}</Tag>;
-        }
-
-        if (block.kind === "list") {
-          return (
-            <ul key={key}>
-              {block.items.map((item, itemIndex) => (
-                <li key={`${index}-${itemIndex}`}>{item}</li>
-              ))}
-            </ul>
-          );
-        }
-
-        if (block.kind === "code") {
-          return (
-            <pre key={key}>
-              <code>{block.code}</code>
-            </pre>
-          );
-        }
-
-        if (block.kind === "blockquote") {
-          return <blockquote key={key}>{block.text}</blockquote>;
-        }
-
-        return <p key={key}>{block.text}</p>;
-      })}
-    </div>
-  );
 };

@@ -3,32 +3,23 @@ import path from "node:path";
 
 import { cache } from "react";
 
-export type NoteType = "article" | "note" | "log";
+import { parseArticleBlocks } from "./blocks";
+import type { Article, ArticleKind, ContentSource } from "./types";
 
-export type NoteMeta = {
+type ArticleFrontmatter = {
   title: string;
   slug: string;
   date: string;
-  type: NoteType;
+  type: ArticleKind;
   description: string;
   published: boolean;
-};
-
-export type Note = NoteMeta & {
-  content: string;
+  updatedAt?: string;
 };
 
 const notesDirectory = path.join(process.cwd(), "content", "notes");
+const articleKinds = new Set<ArticleKind>(["article", "note", "log"]);
 
-export const noteTypeLabels: Record<NoteType, string> = {
-  article: "記事",
-  note: "ノート",
-  log: "記録",
-};
-
-const noteTypes = new Set<NoteType>(["article", "note", "log"]);
-
-const normalizeNoteContent = (content: string, title: string): string => {
+const normalizeArticleContent = (content: string, title: string): string => {
   const trimmed = content.trim();
   const firstLineEnd = trimmed.indexOf("\n");
   const firstLine = firstLineEnd === -1 ? trimmed : trimmed.slice(0, firstLineEnd);
@@ -49,7 +40,7 @@ const parseFrontmatterValue = (value: string): string | boolean => {
 const parseFrontmatter = (
   source: string,
   fileName: string,
-): { meta: NoteMeta; content: string } => {
+): { data: ArticleFrontmatter; content: string } => {
   const match = source.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
 
   if (!match) {
@@ -82,50 +73,60 @@ const parseFrontmatter = (
     throw new Error(`Invalid frontmatter shape in ${fileName}`);
   }
 
-  if (!noteTypes.has(data.type as NoteType)) {
-    throw new Error(`Invalid note type in ${fileName}: ${data.type}`);
+  if (!articleKinds.has(data.type as ArticleKind)) {
+    throw new Error(`Invalid article kind in ${fileName}: ${data.type}`);
   }
 
   return {
-    meta: {
+    data: {
       title: data.title,
       slug: data.slug,
       date: data.date,
-      type: data.type as NoteType,
+      type: data.type as ArticleKind,
       description: data.description,
       published: data.published,
+      updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : undefined,
     },
-    content: normalizeNoteContent(content, data.title),
+    content: normalizeArticleContent(content, data.title),
   };
 };
 
-export const formatNoteDate = (date: string): string => {
-  return date.replaceAll("-", ".");
-};
-
-export const getAllNotes = cache(async (): Promise<Note[]> => {
+const getAllMarkdownArticles = cache(async (): Promise<Article[]> => {
   const fileNames = await fs.readdir(notesDirectory);
-  const notes = await Promise.all(
+  const articles = await Promise.all(
     fileNames
       .filter((fileName) => fileName.endsWith(".md"))
       .map(async (fileName) => {
         const source = await fs.readFile(path.join(notesDirectory, fileName), "utf8");
-        const { meta, content } = parseFrontmatter(source, fileName);
-        return { ...meta, content };
+        const { data, content } = parseFrontmatter(source, fileName);
+
+        return {
+          id: data.slug,
+          slug: data.slug,
+          title: data.title,
+          description: data.description,
+          publishedAt: data.date,
+          updatedAt: data.updatedAt,
+          kind: data.type,
+          isPublished: data.published,
+          blocks: parseArticleBlocks(content),
+        } satisfies Article;
       }),
   );
 
-  return notes
-    .filter((note) => note.published)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  return articles
+    .filter((article) => article.isPublished)
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 });
 
-export const getNoteBySlug = async (slug: string): Promise<Note | null> => {
-  const notes = await getAllNotes();
-  return notes.find((note) => note.slug === slug) ?? null;
-};
-
-export const getNoteSlugs = async (): Promise<string[]> => {
-  const notes = await getAllNotes();
-  return notes.map((note) => note.slug);
+export const markdownSource: ContentSource = {
+  getAllArticles: getAllMarkdownArticles,
+  async getArticleBySlug(slug) {
+    const articles = await getAllMarkdownArticles();
+    return articles.find((article) => article.slug === slug) ?? null;
+  },
+  async getArticleSlugs() {
+    const articles = await getAllMarkdownArticles();
+    return articles.map((article) => article.slug);
+  },
 };

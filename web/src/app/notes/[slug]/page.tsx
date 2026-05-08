@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { MarkdownContent } from "../../../components/site/MarkdownContent";
-import styles from "../../../components/site/site.module.css";
+import { ArticleContent } from "../../../components/site/ArticleContent";
+import notesStyles from "../../../components/site/notes.module.css";
 import { SiteShell } from "../../../components/site/SiteShell";
 import {
-  formatNoteDate,
-  getNoteBySlug,
-  getNoteSlugs,
-  noteTypeLabels,
-} from "../../../lib/notes";
+  articleKindLabels,
+  formatArticleDate,
+  getArticleBySlug,
+  getArticleSlugs,
+} from "../../../lib/content";
 
 type Params = {
   slug: string;
@@ -20,30 +20,30 @@ type Props = {
 };
 
 export const generateStaticParams = async (): Promise<Params[]> => {
-  const slugs = await getNoteSlugs();
+  const slugs = await getArticleSlugs();
   return slugs.map((slug) => ({ slug }));
 };
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
   const { slug } = await params;
-  const note = await getNoteBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
-  if (!note) {
+  if (!article) {
     return {
       title: "Note not found | Koh Yonamine",
     };
   }
 
   return {
-    title: `${note.title} | Koh Yonamine`,
-    description: note.description,
+    title: `${article.title} | Koh Yonamine`,
+    description: article.description,
     alternates: {
-      canonical: `https://yona.dev/notes/${note.slug}`,
+      canonical: `https://yona.dev/notes/${article.slug}`,
     },
     openGraph: {
-      title: note.title,
-      description: note.description,
-      url: `https://yona.dev/notes/${note.slug}`,
+      title: article.title,
+      description: article.description,
+      url: `https://yona.dev/notes/${article.slug}`,
       siteName: "yona.dev",
       type: "article",
     },
@@ -52,22 +52,26 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 export default async function NoteDetailPage({ params }: Props) {
   const { slug } = await params;
-  const note = await getNoteBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
-  if (!note) {
+  if (!article) {
     notFound();
   }
 
   return (
     <SiteShell currentPage="notes">
-      <article className={styles.noteArticle}>
-        <div className={styles.noteMeta}>
-          <time dateTime={note.date}>{formatNoteDate(note.date)}</time>
-          <span className={styles.noteType}>{noteTypeLabels[note.type]}</span>
+      <article className={notesStyles.noteArticle}>
+        <div className={notesStyles.noteMeta}>
+          <time dateTime={article.publishedAt}>
+            {formatArticleDate(article.publishedAt)}
+          </time>
+          <span className={notesStyles.noteType}>
+            {articleKindLabels[article.kind]}
+          </span>
         </div>
-        <h1>{note.title}</h1>
-        <MarkdownContent content={note.content} />
-        <div className={styles.noteEnd} aria-hidden="true">
+        <h1>{article.title}</h1>
+        <ArticleContent blocks={article.blocks} />
+        <div className={notesStyles.noteEnd} aria-hidden="true">
           * * *
         </div>
       </article>

@@ -1,0 +1,109 @@
+.bubbleIn {
+  animation: bubbleIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.bubbleOut {
+  animation: bubbleOut 0.28s ease-out forwards;
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bubbleOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+}
+
+.caretBlink {
+  animation: caretBlink 0.9s step-end infinite;
+}
+
+@keyframes caretBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.wobbleButton:hover .wobbleTarget {
+  animation: hedgehogWobble 0.9s ease-in-out infinite;
+}
+
+@keyframes hedgehogWobble {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  25% {
+    transform: rotate(-3deg) translateY(-1px);
+  }
+  75% {
+    transform: rotate(3deg) translateY(-1px);
+  }
+}
+
+.hedgehogRunning {
+  animation: hedgehogLap 4.3s linear both;
+  pointer-events: none;
+}
+
+@keyframes hedgehogLap {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  47% {
+    transform: translateX(-55vw);
+    opacity: 1;
+  }
+  48% {
+    transform: translateX(-55vw);
+    opacity: 0;
+  }
+  52% {
+    transform: translateX(55vw);
+    opacity: 0;
+  }
+  53% {
+    transform: translateX(55vw);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubbleIn,
+  .bubbleOut {
+    animation: none;
+  }
+
+  .bubbleOut {
+    opacity: 0;
+  }
+
+  .caretBlink {
+    animation: none;
+    opacity: 0;
+  }
+
+  .hedgehogRunning,
+  .wobbleButton:hover .wobbleTarget {
+    animation: none;
+  }
+}
