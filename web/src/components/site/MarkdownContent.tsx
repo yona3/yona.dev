@@ -1,4 +1,4 @@
-import styles from "./site.module.css";
+import articleStyles from "./article.module.css";
 
 type HeadingBlock = {
   kind: "heading";
@@ -133,7 +133,7 @@ export const MarkdownContent = ({ content }: Props) => {
   const blocks = parseMarkdownBlocks(content);
 
   return (
-    <div className={styles.markdown}>
+    <div className={articleStyles.markdown}>
       {blocks.map((block, index) => {
         const key = `${block.kind}-${index}`;
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MarkdownContent } from "../../../components/site/MarkdownContent";
-import styles from "../../../components/site/site.module.css";
+import notesStyles from "../../../components/site/notes.module.css";
 import { SiteShell } from "../../../components/site/SiteShell";
 import {
   formatNoteDate,
@@ -60,14 +60,14 @@ export default async function NoteDetailPage({ params }: Props) {
 
   return (
     <SiteShell currentPage="notes">
-      <article className={styles.noteArticle}>
-        <div className={styles.noteMeta}>
+      <article className={notesStyles.noteArticle}>
+        <div className={notesStyles.noteMeta}>
           <time dateTime={note.date}>{formatNoteDate(note.date)}</time>
-          <span className={styles.noteType}>{noteTypeLabels[note.type]}</span>
+          <span className={notesStyles.noteType}>{noteTypeLabels[note.type]}</span>
         </div>
         <h1>{note.title}</h1>
         <MarkdownContent content={note.content} />
-        <div className={styles.noteEnd} aria-hidden="true">
+        <div className={notesStyles.noteEnd} aria-hidden="true">
           * * *
         </div>
       </article>
