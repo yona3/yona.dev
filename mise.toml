@@ -41,4 +41,5 @@ dir = "{{config_root}}/web"
 
 [tasks.verify]
 description = "Run all verification checks"
-depends = ["lint", "test", "test:e2e"]
+run = "pnpm lint && pnpm test && pnpm build && pnpm test:e2e"
+dir = "{{config_root}}/web"
