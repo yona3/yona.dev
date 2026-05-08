@@ -1,131 +1,81 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import {
+  type Article,
+  type ArticleBlock,
+  type ArticleKind,
+  articleKindLabels,
+  formatArticleDate,
+  getAllArticles,
+  getArticleBySlug,
+  getArticleSlugs,
+} from "./content";
 
-import { cache } from "react";
+export type { ArticleKind as NoteType };
+export { formatArticleDate as formatNoteDate, articleKindLabels as noteTypeLabels };
 
-export type NoteType = "article" | "note" | "log";
-
-export type NoteMeta = {
-  title: string;
-  slug: string;
+export type Note = Article & {
   date: string;
-  type: NoteType;
-  description: string;
-  published: boolean;
-};
-
-export type Note = NoteMeta & {
+  type: ArticleKind;
   content: string;
 };
 
-const notesDirectory = path.join(process.cwd(), "content", "notes");
-
-export const noteTypeLabels: Record<NoteType, string> = {
-  article: "記事",
-  note: "ノート",
-  log: "記録",
-};
-
-const noteTypes = new Set<NoteType>(["article", "note", "log"]);
-
-const normalizeNoteContent = (content: string, title: string): string => {
-  const trimmed = content.trim();
-  const firstLineEnd = trimmed.indexOf("\n");
-  const firstLine = firstLineEnd === -1 ? trimmed : trimmed.slice(0, firstLineEnd);
-
-  if (firstLine.trim() !== `# ${title}`) {
-    return trimmed;
+const blockToMarkdown = (block: ArticleBlock): string => {
+  if (block.kind === "heading") {
+    return `${"#".repeat(block.level)} ${block.text}`;
   }
 
-  return firstLineEnd === -1 ? "" : trimmed.slice(firstLineEnd + 1).trimStart();
-};
-
-const parseFrontmatterValue = (value: string): string | boolean => {
-  if (value === "true") return true;
-  if (value === "false") return false;
-  return value;
-};
-
-const parseFrontmatter = (
-  source: string,
-  fileName: string,
-): { meta: NoteMeta; content: string } => {
-  const match = source.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-
-  if (!match) {
-    throw new Error(`Missing frontmatter in ${fileName}`);
+  if (block.kind === "list") {
+    return block.items.map((item) => `- ${item}`).join("\n");
   }
 
-  const [, frontmatter, content] = match;
-  const entries = frontmatter.split("\n").map((line) => {
-    const separatorIndex = line.indexOf(":");
-
-    if (separatorIndex === -1) {
-      throw new Error(`Invalid frontmatter line in ${fileName}: ${line}`);
-    }
-
-    const key = line.slice(0, separatorIndex).trim();
-    const value = line.slice(separatorIndex + 1).trim();
-    return [key, parseFrontmatterValue(value)] as const;
-  });
-
-  const data = Object.fromEntries(entries);
-
-  if (
-    typeof data.title !== "string" ||
-    typeof data.slug !== "string" ||
-    typeof data.date !== "string" ||
-    typeof data.type !== "string" ||
-    typeof data.description !== "string" ||
-    typeof data.published !== "boolean"
-  ) {
-    throw new Error(`Invalid frontmatter shape in ${fileName}`);
+  if (block.kind === "quote") {
+    return block.text
+      .split("\n")
+      .map((line) => `> ${line}`)
+      .join("\n");
   }
 
-  if (!noteTypes.has(data.type as NoteType)) {
-    throw new Error(`Invalid note type in ${fileName}: ${data.type}`);
+  if (block.kind === "code") {
+    return `\`\`\`${block.language ?? ""}\n${block.code}\n\`\`\``;
   }
 
-  return {
-    meta: {
-      title: data.title,
-      slug: data.slug,
-      date: data.date,
-      type: data.type as NoteType,
-      description: data.description,
-      published: data.published,
-    },
-    content: normalizeNoteContent(content, data.title),
-  };
+  if (block.kind === "image") {
+    const caption = block.caption ? ` "${block.caption}"` : "";
+    return `![${block.asset.alt}](${block.asset.src}${caption})`;
+  }
+
+  if (block.kind === "callout") {
+    const tone = block.tone === "warning" ? " warning" : "";
+    return `:::callout${tone}\n${block.text}\n:::`;
+  }
+
+  if (block.kind === "linkCard") {
+    return block.description
+      ? `${block.title}\n${block.url}\n${block.description}`
+      : `${block.title}\n${block.url}`;
+  }
+
+  if (block.kind === "gallery") {
+    return block.images.map((image) => `![${image.alt}](${image.src})`).join("\n");
+  }
+
+  return block.text;
 };
 
-export const formatNoteDate = (date: string): string => {
-  return date.replaceAll("-", ".");
-};
-
-export const getAllNotes = cache(async (): Promise<Note[]> => {
-  const fileNames = await fs.readdir(notesDirectory);
-  const notes = await Promise.all(
-    fileNames
-      .filter((fileName) => fileName.endsWith(".md"))
-      .map(async (fileName) => {
-        const source = await fs.readFile(path.join(notesDirectory, fileName), "utf8");
-        const { meta, content } = parseFrontmatter(source, fileName);
-        return { ...meta, content };
-      }),
-  );
-
-  return notes
-    .filter((note) => note.published)
-    .sort((a, b) => b.date.localeCompare(a.date));
+const articleToNote = (article: Article): Note => ({
+  ...article,
+  date: article.publishedAt,
+  type: article.kind,
+  content: article.blocks.map(blockToMarkdown).join("\n\n"),
 });
 
-export const getNoteBySlug = async (slug: string): Promise<Note | null> => {
-  const notes = await getAllNotes();
-  return notes.find((note) => note.slug === slug) ?? null;
+export const getAllNotes = async (): Promise<Note[]> => {
+  const articles = await getAllArticles();
+  return articles.map(articleToNote);
 };
 
-export const getNoteSlugs = async (): Promise<string[]> => {
-  const notes = await getAllNotes();
-  return notes.map((note) => note.slug);
+export const getNoteBySlug = async (slug: string): Promise<Note | null> => {
+  const article = await getArticleBySlug(slug);
+  return article ? articleToNote(article) : null;
 };
+
+export const getNoteSlugs = getArticleSlugs;
