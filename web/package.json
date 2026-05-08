@@ -7,6 +7,7 @@
     "build": "if [ \"$ANALYZE\" = \"true\" ]; then next build --webpack; else next build; fi",
     "start": "next start",
     "lint": "eslint '**/*.@(js|ts|tsx)'",
+    "test": "vitest run",
     "format": "prettier --write . && pnpm lint --fix"
   },
   "dependencies": {
@@ -35,7 +36,8 @@
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "globals": "^17.5.0",
     "prettier": "^3.8.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   },
   "pnpm": {
     "overrides": {
