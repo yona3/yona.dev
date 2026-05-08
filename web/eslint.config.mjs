@@ -17,8 +17,6 @@ export default [
       "**/out/**",
       "**/.next/**",
       "eslint.config.mjs",
-      "tailwind.config.js",
-      "postcss.config.js",
       "next.config.ts",
     ],
   },
