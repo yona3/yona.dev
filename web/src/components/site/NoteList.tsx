@@ -1,10 +1,14 @@
 import Link from "next/link";
 
-import { formatNoteDate, type Note, noteTypeLabels } from "../../lib/notes";
+import {
+  type Article,
+  articleKindLabels,
+  formatArticleDate,
+} from "../../lib/content";
 import notesStyles from "./notes.module.css";
 
 type Props = {
-  notes: Note[];
+  notes: Article[];
 };
 
 export const NoteList = ({ notes }: Props) => {
@@ -12,8 +16,12 @@ export const NoteList = ({ notes }: Props) => {
     <ol className={notesStyles.noteList}>
       {notes.map((note) => (
         <li className={notesStyles.noteItem} key={note.slug}>
-          <time dateTime={note.date}>{formatNoteDate(note.date)}</time>
-          <span className={notesStyles.noteType}>{noteTypeLabels[note.type]}</span>
+          <time dateTime={note.publishedAt}>
+            {formatArticleDate(note.publishedAt)}
+          </time>
+          <span className={notesStyles.noteType}>
+            {articleKindLabels[note.kind]}
+          </span>
           <Link href={`/notes/${note.slug}`}>{note.title}</Link>
         </li>
       ))}

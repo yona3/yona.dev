@@ -1,4 +1,4 @@
-.markdown {
+.articleContent {
   display: grid;
   gap: 24px;
   margin-top: 36px;
@@ -7,9 +7,9 @@
   line-height: 1.95;
 }
 
-.markdown h1,
-.markdown h2,
-.markdown h3 {
+.articleContent h1,
+.articleContent h2,
+.articleContent h3 {
   color: var(--color-primary);
   font-weight: 400;
   line-height: 1.45;
@@ -17,48 +17,49 @@
   text-wrap: balance;
 }
 
-.markdown h1 {
+.articleContent h1 {
   margin: 56px 0 16px;
   font-size: 1.5rem;
 }
 
-.markdown h2 {
+.articleContent h2 {
   margin: 56px 0 16px;
   font-size: 1.25rem;
 }
 
-.markdown h3 {
+.articleContent h3 {
   margin: 36px 0 10px;
   font-size: 1rem;
   font-weight: 500;
 }
 
-.markdown p,
-.markdown ul,
-.markdown pre,
-.markdown blockquote {
+.articleContent p,
+.articleContent ul,
+.articleContent pre,
+.articleContent blockquote,
+.articleContent figure {
   margin: 0;
 }
 
-.markdown blockquote {
+.articleContent blockquote {
   padding: 0;
   color: var(--color-faint);
   font-size: 0.88rem;
 }
 
-.markdown p,
-.markdown li {
+.articleContent p,
+.articleContent li {
   line-break: strict;
   overflow-wrap: break-word;
 }
 
-.markdown ul {
+.articleContent ul {
   display: grid;
   gap: 8px;
   padding-left: 1.3em;
 }
 
-.markdown pre {
+.articleContent pre {
   overflow-x: auto;
   padding: 16px;
   border: 1px solid var(--color-border-soft);
@@ -68,4 +69,69 @@
   font-family: var(--font-mono), monospace;
   font-size: 0.9rem;
   line-height: 1.7;
+}
+
+.articleContent figure {
+  display: grid;
+  gap: 8px;
+}
+
+.articleContent img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.articleContent figcaption {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.callout {
+  padding: 16px;
+  border: 1px solid var(--color-border-soft);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-secondary);
+}
+
+.callout[data-tone="warning"] {
+  border-left-color: #b46a4a;
+  background: var(--color-surface-warm);
+}
+
+.linkCard {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.linkCard:hover {
+  border-color: var(--color-border);
+}
+
+.linkCard strong {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.linkCard span {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }

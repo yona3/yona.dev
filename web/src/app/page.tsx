@@ -6,7 +6,7 @@ import { HomeIntro } from "../components/site/HomeIntro";
 import navigationStyles from "../components/site/navigation.module.css";
 import { NoteList } from "../components/site/NoteList";
 import { SiteShell } from "../components/site/SiteShell";
-import { getAllNotes } from "../lib/notes";
+import { getAllArticles } from "../lib/content";
 
 const socialLinks = [
   {
@@ -27,7 +27,7 @@ const socialLinks = [
 ];
 
 export default async function HomePage() {
-  const notes = await getAllNotes();
+  const notes = await getAllArticles();
   const recentNotes = notes.slice(0, 5);
   const hasMoreNotes = notes.length > recentNotes.length;
 

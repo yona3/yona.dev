@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import homeStyles from "../../components/site/home.module.css";
 import { NoteList } from "../../components/site/NoteList";
 import { SiteShell } from "../../components/site/SiteShell";
-import { getAllNotes } from "../../lib/notes";
+import { getAllArticles } from "../../lib/content";
 
 export const metadata: Metadata = {
   title: "Notes | Koh Yonamine",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NotesPage() {
-  const notes = await getAllNotes();
+  const notes = await getAllArticles();
 
   return (
     <SiteShell currentPage="notes">
