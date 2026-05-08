@@ -9,13 +9,13 @@ import { createMarkdownSource } from "./markdown-source";
 const createdDirectories: string[] = [];
 
 const makeNotesDirectory = async (
-  files: Record<string, string>,
+  files: ReadonlyArray<readonly [fileName: string, content: string]>,
 ): Promise<string> => {
   const directory = await mkdtemp(path.join(tmpdir(), "yona-notes-"));
   createdDirectories.push(directory);
 
   await Promise.all(
-    Object.entries(files).map(([fileName, content]) =>
+    files.map(([fileName, content]) =>
       writeFile(path.join(directory, fileName), content),
     ),
   );
@@ -65,11 +65,11 @@ Draft body`;
 
 describe("createMarkdownSource", () => {
   it("returns only published articles sorted by publishedAt descending", async () => {
-    const directory = await makeNotesDirectory({
-      "new.md": publishedNew,
-      "old.md": publishedOld,
-      "draft.md": draft,
-    });
+    const directory = await makeNotesDirectory([
+      ["new.md", publishedNew],
+      ["old.md", publishedOld],
+      ["draft.md", draft],
+    ]);
     const source = createMarkdownSource(directory);
 
     const articles = await source.getAllArticles();
@@ -90,10 +90,10 @@ describe("createMarkdownSource", () => {
   });
 
   it("returns articles by slug and omits unpublished slugs", async () => {
-    const directory = await makeNotesDirectory({
-      "new.md": publishedNew,
-      "draft.md": draft,
-    });
+    const directory = await makeNotesDirectory([
+      ["new.md", publishedNew],
+      ["draft.md", draft],
+    ]);
     const source = createMarkdownSource(directory);
 
     await expect(source.getArticleSlugs()).resolves.toEqual(["new-note"]);
@@ -105,9 +105,7 @@ describe("createMarkdownSource", () => {
   });
 
   it("rejects Markdown without valid frontmatter", async () => {
-    const directory = await makeNotesDirectory({
-      "invalid.md": "No frontmatter",
-    });
+    const directory = await makeNotesDirectory([["invalid.md", "No frontmatter"]]);
     const source = createMarkdownSource(directory);
 
     await expect(source.getAllArticles()).rejects.toThrow(
@@ -116,8 +114,10 @@ describe("createMarkdownSource", () => {
   });
 
   it("rejects invalid frontmatter shape", async () => {
-    const directory = await makeNotesDirectory({
-      "invalid.md": `---
+    const directory = await makeNotesDirectory([
+      [
+        "invalid.md",
+        `---
 title: Invalid
 slug: invalid
 date: 2026-05-02
@@ -125,7 +125,8 @@ type: note
 description: Missing published
 ---
 Body`,
-    });
+      ],
+    ]);
     const source = createMarkdownSource(directory);
 
     await expect(source.getAllArticles()).rejects.toThrow(
@@ -134,8 +135,10 @@ Body`,
   });
 
   it("rejects unsupported article kinds", async () => {
-    const directory = await makeNotesDirectory({
-      "invalid-kind.md": `---
+    const directory = await makeNotesDirectory([
+      [
+        "invalid-kind.md",
+        `---
 title: Invalid Kind
 slug: invalid-kind
 date: 2026-05-02
@@ -144,7 +147,8 @@ description: Invalid kind
 published: true
 ---
 Body`,
-    });
+      ],
+    ]);
     const source = createMarkdownSource(directory);
 
     await expect(source.getAllArticles()).rejects.toThrow(
@@ -153,8 +157,10 @@ Body`,
   });
 
   it("rejects unsupported custom block syntax inside articles", async () => {
-    const directory = await makeNotesDirectory({
-      "custom.md": `---
+    const directory = await makeNotesDirectory([
+      [
+        "custom.md",
+        `---
 title: Custom Block
 slug: custom-block
 date: 2026-05-02
@@ -164,7 +170,8 @@ published: true
 ---
 ::unknown
 value`,
-    });
+      ],
+    ]);
     const source = createMarkdownSource(directory);
 
     await expect(source.getAllArticles()).rejects.toThrow(
