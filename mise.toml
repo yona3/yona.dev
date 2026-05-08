@@ -23,6 +23,17 @@ description = "Run ESLint"
 run = "pnpm lint"
 dir = "{{config_root}}/web"
 
+[tasks.test]
+description = "Run unit tests"
+run = "pnpm test"
+dir = "{{config_root}}/web"
+
+[tasks."test:e2e"]
+description = "Run E2E tests"
+depends = ["build"]
+run = "pnpm test:e2e"
+dir = "{{config_root}}/web"
+
 [tasks.format]
 description = "Format code with Prettier and fix lint"
 run = "pnpm format"
@@ -30,4 +41,4 @@ dir = "{{config_root}}/web"
 
 [tasks.verify]
 description = "Run all verification checks"
-depends = ["lint", "build"]
+depends = ["lint", "test", "test:e2e"]
