@@ -21,7 +21,8 @@
 - 最終検証: `mise run verify` は exit 0。`pnpm lint` と `pnpm build` が通過。`mise` のホーム配下 cache / tracking 書き込み警告は検証本体に影響なし。
 - project-local review 初回: `contract-reviewer` と `docs-ce-reviewer` が計画の commit 手順 / 証跡記録を指摘、`app-security-reviewer` が `linkCard.url` の protocol allowlist 不足を指摘、`ui-reviewer` は APPROVE。
 - 対応方針: commit 手順は `commit` skill 経由へ修正し、計画へ実行済み commit と検証結果を記録する。`ArticleContent` は `linkCard.url` を `http:` / `https:` のみ許可し、不正 protocol は build 時に失敗させる。
-- project-local review 最終: `contract-reviewer`、`app-security-reviewer`、`ui-reviewer`、`docs-ce-reviewer` はすべて APPROVE。未検証範囲は browser での視覚差分確認。
+- project-local review 最終: `contract-reviewer`、`app-security-reviewer`、`ui-reviewer`、`docs-ce-reviewer` はすべて APPROVE。browser での視覚差分確認は production server の screenshot で後追い確認した。
+- PR プレビュー: `mise run start` で `/`, `/notes`, `/notes/site-renewal` が 200。`/tmp/pr-codex-technology-selection-design-preview/` に desktop / mobile screenshot を保存した。
 
 ## ファイル構成
 
