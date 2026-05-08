@@ -6,6 +6,18 @@ type Props = {
   blocks: ArticleBlock[];
 };
 
+const allowedLinkProtocols = new Set(["http:", "https:"]);
+
+const getSafeExternalHref = (url: string): string => {
+  const parsed = new URL(url);
+
+  if (!allowedLinkProtocols.has(parsed.protocol)) {
+    throw new Error(`Unsupported linkCard URL protocol: ${parsed.protocol}`);
+  }
+
+  return parsed.toString();
+};
+
 export const ArticleContent = ({ blocks }: Props) => {
   return (
     <div className={styles.articleContent}>
@@ -62,10 +74,12 @@ export const ArticleContent = ({ blocks }: Props) => {
         }
 
         if (block.kind === "linkCard") {
+          const href = getSafeExternalHref(block.url);
+
           return (
             <a
               className={styles.linkCard}
-              href={block.url}
+              href={href}
               key={key}
               rel="noopener noreferrer"
               target="_blank"
