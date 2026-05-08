@@ -70,11 +70,12 @@ published: true
 
 ## デザイン
 
-デザイン方針は [DESIGN.md](./DESIGN.md) が正本です。薄い紙色、serif typography、細い罫線、日付順 feed を中心にした `Bookish Warm Minimal` を採用しています。
+デザイン方針は [DESIGN.md](./DESIGN.md) が正本です。薄い紙色、sans-serif typography、細い罫線、日付順 feed を中心にした `Bookish Warm Minimal` を採用しています。
 
 関連メモ:
 
 - [docs/site-refresh.md](./docs/site-refresh.md)
+- [docs/tech-stack.md](./docs/tech-stack.md)
 
 ## 技術スタック
 
@@ -82,8 +83,8 @@ published: true
 | --- | --- |
 | フレームワーク | Next.js 16 / App Router |
 | 言語 | TypeScript |
-| スタイリング | Tailwind CSS 4 / CSS Modules / next/font |
-| コンテンツ | Markdown + frontmatter |
+| スタイリング | CSS Modules / CSS custom properties / next/font |
+| コンテンツ | Markdown + frontmatter / ContentSource / ArticleBlock |
 | 品質 | ESLint / Prettier |
 | デプロイ | Vercel |
 

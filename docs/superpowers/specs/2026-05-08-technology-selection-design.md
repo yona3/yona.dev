@@ -19,7 +19,7 @@ yona.dev は個人誌として、技術記事、ノート、作業記録を `Not
 
 第一段階では、次を主系統にしない。
 
-- `Tailwind CSS`: 使っていない utility 系統を増やさず、撤去候補にする
+- `Tailwind CSS`: 撤去済み。使っていない utility 系統を再導入しない
 - `Astro`: すぐ移行せず、静的記事中心が続く場合の再評価枠に置く
 - `Cloudflare Pages` / `Cloudflare Workers`: すぐ移行せず、Vercel 依存が問題になった時の再評価枠に置く
 - `vanilla-extract` / `Panda CSS`: 今の規模では採用せず、複数 theme や管理画面込みの design system が必要になった時に再評価する
@@ -28,7 +28,7 @@ yona.dev は個人誌として、技術記事、ノート、作業記録を `Not
 
 設計の基準は「将来自作 CMS に差し替えられる個人サイト基盤」である。今すぐ CMS は作らず、当面は `web/content/notes/*.md` を正本にする。ただしアプリ側は Markdown ファイルを直接前提にせず、`ContentSource` 境界を通して `Article` と `ArticleBlock[]` を受け取る構造へ寄せる。
 
-初期の流れは次の通り。
+現行の流れは次の通り。
 
 1. `MarkdownSource` が repo 内 Markdown と frontmatter を読む。
 2. `MarkdownSource` が `Article` と `ArticleBlock[]` を返す。
@@ -39,7 +39,7 @@ yona.dev は個人誌として、技術記事、ノート、作業記録を `Not
 
 ## ContentSource contract
 
-`ContentSource` は、最初から複雑な repository layer にしない。現在の `getAllNotes`, `getNoteBySlug`, `getNoteSlugs` に近い呼び出し口を保ち、入力元だけを閉じ込める。
+`ContentSource` は、最初から複雑な repository layer にしない。旧 `getAllNotes`, `getNoteBySlug`, `getNoteSlugs` に近い呼び出し口を保ち、入力元だけを閉じ込める。現行 route は `getAllArticles`, `getArticleBySlug`, `getArticleSlugs` を使い、旧 `lib/notes` は削除済みである。
 
 想定する公開関数:
 
@@ -63,7 +63,7 @@ yona.dev は個人誌として、技術記事、ノート、作業記録を `Not
 
 ## ArticleBlock schema
 
-本文は Markdown 文字列をそのまま renderer に渡し続けるのではなく、段階的に `ArticleBlock[]` へ寄せる。
+本文は Markdown 文字列をそのまま renderer に渡さず、`ArticleBlock[]` へ変換する。旧 `MarkdownContent` は削除済みで、現行 renderer は `ArticleContent` である。
 
 初期 block:
 
@@ -77,15 +77,15 @@ yona.dev は個人誌として、技術記事、ノート、作業記録を `Not
 - `linkCard`
 - `gallery`
 
-`callout`, `linkCard`, `gallery` は MDX 的な自由実行ではなく、将来自作 CMS の入力 UI でも扱える定型 block とする。未知の syntax は黙って崩すのではなく、build 時に失敗させる。
+`callout`, `linkCard`, `gallery` は MDX 的な自由実行ではなく、将来自作 CMS の入力 UI でも扱える定型 block とする。現行 Markdown parser は `:::callout` を受け入れ、未知の `::` custom syntax は黙って崩さず build 時に失敗させる。
 
 自作 CMS 側の仮 schema は、`articles` と `assets` を分ける。画像は `assetId`, `alt`, `width`, `height`, `blurData?` を持ち、記事 block は asset を参照する。CMS 実装時はこの schema に合わせて API を作れば、サイト側 renderer を大きく変えずに済む。
 
 ## Styling
 
-スタイリングは `CSS Modules + CSS custom properties` に統一する。`Tailwind CSS` は主系統にしない。実装で utility class を使わない方針にし、移行計画では `@import "tailwindcss"`, `@tailwindcss/postcss`, `tailwindcss` 依存を削除候補にする。
+スタイリングは `CSS Modules + CSS custom properties` に統一する。`Tailwind CSS` は主系統にせず、現行実装から撤去済みである。`@import "tailwindcss"`, `@theme`, `@tailwindcss/postcss`, `tailwindcss` 依存は使わない。`web/postcss.config.js` も削除済みで、CSS Modules と global CSS は `Next.js` 標準 CSS support で扱う。
 
-CSS は現在の `site.module.css` から責務別に分割する。候補は次の通り。
+CSS は旧 `site.module.css` から責務別に分割済みである。現行 module は次の通り。
 
 - `layout.module.css`
 - `home.module.css`
@@ -125,16 +125,16 @@ design token は `globals.css` の `:root` に集約する。色、font、spacin
 
 ## 移行順序
 
-実装計画では、戻しやすい順に切る。
+実装は戻しやすい順に完了した。現行状態は次の通り。
 
-1. `Tailwind CSS` 使用状況を確認し、`CSS Modules + CSS custom properties` 統一の方針を実装へ反映する。
-2. `site.module.css` を責務別 module に分割し、見た目を変えない。
-3. `DESIGN.md` と `globals.css` の token を同期する。
-4. `ContentSource` 境界を作り、現行 route が境界経由で記事を読むようにする。
-5. `Article` と `ArticleBlock[]` の最小 schema を導入する。
-6. 既存 Markdown renderer を block renderer へ段階的に寄せる。
-7. 自作 CMS の仮 schema と API 方向を docs に固定する。
-8. `Astro`, `Cloudflare`, 型付き styling の再評価条件を docs に残す。
+1. `Tailwind CSS` 使用状況を確認し、`CSS Modules + CSS custom properties` 統一へ移行済み。
+2. `site.module.css` を `layout`, `navigation`, `home`, `notes`, `article`, `motion` の責務別 module に分割済み。
+3. `DESIGN.md` と `globals.css` の token を同期済み。
+4. `ContentSource` 境界を作り、現行 route が境界経由で記事を読むように移行済み。
+5. `Article` と `ArticleBlock[]` の最小 schema を導入済み。
+6. 旧 Markdown renderer を削除し、`ArticleContent` の block renderer へ移行済み。
+7. 自作 CMS の仮 schema と API 方向を `docs/tech-stack.md` に固定済み。
+8. `Astro`, `Cloudflare`, 型付き styling の再評価条件を `docs/tech-stack.md` に記録済み。
 
 ## 外部参照
 
