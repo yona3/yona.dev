@@ -79,11 +79,23 @@ describe("article collection helpers", () => {
       createMarkdownArticle(draft, "draft.md"),
       createMarkdownArticle(publishedNew, "new.md"),
     ];
+    const publishedArticles = getPublishedArticles(articles);
+    const sorted = sortArticlesByPublishedAtDesc(publishedArticles);
 
-    expect(
-      sortArticlesByPublishedAtDesc(getPublishedArticles(articles)).map(
-        (article) => article.slug,
-      ),
-    ).toEqual(["new-note", "old-article"]);
+    expect(sorted.map((article) => article.slug)).toEqual([
+      "new-note",
+      "old-article",
+    ]);
+    expect(sorted).not.toBe(articles);
+    expect(sorted).not.toBe(publishedArticles);
+    expect(publishedArticles.map((article) => article.slug)).toEqual([
+      "old-article",
+      "new-note",
+    ]);
+    expect(articles.map((article) => article.slug)).toEqual([
+      "old-article",
+      "draft-log",
+      "new-note",
+    ]);
   });
 });
