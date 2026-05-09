@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 import { GitHubIcon, XIcon, ZennIcon } from "../components/icons/SocialIcons";
-import homeStyles from "../components/site/home.module.css";
 import { HomeIntro } from "../components/site/HomeIntro";
 import navigationStyles from "../components/site/navigation.module.css";
 import { NoteList } from "../components/site/NoteList";
+import pageStyles from "../components/site/page.module.css";
 import { PageHero } from "../components/site/PageHero";
 import { PageSection } from "../components/site/PageSection";
 import { SiteShell } from "../components/site/SiteShell";
@@ -37,12 +37,12 @@ export default async function HomePage() {
     <SiteShell currentPage="home">
       <PageHero labelledBy="home-title">
         <HomeIntro />
-        <p className={homeStyles.lead}>
+        <p className={pageStyles.lead}>
           沖縄でソフトウェアエンジニアをしています 🌺
           <br />
           普段の業務では Web システムの開発に携わっています。
         </p>
-        <p className={homeStyles.lead}>
+        <p className={pageStyles.lead}>
           最近は AI Agent
           と一緒に開発すること、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
           Notes に書いています ✏️
@@ -66,7 +66,7 @@ export default async function HomePage() {
       <PageSection
         action={
           hasMoreNotes && (
-            <Link className={homeStyles.sectionLink} href="/notes">
+            <Link className={pageStyles.sectionLink} href="/notes">
               すべて見る
             </Link>
           )

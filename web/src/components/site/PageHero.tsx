@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import homeStyles from "./home.module.css";
+import pageStyles from "./page.module.css";
 
 type Props = {
   children?: ReactNode;
@@ -17,13 +17,13 @@ export const PageHero = ({
 }: Props) => {
   const className =
     variant === "about"
-      ? `${homeStyles.hero} ${homeStyles.heroAbout}`
-      : homeStyles.hero;
+      ? `${pageStyles.hero} ${pageStyles.heroAbout}`
+      : pageStyles.hero;
 
   return (
     <section className={className} aria-labelledby={labelledBy}>
       {title && (
-        <h1 id={labelledBy} className={homeStyles.pageTitle}>
+        <h1 id={labelledBy} className={pageStyles.pageTitle}>
           {title}
         </h1>
       )}

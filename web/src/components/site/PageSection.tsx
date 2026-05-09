@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import homeStyles from "./home.module.css";
+import pageStyles from "./page.module.css";
 
 type Props = {
   action?: ReactNode;
@@ -19,12 +19,12 @@ export const PageSection = ({
 }: Props) => {
   return (
     <section
-      className={homeStyles.section}
+      className={pageStyles.section}
       aria-label={label}
       aria-labelledby={labelledBy}
     >
       {title && labelledBy && (
-        <div className={homeStyles.sectionHeader}>
+        <div className={pageStyles.sectionHeader}>
           <h2 id={labelledBy}>{title}</h2>
           {action}
         </div>
