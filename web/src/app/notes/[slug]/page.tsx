@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ArticleContent } from "../../../components/site/ArticleContent";
+import { NoteArticleHeader } from "../../../components/site/NoteArticleHeader";
 import notesStyles from "../../../components/site/notes.module.css";
 import { SiteShell } from "../../../components/site/SiteShell";
-import {
-  articleKindLabels,
-  formatArticleDate,
-  getArticleBySlug,
-  getArticleSlugs,
-} from "../../../lib/content";
+import { getArticleBySlug, getArticleSlugs } from "../../../lib/content";
 
 type Params = {
   slug: string;
@@ -61,15 +57,7 @@ export default async function NoteDetailPage({ params }: Props) {
   return (
     <SiteShell currentPage="notes">
       <article className={notesStyles.noteArticle}>
-        <div className={notesStyles.noteMeta}>
-          <time dateTime={article.publishedAt}>
-            {formatArticleDate(article.publishedAt)}
-          </time>
-          <span className={notesStyles.noteType}>
-            {articleKindLabels[article.kind]}
-          </span>
-        </div>
-        <h1>{article.title}</h1>
+        <NoteArticleHeader article={article} />
         <ArticleContent blocks={article.blocks} />
         <div className={notesStyles.noteEnd} aria-hidden="true">
           * * *
