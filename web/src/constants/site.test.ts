@@ -18,6 +18,18 @@ describe("site copy", () => {
     expect(siteCopy.notes.hero.title).toBe("Notes");
   });
 
+  it("preserves spaces that were rendered from JSX line breaks", () => {
+    expect(siteCopy.about.body.paragraphs[0][0]).toContain(
+      "携わっています。 最近は",
+    );
+    expect(siteCopy.about.body.paragraphs[1][0]).toContain(
+      "好きです。 このサイトも",
+    );
+    expect(siteCopy.notes.hero.leadParagraphs[0][0]).toContain(
+      "置いています。 まとまる前",
+    );
+  });
+
   it("provides shared shell labels and external profile links", () => {
     expect(siteInfo.name).toBe("yona.dev");
     expect(siteCopy.layout.navigationLabel).toBe("主要ナビゲーション");
