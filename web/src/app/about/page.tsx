@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import homeStyles from "../../components/site/home.module.css";
+import { PageHero } from "../../components/site/PageHero";
 import { SiteShell } from "../../components/site/SiteShell";
 
 export const metadata: Metadata = {
@@ -11,19 +12,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <SiteShell currentPage="about">
-      <section
-        className={`${homeStyles.hero} ${homeStyles.heroAbout}`}
-        aria-labelledby="about-title"
-      >
-        <h1 id="about-title" className={homeStyles.pageTitle}>
-          このサイトについて
-        </h1>
+      <PageHero labelledBy="about-title" title="このサイトについて" variant="about">
         <p className={homeStyles.lead}>
           こんにちは、Koh Yonamine です。
           <br />
           沖縄でソフトウェアエンジニアをしています 🌺
         </p>
-      </section>
+      </PageHero>
 
       <section className={homeStyles.bodyText} aria-label="プロフィール">
         <p>

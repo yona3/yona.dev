@@ -5,6 +5,8 @@ import homeStyles from "../components/site/home.module.css";
 import { HomeIntro } from "../components/site/HomeIntro";
 import navigationStyles from "../components/site/navigation.module.css";
 import { NoteList } from "../components/site/NoteList";
+import { PageHero } from "../components/site/PageHero";
+import { PageSection } from "../components/site/PageSection";
 import { SiteShell } from "../components/site/SiteShell";
 import { getAllArticles } from "../lib/content";
 
@@ -33,7 +35,7 @@ export default async function HomePage() {
 
   return (
     <SiteShell currentPage="home">
-      <section className={homeStyles.hero} aria-labelledby="home-title">
+      <PageHero labelledBy="home-title">
         <HomeIntro />
         <p className={homeStyles.lead}>
           沖縄でソフトウェアエンジニアをしています 🌺
@@ -59,19 +61,21 @@ export default async function HomePage() {
             </li>
           ))}
         </ul>
-      </section>
+      </PageHero>
 
-      <section className={homeStyles.section} aria-labelledby="recent-notes-title">
-        <div className={homeStyles.sectionHeader}>
-          <h2 id="recent-notes-title">Notes</h2>
-          {hasMoreNotes && (
+      <PageSection
+        action={
+          hasMoreNotes && (
             <Link className={homeStyles.sectionLink} href="/notes">
               すべて見る
             </Link>
-          )}
-        </div>
+          )
+        }
+        labelledBy="recent-notes-title"
+        title="Notes"
+      >
         <NoteList notes={recentNotes} />
-      </section>
+      </PageSection>
     </SiteShell>
   );
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
@@ -35,7 +36,7 @@ describe("PageSection", () => {
   it("renders a labelled section heading with an action", () => {
     const markup = renderToStaticMarkup(
       <PageSection
-        action={<a href="/notes">すべて見る</a>}
+        action={<Link href="/notes">すべて見る</Link>}
         labelledBy="recent-notes-title"
         title="Notes"
       >
