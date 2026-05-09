@@ -1,3 +1,4 @@
+import { fixupPluginRules } from "@eslint/compat";
 import js from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
@@ -52,9 +53,9 @@ export default [
     },
     plugins: {
       "@typescript-eslint": typescriptEslint,
-      react,
+      react: fixupPluginRules(react),
       "react-hooks": reactHooks,
-      "jsx-a11y": jsxA11y,
+      "jsx-a11y": fixupPluginRules(jsxA11y),
       "simple-import-sort": simpleImportSort,
       "@next/next": nextPlugin,
     },
