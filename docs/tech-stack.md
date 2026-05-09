@@ -16,6 +16,16 @@
 - `CSS Modules + CSS custom properties`: styling の主系統として採用する。
 - `Next.js` 標準 CSS support: CSS Modules と global CSS の処理に使う。追加の `web/postcss.config.js` は持たない。
 
+## 現行境界
+
+- `web/src/lib/content/frontmatter.ts`: frontmatter の抽出と validation。
+- `web/src/lib/content/markdown-article.ts`: Markdown source から `Article` への組み立て、公開 filter、日付降順 sort。
+- `web/src/lib/content/markdown-source.ts`: file system access、React `cache`、`ContentSource` adapter。
+- `web/src/components/site/PageHero.tsx` / `PageSection.tsx`: Home / About / Notes の page scaffold。
+- `web/src/components/site/NoteArticleHeader.tsx`: Notes detail の metadata と title 表示。
+- `web/src/components/site/page.module.css`: page scaffold 用 styling。
+- `web/src/components/site/home.module.css`: Home intro、speech bubble、hedgehog 用 styling。
+
 ## 非採用
 
 - `Tailwind CSS`: 撤去済み。utility class、`@import "tailwindcss"`、`@theme`、`@tailwindcss/postcss`、`tailwindcss` 依存は使わない。

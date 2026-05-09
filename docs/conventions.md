@@ -62,6 +62,25 @@ hidden runtime、pipeline directory、別形式の task artifact は増やしま
 - `/blog` と `/blog/[articleId]` は `/notes` への移行導線として扱う。
 - Open Graph、Twitter metadata、canonical URL は user-visible behavior として扱う。
 
+### App structure boundaries
+
+- content 境界は `web/src/lib/content/` に閉じる。`frontmatter.ts` は
+  frontmatter の抽出と validation、`markdown-article.ts` は Markdown から
+  `Article` への組み立て、`markdown-source.ts` は file system access、
+  React `cache`、`ContentSource` adapter を担当する。
+- route file は data fetch、metadata、redirect、`notFound`、page composition
+  に寄せる。繰り返す presentation は `web/src/components/site/` の component
+  に置き、Home / About / Notes の page scaffold は `PageHero` と
+  `PageSection` を使う。
+- Notes detail の metadata と title 表示は `NoteArticleHeader`、記事本文の
+  block rendering は `ArticleContent` に寄せる。route 側へ renderer 固有の
+  分岐を広げない。
+- styling は責務別 CSS Modules を維持する。page scaffold は `page.module.css`、
+  Home intro / speech bubble / hedgehog は `home.module.css`、Notes 一覧と
+  detail metadata は `notes.module.css`、記事本文は `article.module.css`、
+  shell は `layout.module.css`、navigation は `navigation.module.css`、
+  animation は `motion.module.css` に置く。
+
 ### Workspace 境界
 
 - root の task runner は `mise.toml`。

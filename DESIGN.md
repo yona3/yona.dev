@@ -212,6 +212,6 @@ Don't:
 
 `Tailwind CSS` は採用しない。現行実装では `@import "tailwindcss"`、`@theme`、`@tailwindcss/postcss`、`tailwindcss` 依存、`web/postcss.config.js` を撤去済みである。CSS Modules と global CSS は `Next.js` 標準 CSS support で扱い、追加の PostCSS 設定を前提にしない。
 
-CSS Modules は責務別に分ける。共通 shell は `layout.module.css`、navigation は `navigation.module.css`、Home は `home.module.css`、Notes 一覧と detail metadata は `notes.module.css`、animation は `motion.module.css` に置く。
+CSS Modules は責務別に分ける。page scaffold は `page.module.css`、Home intro / speech bubble / hedgehog は `home.module.css`、共通 shell は `layout.module.css`、navigation は `navigation.module.css`、Notes 一覧と detail metadata は `notes.module.css`、animation は `motion.module.css` に置く。
 
 記事本文と article block の styling は `web/src/components/site/article.module.css` に閉じる。`ArticleContent` は `ArticleBlock[]` を描画し、paragraph、heading、list、quote、code、image、callout、linkCard、gallery の表示寸法、余白、caption、border をこの module で管理する。CMS 由来の block に差し替わっても、route や他 component へ記事本文固有の CSS を広げない。

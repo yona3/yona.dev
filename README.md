@@ -85,7 +85,7 @@ published: true
 | 言語 | TypeScript |
 | スタイリング | CSS Modules / CSS custom properties / next/font |
 | コンテンツ | Markdown + frontmatter / ContentSource / ArticleBlock |
-| 品質 | ESLint / Prettier |
+| 品質 | ESLint / Prettier / Vitest / Playwright |
 | デプロイ | Vercel |
 
 ## 検証
