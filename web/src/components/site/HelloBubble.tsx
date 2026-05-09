@@ -7,15 +7,15 @@ import homeStyles from "./home.module.css";
 import layoutStyles from "./layout.module.css";
 import motionStyles from "./motion.module.css";
 
-const TEXT = "Hello, I'm yona!";
 const TYPE_DELAY_MS = 70;
 const TYPE_START_DELAY_MS = 320;
 
 type Props = {
   hidden?: boolean;
+  text: string;
 };
 
-export const HelloBubble = ({ hidden = false }: Props) => {
+export const HelloBubble = ({ hidden = false, text }: Props) => {
   const isReduced = useReducedMotion();
   const [shown, setShown] = useState("");
   const [isTyping, setIsTyping] = useState(true);
@@ -27,8 +27,8 @@ export const HelloBubble = ({ hidden = false }: Props) => {
       let i = 0;
       interval = window.setInterval(() => {
         i += 1;
-        setShown(TEXT.slice(0, i));
-        if (i >= TEXT.length) {
+        setShown(text.slice(0, i));
+        if (i >= text.length) {
           if (interval !== undefined) window.clearInterval(interval);
           setIsTyping(false);
         }
@@ -38,21 +38,23 @@ export const HelloBubble = ({ hidden = false }: Props) => {
       window.clearTimeout(start);
       if (interval !== undefined) window.clearInterval(interval);
     };
-  }, [isReduced]);
+  }, [isReduced, text]);
 
   const className = hidden
     ? `${homeStyles.nameSpeech} ${motionStyles.bubbleOut}`
     : `${homeStyles.nameSpeech} ${motionStyles.bubbleIn}`;
-  const displayedText = isReduced ? TEXT : shown;
+  const displayedText = isReduced ? text : shown;
   const shouldShowCaret = !isReduced && isTyping && !hidden;
 
   return (
     <>
-      <span className={layoutStyles.visuallyHidden}>{TEXT}</span>
+      <span className={layoutStyles.visuallyHidden}>{text}</span>
       <span aria-hidden="true" className={className}>
         <span>{displayedText}</span>
         {shouldShowCaret && (
-          <span className={`${homeStyles.nameCaret} ${motionStyles.caretBlink}`} />
+          <span
+            className={`${homeStyles.nameCaret} ${motionStyles.caretBlink}`}
+          />
         )}
       </span>
     </>

@@ -1,30 +1,35 @@
 import type { Metadata } from "next";
 
+import { CopyParagraph } from "../../components/site/CopyParagraph";
 import { NoteList } from "../../components/site/NoteList";
 import pageStyles from "../../components/site/page.module.css";
 import { PageHero } from "../../components/site/PageHero";
 import { PageSection } from "../../components/site/PageSection";
 import { SiteShell } from "../../components/site/SiteShell";
+import { siteCopy } from "../../constants/site";
 import { getAllArticles } from "../../lib/content";
 
-export const metadata: Metadata = {
-  title: "Notes | Koh Yonamine",
-  description: "技術記事、ノート、日々の記録。",
-};
+export const metadata: Metadata = siteCopy.notes.metadata;
 
 export default async function NotesPage() {
   const notes = await getAllArticles();
 
   return (
     <SiteShell currentPage="notes">
-      <PageHero labelledBy="notes-title" title="Notes">
-        <p className={pageStyles.lead}>
-          技術記事、考えたことのノート、作業記録を同じ場所に置いています。
-          まとまる前のことも、日付順にそのまま残します。
-        </p>
+      <PageHero
+        labelledBy={siteCopy.notes.hero.labelledBy}
+        title={siteCopy.notes.hero.title}
+      >
+        {siteCopy.notes.hero.leadParagraphs.map((lines, index) => (
+          <CopyParagraph
+            className={pageStyles.lead}
+            key={index}
+            lines={lines}
+          />
+        ))}
       </PageHero>
 
-      <PageSection label="ノート一覧">
+      <PageSection label={siteCopy.notes.listLabel}>
         <NoteList notes={notes} />
       </PageSection>
     </SiteShell>

@@ -1,21 +1,19 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import {
+  siteCopy,
+  siteInfo,
+  siteNavigationItems,
+  type SitePage,
+} from "../../constants/site";
 import layoutStyles from "./layout.module.css";
 import navigationStyles from "./navigation.module.css";
 
-type CurrentPage = "home" | "about" | "notes";
-
 type Props = {
   children: ReactNode;
-  currentPage: CurrentPage;
+  currentPage: SitePage;
 };
-
-const navItems: { href: string; label: string; page: CurrentPage }[] = [
-  { href: "/", label: "Home", page: "home" },
-  { href: "/about", label: "About", page: "about" },
-  { href: "/notes", label: "Notes", page: "notes" },
-];
 
 const CoffeeEmoji = () => {
   return (
@@ -69,10 +67,13 @@ export const SiteShell = ({ children, currentPage }: Props) => {
       <div className={layoutStyles.shell}>
         <header className={layoutStyles.header}>
           <Link className={navigationStyles.brand} href="/">
-            yona.dev
+            {siteInfo.name}
           </Link>
-          <nav className={navigationStyles.nav} aria-label="主要ナビゲーション">
-            {navItems.map((item) => (
+          <nav
+            className={navigationStyles.nav}
+            aria-label={siteCopy.layout.navigationLabel}
+          >
+            {siteNavigationItems.map((item) => (
               <Link
                 aria-current={currentPage === item.page ? "page" : undefined}
                 href={item.href}
@@ -86,7 +87,7 @@ export const SiteShell = ({ children, currentPage }: Props) => {
         <main id="main">{children}</main>
         <p className={layoutStyles.constructionNotice} role="note">
           <span aria-hidden="true">🚧</span>
-          <span>このサイトは現在工事中です</span>
+          <span>{siteCopy.layout.constructionNotice}</span>
         </p>
         <div className={layoutStyles.footer} aria-hidden="true">
           <CoffeeEmoji />
