@@ -96,4 +96,4 @@ published: true
 mise run verify
 ```
 
-`mise run verify` は lint と build を順に実行する唯一の hard guard です。
+`mise run verify` は lint、unit test、build、E2E を順に実行する唯一の hard guard です。
