@@ -16,7 +16,7 @@ type ArticleFrontmatter = {
   updatedAt?: string;
 };
 
-const notesDirectory = path.join(process.cwd(), "content", "notes");
+const defaultNotesDirectory = path.join(process.cwd(), "content", "notes");
 const articleKinds = new Set<ArticleKind>(["article", "note", "log"]);
 
 const normalizeArticleContent = (content: string, title: string): string => {
@@ -91,42 +91,48 @@ const parseFrontmatter = (
   };
 };
 
-const getAllMarkdownArticles = cache(async (): Promise<Article[]> => {
-  const fileNames = await fs.readdir(notesDirectory);
-  const articles = await Promise.all(
-    fileNames
-      .filter((fileName) => fileName.endsWith(".md"))
-      .map(async (fileName) => {
-        const source = await fs.readFile(path.join(notesDirectory, fileName), "utf8");
-        const { data, content } = parseFrontmatter(source, fileName);
+export const createMarkdownSource = (
+  notesDirectory = defaultNotesDirectory,
+): ContentSource => {
+  const getAllMarkdownArticles = cache(async (): Promise<Article[]> => {
+    const fileNames = await fs.readdir(notesDirectory);
+    const articles = await Promise.all(
+      fileNames
+        .filter((fileName) => fileName.endsWith(".md"))
+        .map(async (fileName) => {
+          const source = await fs.readFile(path.join(notesDirectory, fileName), "utf8");
+          const { data, content } = parseFrontmatter(source, fileName);
 
-        return {
-          id: data.slug,
-          slug: data.slug,
-          title: data.title,
-          description: data.description,
-          publishedAt: data.date,
-          updatedAt: data.updatedAt,
-          kind: data.type,
-          isPublished: data.published,
-          blocks: parseArticleBlocks(content),
-        } satisfies Article;
-      }),
-  );
+          return {
+            id: data.slug,
+            slug: data.slug,
+            title: data.title,
+            description: data.description,
+            publishedAt: data.date,
+            updatedAt: data.updatedAt,
+            kind: data.type,
+            isPublished: data.published,
+            blocks: parseArticleBlocks(content),
+          } satisfies Article;
+        }),
+    );
 
-  return articles
-    .filter((article) => article.isPublished)
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-});
+    return articles
+      .filter((article) => article.isPublished)
+      .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  });
 
-export const markdownSource: ContentSource = {
-  getAllArticles: getAllMarkdownArticles,
-  async getArticleBySlug(slug) {
-    const articles = await getAllMarkdownArticles();
-    return articles.find((article) => article.slug === slug) ?? null;
-  },
-  async getArticleSlugs() {
-    const articles = await getAllMarkdownArticles();
-    return articles.map((article) => article.slug);
-  },
+  return {
+    getAllArticles: getAllMarkdownArticles,
+    async getArticleBySlug(slug) {
+      const articles = await getAllMarkdownArticles();
+      return articles.find((article) => article.slug === slug) ?? null;
+    },
+    async getArticleSlugs() {
+      const articles = await getAllMarkdownArticles();
+      return articles.map((article) => article.slug);
+    },
+  };
 };
+
+export const markdownSource = createMarkdownSource();
