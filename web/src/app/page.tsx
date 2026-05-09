@@ -1,30 +1,30 @@
 import Link from "next/link";
+import type { ComponentType } from "react";
 
 import { GitHubIcon, XIcon, ZennIcon } from "../components/icons/SocialIcons";
-import homeStyles from "../components/site/home.module.css";
+import { CopyParagraph } from "../components/site/CopyParagraph";
 import { HomeIntro } from "../components/site/HomeIntro";
 import navigationStyles from "../components/site/navigation.module.css";
 import { NoteList } from "../components/site/NoteList";
+import pageStyles from "../components/site/page.module.css";
+import { PageHero } from "../components/site/PageHero";
+import { PageSection } from "../components/site/PageSection";
 import { SiteShell } from "../components/site/SiteShell";
+import {
+  siteCopy,
+  type SiteSocialLinkId,
+  siteSocialLinks,
+} from "../constants/site";
 import { getAllArticles } from "../lib/content";
 
-const socialLinks = [
-  {
-    href: "https://github.com/yona3",
-    label: "GitHub",
-    icon: GitHubIcon,
-  },
-  {
-    href: "https://x.com/yonah6g",
-    label: "X",
-    icon: XIcon,
-  },
-  {
-    href: "https://zenn.dev/yonajs",
-    label: "Zenn",
-    icon: ZennIcon,
-  },
-];
+const socialIcons: Record<
+  SiteSocialLinkId,
+  ComponentType<{ className?: string }>
+> = {
+  github: GitHubIcon,
+  x: XIcon,
+  zenn: ZennIcon,
+};
 
 export default async function HomePage() {
   const notes = await getAllArticles();
@@ -33,45 +33,50 @@ export default async function HomePage() {
 
   return (
     <SiteShell currentPage="home">
-      <section className={homeStyles.hero} aria-labelledby="home-title">
-        <HomeIntro />
-        <p className={homeStyles.lead}>
-          沖縄でソフトウェアエンジニアをしています 🌺
-          <br />
-          普段の業務では Web システムの開発に携わっています。
-        </p>
-        <p className={homeStyles.lead}>
-          最近は AI Agent
-          と一緒に開発すること、個人で小さな道具を作ることに時間を使っています。技術メモや日々の記録は
-          Notes に書いています ✏️
-        </p>
-        <ul className={navigationStyles.socialLinks} aria-label="外部プロフィール">
-          {socialLinks.map(({ href, label, icon: Icon }) => (
-            <li key={href}>
-              <a
-                aria-label={label}
-                href={href}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Icon className={navigationStyles.socialIcon} />
-              </a>
-            </li>
-          ))}
+      <PageHero labelledBy={siteCopy.home.hero.labelledBy}>
+        <HomeIntro helloText={siteCopy.home.hero.helloText} />
+        {siteCopy.home.hero.leadParagraphs.map((lines, index) => (
+          <CopyParagraph
+            className={pageStyles.lead}
+            key={index}
+            lines={lines}
+          />
+        ))}
+        <ul
+          className={navigationStyles.socialLinks}
+          aria-label={siteCopy.home.socialLinksLabel}
+        >
+          {siteSocialLinks.map(({ href, id, label }) => {
+            const Icon = socialIcons[id];
+            return (
+              <li key={href}>
+                <a
+                  aria-label={label}
+                  href={href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <Icon className={navigationStyles.socialIcon} />
+                </a>
+              </li>
+            );
+          })}
         </ul>
-      </section>
+      </PageHero>
 
-      <section className={homeStyles.section} aria-labelledby="recent-notes-title">
-        <div className={homeStyles.sectionHeader}>
-          <h2 id="recent-notes-title">Notes</h2>
-          {hasMoreNotes && (
-            <Link className={homeStyles.sectionLink} href="/notes">
-              すべて見る
+      <PageSection
+        action={
+          hasMoreNotes && (
+            <Link className={pageStyles.sectionLink} href="/notes">
+              {siteCopy.home.recentNotes.viewAllLabel}
             </Link>
-          )}
-        </div>
+          )
+        }
+        labelledBy={siteCopy.home.recentNotes.labelledBy}
+        title={siteCopy.home.recentNotes.title}
+      >
         <NoteList notes={recentNotes} />
-      </section>
+      </PageSection>
     </SiteShell>
   );
 }

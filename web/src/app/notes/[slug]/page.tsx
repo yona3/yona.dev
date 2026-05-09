@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ArticleContent } from "../../../components/site/ArticleContent";
+import { NoteArticleHeader } from "../../../components/site/NoteArticleHeader";
 import notesStyles from "../../../components/site/notes.module.css";
 import { SiteShell } from "../../../components/site/SiteShell";
 import {
-  articleKindLabels,
-  formatArticleDate,
-  getArticleBySlug,
-  getArticleSlugs,
-} from "../../../lib/content";
+  formatSitePageTitle,
+  getNoteUrl,
+  siteCopy,
+  siteInfo,
+} from "../../../constants/site";
+import { getArticleBySlug, getArticleSlugs } from "../../../lib/content";
 
 type Params = {
   slug: string;
@@ -24,27 +26,31 @@ export const generateStaticParams = async (): Promise<Params[]> => {
   return slugs.map((slug) => ({ slug }));
 };
 
-export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+export const generateMetadata = async ({
+  params,
+}: Props): Promise<Metadata> => {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
 
   if (!article) {
     return {
-      title: "Note not found | Koh Yonamine",
+      title: siteCopy.noteDetail.notFoundTitle,
     };
   }
 
+  const noteUrl = getNoteUrl(article.slug);
+
   return {
-    title: `${article.title} | Koh Yonamine`,
+    title: formatSitePageTitle(article.title),
     description: article.description,
     alternates: {
-      canonical: `https://yona.dev/notes/${article.slug}`,
+      canonical: noteUrl,
     },
     openGraph: {
       title: article.title,
       description: article.description,
-      url: `https://yona.dev/notes/${article.slug}`,
-      siteName: "yona.dev",
+      url: noteUrl,
+      siteName: siteInfo.name,
       type: "article",
     },
   };
@@ -61,15 +67,7 @@ export default async function NoteDetailPage({ params }: Props) {
   return (
     <SiteShell currentPage="notes">
       <article className={notesStyles.noteArticle}>
-        <div className={notesStyles.noteMeta}>
-          <time dateTime={article.publishedAt}>
-            {formatArticleDate(article.publishedAt)}
-          </time>
-          <span className={notesStyles.noteType}>
-            {articleKindLabels[article.kind]}
-          </span>
-        </div>
-        <h1>{article.title}</h1>
+        <NoteArticleHeader article={article} />
         <ArticleContent blocks={article.blocks} />
         <div className={notesStyles.noteEnd} aria-hidden="true">
           * * *

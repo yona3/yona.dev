@@ -10,7 +10,11 @@ import homeStyles from "./home.module.css";
 
 const LAP_DURATION_MS = 4300;
 
-export const HomeIntro = () => {
+type Props = {
+  helloText: string;
+};
+
+export const HomeIntro = ({ helloText }: Props) => {
   const isReduced = useReducedMotion();
   const [isRunning, setIsRunning] = useState(false);
   const [cycle, setCycle] = useState(0);
@@ -37,7 +41,7 @@ export const HomeIntro = () => {
   return (
     <div className={homeStyles.nameHeading}>
       <h1 id="home-title">
-        <HelloBubble key={cycle} hidden={isRunning} />
+        <HelloBubble key={cycle} hidden={isRunning} text={helloText} />
       </h1>
       {isReduced ? (
         <span aria-hidden="true">

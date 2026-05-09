@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import Script from "next/script";
 
+import { siteCopy, siteInfo } from "../constants/site";
 import { GA_ID } from "../utils/gtag";
 
 const faviconSvg = `data:image/svg+xml,${encodeURIComponent(
@@ -37,21 +38,21 @@ const notoColorEmoji = Noto_Color_Emoji({
 
 export const metadata: Metadata = {
   title: {
-    default: "Koh Yonamine",
+    default: siteInfo.ownerName,
     template: "%s",
   },
-  description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
+  description: siteCopy.metadata.description,
   openGraph: {
-    title: "Koh Yonamine",
-    description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
-    url: "https://yona.dev",
-    siteName: "yona.dev",
+    title: siteInfo.ownerName,
+    description: siteCopy.metadata.description,
+    url: siteInfo.url,
+    siteName: siteInfo.name,
     images: [
       {
-        url: "https://yona.dev/icon.jpeg",
+        url: siteInfo.imageUrl,
         width: 1200,
         height: 630,
-        alt: "yona.dev",
+        alt: siteInfo.name,
       },
     ],
     locale: "ja_JP",
@@ -59,10 +60,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Koh Yonamine",
-    description: "AI Agent を使った開発、小さな道具づくり、生活の中で考えたことを書いています。",
-    images: ["https://yona.dev/icon.jpeg"],
-    site: "@yonah6g",
+    title: siteInfo.ownerName,
+    description: siteCopy.metadata.description,
+    images: [siteInfo.imageUrl],
+    site: siteInfo.twitterSite,
   },
   icons: {
     icon: [
@@ -84,10 +85,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} ${mPlusRounded.variable} ${notoColorEmoji.variable}`}>
+    <html
+      lang="ja"
+      className={`${notoSansJP.variable} ${mPlusRounded.variable} ${notoColorEmoji.variable}`}
+    >
       <body>
         <a href="#main" className="skip-link">
-          メインコンテンツへスキップ
+          {siteCopy.layout.skipLinkLabel}
         </a>
         {children}
         {GA_ID && (

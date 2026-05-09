@@ -104,6 +104,17 @@ describe("createMarkdownSource", () => {
     await expect(source.getArticleBySlug("missing")).resolves.toBeNull();
   });
 
+  it("ignores files that are not Markdown documents", async () => {
+    const directory = await makeNotesDirectory([
+      ["new.md", publishedNew],
+      ["draft.md", draft],
+      ["notes.txt", "not a markdown article"],
+    ]);
+    const source = createMarkdownSource(directory);
+
+    await expect(source.getArticleSlugs()).resolves.toEqual(["new-note"]);
+  });
+
   it("rejects Markdown without valid frontmatter", async () => {
     const directory = await makeNotesDirectory([["invalid.md", "No frontmatter"]]);
     const source = createMarkdownSource(directory);
